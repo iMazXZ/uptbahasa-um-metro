@@ -172,17 +172,7 @@
             </div>
         @endif
 
-        {{-- Section: EPT Online (hanya jika ada token aktif atau user punya attempt) --}}
-        @php
-            $showEptOnline = $u ? App\Models\EptOnlineAccessToken::query()
-                ->where(fn ($q) => $q->whereNull('user_id')->orWhere('user_id', $u->id))
-                ->where('is_active', true)
-                ->whereNull('revoked_at')
-                ->where('starts_at', '<=', now())
-                ->where('ends_at', '>=', now())
-                ->exists() || \App\Models\EptOnlineAttempt::where('user_id', $u->id)->exists() : false;
-        @endphp
-        @if($showEptOnline)
+        {{-- Section: EPT Online --}}
         <div class="pt-2">
             <a href="{{ route('ept-online.index') }}"
                title="EPT Online (Beta) — start or continue the online test session"
@@ -196,7 +186,6 @@
                 </span>
             </a>
         </div>
-        @endif
     </nav>
 
     {{-- Footer User Profile --}}
