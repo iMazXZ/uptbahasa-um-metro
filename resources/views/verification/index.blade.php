@@ -25,7 +25,7 @@
                     <i class="fa-solid fa-shield-halved text-xs"></i>
                     Sistem Verifikasi Resmi
                 </div>
-                <h1 class="text-2xl md:text-4xl lg:text-5xl font-black tracking-tight mb-2 lg:mb-4">
+                <h1 class="text-2xl md:text-3xl xl:text-4xl 2xl:text-5xl font-black tracking-tight mb-2 lg:mb-4">
                     Cek <span class="text-blue-300">Keaslian</span> Dokumen
                 </h1>
                 <p class="text-blue-100 text-sm lg:text-lg leading-relaxed mb-4 lg:mb-8 max-w-xl">

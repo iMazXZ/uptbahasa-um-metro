@@ -57,10 +57,10 @@
                     </span>
                     Pelayanan Dibuka
                 </div>
-                <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight mb-1 leading-tight">
+                <h1 class="text-3xl md:text-4xl xl:text-5xl 2xl:text-6xl font-black text-white tracking-tight mb-1 leading-tight">
                     UPT <span class="text-um-gold">BAHASA</span>
                 </h1>
-                <p class="text-blue-100/90 text-lg md:text-xl font-medium mb-1">
+                <p class="text-blue-100/90 text-base md:text-lg xl:text-xl font-medium mb-1">
                     Universitas Muhammadiyah Metro
                 </p>
                 <p class="text-blue-200/70 text-base italic mb-6">
@@ -136,7 +136,7 @@
     <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between mb-8 lg:mb-10">
       <div>
         <p class="text-xs font-bold tracking-[0.18em] uppercase text-blue-600 mb-2">Berita Resmi</p>
-        <h2 id="berita-terbaru-title" class="text-3xl lg:text-4xl font-black text-slate-900 tracking-tight">
+        <h2 id="berita-terbaru-title" class="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight">
           Berita Terbaru UPT Bahasa
         </h2>
         <p class="text-slate-600 mt-3 max-w-3xl">
@@ -224,7 +224,7 @@
   <div class="max-w-6xl mx-auto px-4 lg:px-8">
     {{-- Header --}}
     <div class="text-center mb-10">
-      <h2 class="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">Informasi Layanan</h2>
+      <h2 class="text-xl lg:text-2xl font-bold text-gray-900 mb-2">Informasi Layanan</h2>
       <p class="text-gray-500 text-sm">Panduan dan ketentuan layanan UPT Bahasa</p>
     </div>
     
@@ -275,7 +275,7 @@
         <i class="fas fa-info-circle"></i>
         Tentang Kami
       </div>
-      <h2 class="text-3xl lg:text-5xl font-black text-slate-900 mb-4">
+      <h2 class="text-2xl lg:text-4xl font-black text-slate-900 mb-4">
         UPT <span class="text-um-gold">Bahasa</span> UM Metro
       </h2>
       <p class="text-slate-500 text-lg max-w-2xl mx-auto">
@@ -295,7 +295,7 @@
           <div class="w-16 h-16 bg-white/20 backdrop-blur rounded-2xl flex items-center justify-center mb-6">
             <i class="fas fa-graduation-cap text-3xl"></i>
           </div>
-          <h3 class="text-2xl lg:text-3xl font-bold mb-3">Mendukung Kesuksesan Anda</h3>
+          <h3 class="text-xl lg:text-2xl font-bold mb-3">Mendukung Kesuksesan Anda</h3>
           <p class="text-blue-100 text-sm lg:text-base leading-relaxed mb-6">
             Sejak 2009, kami berkomitmen menyediakan layanan bahasa berkualitas tinggi untuk mendukung perjalanan akademik dan profesional mahasiswa serta masyarakat umum.
           </p>
@@ -307,28 +307,28 @@
 
       {{-- Stat Cards with Count Animation --}}
       <div class="bg-white rounded-2xl p-6 shadow-lg shadow-slate-200/50 border border-slate-100 flex flex-col justify-center text-center hover:shadow-xl hover:-translate-y-1 transition-all">
-        <div class="text-4xl lg:text-5xl font-black bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">
+        <div class="text-3xl lg:text-4xl font-black bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">
           <span class="count-up" data-target="{{ $stats['tahun_pengalaman'] ?? 15 }}">0</span>+
         </div>
         <div class="text-slate-500 text-sm font-medium">Tahun Pengalaman</div>
       </div>
       
       <div class="bg-white rounded-2xl p-6 shadow-lg shadow-slate-200/50 border border-slate-100 flex flex-col justify-center text-center hover:shadow-xl hover:-translate-y-1 transition-all">
-        <div class="text-4xl lg:text-5xl font-black bg-gradient-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent mb-2">
+        <div class="text-3xl lg:text-4xl font-black bg-gradient-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent mb-2">
           <span class="count-up" data-target="{{ $stats['alumni'] ?? 0 }}">0</span>+
         </div>
         <div class="text-slate-500 text-sm font-medium">Alumni Sukses</div>
       </div>
       
       <div class="bg-white rounded-2xl p-6 shadow-lg shadow-slate-200/50 border border-slate-100 flex flex-col justify-center text-center hover:shadow-xl hover:-translate-y-1 transition-all">
-        <div class="text-4xl lg:text-5xl font-black bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent mb-2">
+        <div class="text-3xl lg:text-4xl font-black bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent mb-2">
           <span class="count-up" data-target="{{ $stats['instruktur'] ?? 0 }}">0</span>+
         </div>
         <div class="text-slate-500 text-sm font-medium">Instruktur & Penerjemah</div>
       </div>
       
       <div class="bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl p-6 shadow-lg flex flex-col justify-center text-center text-white hover:shadow-xl hover:-translate-y-1 transition-all">
-        <div class="text-4xl lg:text-5xl font-black mb-2">A+</div>
+        <div class="text-3xl lg:text-4xl font-black mb-2">A+</div>
         <div class="text-amber-100 text-sm font-medium">Akreditasi</div>
       </div>
 

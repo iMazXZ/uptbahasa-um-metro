@@ -81,7 +81,7 @@
           </span>
           {{ $heroBadge }}
         </div>
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight mb-2 leading-tight">
+        <h1 class="text-3xl md:text-4xl xl:text-5xl 2xl:text-6xl font-black text-white tracking-tight mb-2 leading-tight">
           {{ $title }}
         </h1>
         <p class="text-blue-100/90 text-lg md:text-xl font-medium">

@@ -26,7 +26,7 @@
       Layanan Profesional
     </div>
     
-    <h1 class="text-3xl md:text-4xl lg:text-5xl font-black mb-4">
+    <h1 class="text-2xl md:text-3xl xl:text-4xl 2xl:text-5xl font-black mb-4">
       Layanan <span class="text-blue-300">Kami</span>
     </h1>
     <p class="text-lg text-blue-100 max-w-2xl mx-auto">

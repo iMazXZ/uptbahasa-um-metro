@@ -796,7 +796,7 @@
     </nav>
 
     <header class="mb-5 text-left">
-      <h1 class="news-title text-3xl lg:text-5xl font-bold leading-tight mb-3">
+      <h1 class="news-title text-2xl lg:text-3xl xl:text-4xl font-bold leading-tight mb-3">
         {{ $post->title }}
       </h1>
 
