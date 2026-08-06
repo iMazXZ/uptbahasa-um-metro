@@ -126,7 +126,7 @@
                                 <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400"><i class="fa-solid fa-envelope text-sm"></i></span>
                                 <input type="email" id="email" name="email" value="{{ old('email') }}"
                                     class="w-full pl-10 pr-3 py-2.5 rounded-lg border border-slate-300 bg-slate-50/50 focus:bg-white focus:border-um-blue focus:ring-2 focus:ring-um-blue/20 outline-none text-sm transition placeholder:text-slate-400 @error('email') border-red-300 @enderror"
-                                    placeholder="nama@contoh.com" required>
+                                    placeholder="nama@gmail.com" required>
                             </div>
                             @error('email')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
                         </div>
