@@ -8,9 +8,6 @@
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
 
     {{-- Google Fonts: Inter --}}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     {{-- Tailwind CSS --}}
     <script src="https://cdn.tailwindcss.com"></script>
@@ -34,6 +31,7 @@
 
     {{-- Font Awesome --}}
     <link rel="stylesheet" href="{{ asset('vendor/fontawesome/all.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/inter/inter.css') }}">
 
     {{-- Alpine.js --}}
     <script src="{{ asset('vendor/alpine/alpine.min.js') }}" defer></script>

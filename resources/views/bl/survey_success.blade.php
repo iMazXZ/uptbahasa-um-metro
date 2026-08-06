@@ -7,7 +7,7 @@
   <title>Kuesioner Selesai</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="{{ asset('vendor/fontawesome/all.min.css') }}">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('vendor/inter/inter.css') }}">
   <style>
     body {
       font-family: 'Inter', sans-serif;
