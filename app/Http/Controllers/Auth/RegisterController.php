@@ -57,14 +57,13 @@ class RegisterController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'whatsapp' => ['required', 'string', 'max:20'],
+            'whatsapp' => ['nullable', 'string', 'max:20'],
             'password' => ['required', 'confirmed', Password::defaults()],
         ], [
             'name.required' => 'Nama lengkap wajib diisi.',
             'email.required' => 'Email wajib diisi.',
             'email.email' => 'Format email tidak valid.',
             'email.unique' => 'Email ini sudah terdaftar.',
-            'whatsapp.required' => 'Nomor WhatsApp wajib diisi.',
             'password.required' => 'Kata sandi wajib diisi.',
             'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
         ]);
@@ -78,19 +77,22 @@ class RegisterController extends Controller
         }
 
         // Normalisasi WhatsApp
-        $whatsapp = NormalizeWhatsAppNumber::normalize($request->whatsapp);
-        if (!$whatsapp) {
-            throw ValidationException::withMessages([
-                'whatsapp' => 'Format nomor WhatsApp tidak valid.',
-            ]);
-        }
+        $whatsapp = null;
+        if (filled($request->whatsapp)) {
+            $whatsapp = NormalizeWhatsAppNumber::normalize($request->whatsapp);
+            if (!$whatsapp) {
+                throw ValidationException::withMessages([
+                    'whatsapp' => 'Format nomor WhatsApp tidak valid.',
+                ]);
+            }
 
-        // Cek apakah WhatsApp sudah terdaftar
-        if (User::where('whatsapp', $whatsapp)->exists()) {
-            RateLimiter::hit($throttleKey, 60);
-            throw ValidationException::withMessages([
-                'whatsapp' => 'Nomor WhatsApp ini sudah terdaftar di akun lain.',
-            ]);
+            // Cek apakah WhatsApp sudah terdaftar
+            if (User::where('whatsapp', $whatsapp)->exists()) {
+                RateLimiter::hit($throttleKey, 60);
+                throw ValidationException::withMessages([
+                    'whatsapp' => 'Nomor WhatsApp ini sudah terdaftar di akun lain.',
+                ]);
+            }
         }
 
         RateLimiter::hit($throttleKey, 60);
@@ -132,6 +134,10 @@ class RegisterController extends Controller
      */
     protected function sendWhatsAppOtp(User $user): void
     {
+        if (empty($user->whatsapp)) {
+            return;
+        }
+
         // Cek apakah OTP diaktifkan
         if (!SiteSetting::isOtpEnabled()) {
             $user->update([

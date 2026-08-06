@@ -144,12 +144,11 @@
                         </div>
                         
                         <div>
-                            <label for="whatsapp" class="block text-sm font-medium text-slate-700 mb-1">WhatsApp Aktif</label>
+                            <label for="whatsapp" class="block text-sm font-medium text-slate-700 mb-1">WhatsApp Aktif <span class="text-slate-400">(opsional)</span></label>
                             <div class="relative">
                                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400"><i class="fa-brands fa-whatsapp text-sm"></i></span>
                                 <input type="tel" id="whatsapp" name="whatsapp" value="{{ old('whatsapp') }}"
-                                    class="w-full pl-10 pr-3 py-2.5 rounded-lg border border-slate-200 focus:border-um-blue focus:ring-1 focus:ring-um-blue/30 outline-none text-sm @error('whatsapp') border-red-300 @enderror"
-                                    required>
+                                    class="w-full pl-10 pr-3 py-2.5 rounded-lg border border-slate-200 focus:border-um-blue focus:ring-1 focus:ring-um-blue/30 outline-none text-sm @error('whatsapp') border-red-300 @enderror">
                             </div>
                             <p class="mt-0.5 text-[10px] text-slate-400">Untuk notifikasi dan verifikasi akun</p>
                             @error('whatsapp')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
