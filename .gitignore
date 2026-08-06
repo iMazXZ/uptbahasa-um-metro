@@ -13,6 +13,8 @@
 .env.cpanel.bak
 *.zip
 sess_*
+*.sql
+error_log
 .phpactor.json
 .phpunit.result.cache
 Homestead.json
