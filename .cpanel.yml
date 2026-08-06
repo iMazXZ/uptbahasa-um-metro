@@ -1,0 +1,6 @@
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home1/uptbahasaummetro/public_html
+    - /bin/cp -Rf * $DEPLOYPATH/
+    - /bin/cp -Rf .htaccess .env.example $DEPLOYPATH/
+    - cd $DEPLOYPATH && php artisan optimize:clear || true
