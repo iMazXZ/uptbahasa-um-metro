@@ -3,12 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Jobs\SendWhatsAppOtp;
-use App\Models\SiteSetting;
 use App\Models\User;
-use App\Services\WhatsAppService;
 use App\Support\NormalizeWhatsAppNumber;
-use App\Support\WhatsAppOutboundThrottle;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -63,9 +59,9 @@ class WhatsAppController extends Controller
     }
 
     /**
-     * Kirim OTP (atau langsung verifikasi jika OTP dinonaktifkan).
+     * Simpan nomor WA dan langsung verifikasi (tanpa OTP).
      */
-    public function sendOtp(Request $request, WhatsAppService $waService): JsonResponse
+    public function sendOtp(Request $request): JsonResponse
     {
         $request->validate([
             'whatsapp' => ['required', 'string', 'max:20'],
@@ -92,36 +88,7 @@ class WhatsAppController extends Controller
             ], 422);
         }
 
-        if (SiteSetting::isOtpEnabled()) {
-            $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-            $expiresAt = now()->addMinutes(30);
-
-            $user->update([
-                'whatsapp' => $normalized,
-                'whatsapp_otp' => $otp,
-                'whatsapp_otp_expires_at' => $expiresAt,
-                'whatsapp_verified_at' => null,
-            ]);
-
-            if (!$waService->isEnabled()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Layanan WhatsApp tidak tersedia',
-                ], 503);
-            }
-
-            // Offload pengiriman ke queue supaya respon cepat.
-            SendWhatsAppOtp::dispatch($normalized, $otp)
-                ->delay(WhatsAppOutboundThrottle::nextDelaySeconds());
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Kode OTP masuk ke antrean pengiriman WhatsApp. Mohon tunggu beberapa saat.',
-                'skip_otp' => false,
-            ]);
-        }
-
-        // OTP nonaktif: langsung verifikasi
+        // Simpan langsung dan tandai terverifikasi (tanpa OTP)
         $user->update([
             'whatsapp' => $normalized,
             'whatsapp_otp' => null,
