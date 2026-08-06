@@ -183,7 +183,7 @@ class SurveyResponses extends Page implements HasTable
         return $options ?: [
             'tutor'      => 'Tutor',
             'supervisor' => 'Supervisor',
-            'institute'  => 'UPT Bahasa',
+            'institute'  => 'Lembaga',
         ];
     }
 
