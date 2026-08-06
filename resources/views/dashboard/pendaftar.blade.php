@@ -125,34 +125,12 @@
 
     {{-- ONBOARDING CHECKLIST WIDGET --}}
     @php
-        $otpEnabled = \App\Models\SiteSetting::isOtpEnabled();
-        
-        // Jika OTP disabled, step WA verification dianggap sudah selesai
-        $waVerified = $otpEnabled ? !empty($user->whatsapp_verified_at) : !empty($user->whatsapp);
-        
-        // Total steps: 2 jika OTP disabled, 3 jika OTP enabled
-        $totalSteps = $otpEnabled ? 3 : 2;
-        
+        // Total steps: 2 (Akun Terdaftar + Biodata Lengkap). WhatsApp opsional, bukan syarat.
+        $totalSteps = 2;
+
         $stepsDone = 1; // Akun terdaftar selalu done
-        if ($waVerified) $stepsDone++;
-        if (!$otpEnabled && $biodataLengkap) {
-            // Jika OTP disabled, biodata adalah step 2
-            $stepsDone = $biodataLengkap ? 2 : 1;
-        } elseif ($otpEnabled) {
-            if ($waVerified) $stepsDone++;
-            if ($biodataLengkap) $stepsDone++;
-        }
-        
-        // Recalculate
-        $stepsDone = 1;
-        if ($otpEnabled) {
-            if ($waVerified) $stepsDone++;
-            if ($biodataLengkap) $stepsDone++;
-        } else {
-            // OTP disabled: skip WA verification step, hanya 2 step
-            if ($biodataLengkap) $stepsDone++;
-        }
-        
+        if ($biodataLengkap) $stepsDone++;
+
         $allDone = ($stepsDone === $totalSteps);
         $progressPercent = ($stepsDone / $totalSteps) * 100;
     @endphp
@@ -179,7 +157,7 @@
             </div>
             
             {{-- Steps --}}
-            <div class="p-5 grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="p-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {{-- Step 1: Akun Terdaftar --}}
                 <div class="flex items-start gap-3">
                     <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
@@ -191,32 +169,7 @@
                     </div>
                 </div>
                 
-                {{-- Step 2: Verifikasi WhatsApp (hanya tampil jika OTP enabled) --}}
-                @if($otpEnabled)
-                <div class="flex items-start gap-3">
-                    @if($waVerified)
-                        <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
-                            <i class="fa-solid fa-check text-emerald-600 text-sm"></i>
-                        </div>
-                        <div>
-                            <p class="text-sm font-semibold text-slate-800">WhatsApp Terverifikasi</p>
-                            <p class="text-xs text-emerald-600">Selesai</p>
-                        </div>
-                    @else
-                        <div class="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
-                            <span class="text-amber-600 font-bold text-sm">2</span>
-                        </div>
-                        <div>
-                            <p class="text-sm font-semibold text-slate-800">Verifikasi WhatsApp</p>
-                            <a href="{{ route('dashboard.biodata') }}" class="text-xs text-um-blue hover:underline">
-                                Verifikasi sekarang →
-                            </a>
-                        </div>
-                    @endif
-                </div>
-                @endif
-                
-                {{-- Step 3 (atau 2 jika OTP disabled): Lengkapi Biodata --}}
+                {{-- Step 2: Lengkapi Biodata --}}
                 <div class="flex items-start gap-3">
                     @if($biodataLengkap)
                         <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
@@ -228,7 +181,7 @@
                         </div>
                     @else
                         <div class="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
-                            <span class="text-amber-600 font-bold text-sm">{{ $otpEnabled ? '3' : '2' }}</span>
+                            <span class="text-amber-600 font-bold text-sm">2</span>
                         </div>
                         <div>
                             <p class="text-sm font-semibold text-slate-800">Lengkapi Biodata</p>

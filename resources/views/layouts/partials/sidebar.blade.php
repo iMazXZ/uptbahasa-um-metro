@@ -8,11 +8,9 @@
     $isPBI = $u && $u->prody && $u->prody->name === 'Pendidikan Bahasa Inggris';
     $prodiIslam = ['Komunikasi dan Penyiaran Islam', 'Pendidikan Agama Islam', 'Pendidikan Islam Anak Usia Dini'];
     $isProdiIslam = $u && $u->prody && in_array($u->prody->name, $prodiIslam);
-    $needsBL = $u && $u->year && (int)$u->year <= 2024 && !$isS2;
     
     $biodataComplete = $u ? \App\Models\SiteSetting::isEptBiodataComplete($u) : false;
-    $waVerified = $u && !empty($u->whatsapp_verified_at);
-    $biodataNeedsBadge = !$biodataComplete || !$waVerified;
+    $biodataNeedsBadge = !$biodataComplete;
 
     $eptEligibility = $u ? \App\Models\SiteSetting::checkEptEligibility($u) : [false, null];
     $canRegisterEpt = $eptEligibility[0] ?? false;
@@ -174,7 +172,17 @@
             </div>
         @endif
 
-        {{-- Section: Beta --}}
+        {{-- Section: EPT Online (hanya jika ada token aktif atau user punya attempt) --}}
+        @php
+            $showEptOnline = $u ? App\Models\EptOnlineAccessToken::query()
+                ->where(fn ($q) => $q->whereNull('user_id')->orWhere('user_id', $u->id))
+                ->where('is_active', true)
+                ->whereNull('revoked_at')
+                ->where('starts_at', '<=', now())
+                ->where('ends_at', '>=', now())
+                ->exists() || \App\Models\EptOnlineAttempt::where('user_id', $u->id)->exists() : false;
+        @endphp
+        @if($showEptOnline)
         <div class="pt-2">
             <a href="{{ route('ept-online.index') }}"
                title="EPT Online (Beta) — start or continue the online test session"
@@ -188,6 +196,7 @@
                 </span>
             </a>
         </div>
+        @endif
     </nav>
 
     {{-- Footer User Profile --}}
