@@ -1,9 +1,9 @@
 @extends('layouts.front')
 
-@section('title', 'Kebijakan Privasi - Lembaga Bahasa UM Metro')
+@section('title', 'Kebijakan Privasi - UPT Bahasa UM Metro')
 
 @section('meta')
-  <meta name="description" content="Kebijakan Privasi Lembaga Bahasa UM Metro terkait pengumpulan, penggunaan, penyimpanan, dan perlindungan data pengguna.">
+  <meta name="description" content="Kebijakan Privasi UPT Bahasa UM Metro terkait pengumpulan, penggunaan, penyimpanan, dan perlindungan data pengguna.">
   <meta name="robots" content="index,follow">
 @endsection
 
@@ -28,7 +28,7 @@
   <div class="max-w-4xl mx-auto px-4 lg:px-8">
     <article class="bg-white border border-gray-100 shadow-sm rounded-2xl p-6 lg:p-10 prose prose-slate max-w-none">
       <p>
-        Lembaga Bahasa UM Metro berkomitmen melindungi privasi pengguna layanan kami. Kebijakan ini menjelaskan
+        UPT Bahasa UM Metro berkomitmen melindungi privasi pengguna layanan kami. Kebijakan ini menjelaskan
         bagaimana data dikumpulkan, digunakan, disimpan, dan dilindungi ketika Anda mengakses situs ini.
       </p>
 
@@ -43,7 +43,7 @@
       <h2>2. Tujuan Penggunaan Data</h2>
       <p>Data digunakan untuk:</p>
       <ul>
-        <li>Menyediakan dan memproses layanan Lembaga Bahasa.</li>
+        <li>Menyediakan dan memproses layanan UPT Bahasa.</li>
         <li>Verifikasi identitas, komunikasi, notifikasi, dan dukungan pengguna.</li>
         <li>Peningkatan kualitas layanan, keamanan sistem, dan evaluasi internal.</li>
         <li>Kepatuhan terhadap kewajiban hukum dan kebijakan institusi.</li>
@@ -76,7 +76,7 @@
       <h2>7. Hak Pengguna</h2>
       <p>
         Anda dapat mengajukan permintaan pembaruan atau perbaikan data sesuai ketentuan yang berlaku melalui kanal
-        kontak resmi Lembaga Bahasa UM Metro.
+        kontak resmi UPT Bahasa UM Metro.
       </p>
 
       <h2>8. Perubahan Kebijakan</h2>
@@ -87,7 +87,7 @@
       <h2>9. Kontak</h2>
       <p>Untuk pertanyaan terkait privasi data, Anda dapat menghubungi:</p>
       <ul>
-        <li>Lembaga Bahasa Universitas Muhammadiyah Metro.</li>
+        <li>UPT Bahasa Universitas Muhammadiyah Metro.</li>
         <li>Alamat: Jl. Ki Hajar Dewantara, Iringmulyo, Kec. Metro Timur, Kota Metro, Lampung.</li>
         <li>Telepon: 0858-9666-6588.</li>
         <li>Situs: <a href="https://ummetro.ac.id" target="_blank" rel="noopener">ummetro.ac.id</a>.</li>

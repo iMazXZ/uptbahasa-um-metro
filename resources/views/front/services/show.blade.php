@@ -1,7 +1,7 @@
 {{-- resources/views/front/services/show.blade.php --}}
 @extends('layouts.front')
 
-@section('title', ($service->title ?? 'Layanan') . ' - Lembaga Bahasa UM Metro')
+@section('title', ($service->title ?? 'Layanan') . ' - UPT Bahasa UM Metro')
 
 @section('meta')
   <meta name="description" content="{{ $service->excerpt ?: Str::limit(strip_tags($service->body), 160) }}">

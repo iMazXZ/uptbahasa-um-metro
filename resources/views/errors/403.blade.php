@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Akses Ditolak - Lembaga Bahasa UM Metro</title>
+    <title>Akses Ditolak - UPT Bahasa UM Metro</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -196,7 +196,7 @@
         <div class="logo-section">
             <img src="{{ asset('images/logo-um.png') }}" alt="Logo UM Metro">
             <div class="logo-text">
-                <div class="brand">Lembaga<span>Bahasa</span></div>
+                <div class="brand">UPT<span>Bahasa</span></div>
                 <div class="sub">Universitas Muhammadiyah Metro</div>
             </div>
         </div>

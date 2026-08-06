@@ -46,7 +46,7 @@ class ListPenerjemahans extends ListRecords
         $year = (int) ($u?->year ?? 0);
 
         if ($year <= 2024) {
-            return '⚠️ Nilai Basic Listening arsip/manual Anda belum tercatat. Jika sudah pernah lulus, silakan konfirmasi ke kantor Lembaga Bahasa.';
+            return '⚠️ Nilai Basic Listening arsip/manual Anda belum tercatat. Jika sudah pernah lulus, silakan konfirmasi ke kantor UPT Bahasa.';
         }
 
         return '⚠️ Anda belum mengikuti Basic Listening. Setelah nilai Attendance dan Final Test terisi, tombol “Permintaan Baru” akan muncul.';

@@ -21,7 +21,7 @@
         <div class="text-sm text-green-800 dark:text-green-200">
             Dokumen terjemahan Anda sudah selesai. Silakan <strong>unduh PDF resmi</strong> di bawah ini.
             <br><br>
-            Untuk Ceklis SIMYUD, silakan kumpulkan Kwitansi Pembayaran asli ke Kantor Lembaga Bahasa.
+            Untuk Ceklis SIMYUD, silakan kumpulkan Kwitansi Pembayaran asli ke Kantor UPT Bahasa.
             <br><br>
 
             <div class="mt-4 flex flex-wrap gap-2">

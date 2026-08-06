@@ -95,7 +95,7 @@ class EptSubmissionStatusNotification extends Notification implements ShouldQueu
                 $message .= "Catatan:\n{$adminNote}\n\n";
             }
 
-            $message .= "Unduh, cetak, lalu bawa ke Kantor Lembaga Bahasa untuk cap basah:\n{$downloadUrl}";
+            $message .= "Unduh, cetak, lalu bawa ke Kantor UPT Bahasa untuk cap basah:\n{$downloadUrl}";
         } else {
             $details = match ($this->status) {
                 'pending' => "Pengajuan Anda saat ini MENUNGGU PROSES PENINJAUAN oleh admin.",
@@ -140,7 +140,7 @@ class EptSubmissionStatusNotification extends Notification implements ShouldQueu
         if ($this->status === 'approved') {
             $mail->line('Pengajuan Anda telah **Disetujui** dan **Berhasil Dibuat**.');
             $mail->line('Silakan **unduh dokumen Surat Rekomendasi**, kemudian cetak. '
-                .'Bawa cetakan tersebut ke **Kantor Lembaga Bahasa, Kampus 3 UM Metro, Gedung FIKOM Lantai 2** '
+                .'Bawa cetakan tersebut ke **Kantor UPT Bahasa, Kampus 3 UM Metro, Gedung FIKOM Lantai 2** '
                 .'untuk mendapatkan **Cap Basah** dan **Legalisir** *(bila diperlukan)*.');
         }
 
@@ -160,7 +160,7 @@ class EptSubmissionStatusNotification extends Notification implements ShouldQueu
             $mail->action('Buka Halaman Verifikasi', $this->verificationUrl);
         }
 
-        $mail->salutation("Hormat kami, Admin Lembaga Bahasa UM Metro");
+        $mail->salutation("Hormat kami, Admin UPT Bahasa UM Metro");
 
         return $mail;
     }

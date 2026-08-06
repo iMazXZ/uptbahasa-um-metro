@@ -529,12 +529,12 @@ class BasicListeningProfileController extends Controller
         $interactiveScores = [];
         $interactiveStoredScores = [];
         $interactiveMessage = $interactiveApplicable
-            ? 'Nilai Interactive Class belum ditemukan. Silakan ke kantor Lembaga Bahasa.'
+            ? 'Nilai Interactive Class belum ditemukan. Silakan ke kantor UPT Bahasa.'
             : 'Nilai Interactive Class tidak diperlukan untuk kombinasi angkatan dan prodi ini.';
         $interactiveArabicScores = [];
         $interactiveArabicStoredScores = [];
         $interactiveArabicMessage = $interactiveArabicApplicable
-            ? 'Nilai Bahasa Arab 1 dan 2 belum ditemukan di arsip. Jika Anda sudah mengikuti kelas, silakan ke kantor Lembaga Bahasa.'
+            ? 'Nilai Bahasa Arab 1 dan 2 belum ditemukan di arsip. Jika Anda sudah mengikuti kelas, silakan ke kantor UPT Bahasa.'
             : 'Nilai Interactive Bahasa Arab tidak diperlukan untuk kombinasi angkatan dan prodi ini.';
 
         if ($interactiveApplicable && mb_strlen((string) $normalizedSrn) >= 8) {
@@ -598,7 +598,7 @@ class BasicListeningProfileController extends Controller
                 ? 'Nilai manual tidak diperlukan untuk kombinasi angkatan dan prodi ini.'
                 : (($record !== null || $storedScore !== null)
                 ? null
-                : 'Nilai Basic Listening belum tersedia di arsip. Jika Anda sudah mengikuti kelas, silakan ke kantor Lembaga Bahasa.'),
+                : 'Nilai Basic Listening belum tersedia di arsip. Jika Anda sudah mengikuti kelas, silakan ke kantor UPT Bahasa.'),
             'interactive_class_applicable' => $interactiveApplicable,
             'interactive_class_found' => ($interactiveScores !== [] || $interactiveStoredScores !== []),
             'interactive_class_scores' => $interactiveScores !== [] ? $interactiveScores : $interactiveStoredScores,

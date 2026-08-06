@@ -156,6 +156,6 @@ class SubmitEptScoreController extends Controller
 
         return redirect()
             ->route('dashboard.ept')
-            ->with('success', 'Data berhasil dikirim! Silakan menunggu proses verifikasi dari Lembaga Bahasa.');
+            ->with('success', 'Data berhasil dikirim! Silakan menunggu proses verifikasi dari UPT Bahasa.');
     }
 }

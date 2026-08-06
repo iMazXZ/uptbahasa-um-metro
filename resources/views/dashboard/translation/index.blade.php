@@ -285,7 +285,7 @@
                                 <div class="mt-4 flex items-start gap-3 p-3 rounded-xl bg-blue-50 border border-blue-100">
                                     <i class="fa-solid fa-circle-info text-blue-500 mt-0.5"></i>
                                     <p class="text-sm text-blue-700">
-                                        Jika ingin <strong>Ceklis SIMYUD</strong>, silakan kumpulkan <strong>bukti pembayaran Asli (1 lembar)</strong> ke Kantor Lembaga Bahasa.
+                                        Jika ingin <strong>Ceklis SIMYUD</strong>, silakan kumpulkan <strong>bukti pembayaran Asli (1 lembar)</strong> ke Kantor UPT Bahasa.
                                     </p>
                                 </div>
                             </div>

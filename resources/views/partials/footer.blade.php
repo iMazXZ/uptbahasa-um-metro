@@ -96,7 +96,7 @@
             </p>
             <p>
               WhatsApp:
-              <a href="https://wa.me/6287790740408?text=Halo%20Lembaga%20Bahasa%2C%20saya%20ingin%20bertanya."
+              <a href="https://wa.me/6287790740408?text=Halo%20UPT%20Bahasa%2C%20saya%20ingin%20bertanya."
                  class="underline underline-offset-4 hover:text-white transition"
                  target="_blank" rel="noopener">
                 0877-9074-0408
@@ -137,7 +137,7 @@
   </div>
 
   <!-- {{-- Floating WhatsApp --}}
-  <a href="https://wa.me/6287790740408?text=Halo%20Lembaga%20Bahasa%2C%20saya%20ingin%20bertanya."
+  <a href="https://wa.me/6287790740408?text=Halo%20UPT%20Bahasa%2C%20saya%20ingin%20bertanya."
      target="_blank" rel="noopener"
      class="fixed bottom-6 right-6 w-14 h-14 lg:w-16 lg:h-16 bg-green-500 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 transition-colors z-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
      aria-label="Chat WhatsApp UPT Bahasa">

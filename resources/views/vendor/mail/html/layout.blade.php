@@ -207,7 +207,7 @@
                             <table class="footer" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
                                 <tr>
                                     <td class="content-cell" align="center">
-                                        <strong>Lembaga Bahasa UM Metro</strong><br>
+                                        <strong>UPT Bahasa UM Metro</strong><br>
                                         Jl. Ki Hajar Dewantara No.116, Metro Barat<br>
                                         Kota Metro, Lampung<br><br>
                                         

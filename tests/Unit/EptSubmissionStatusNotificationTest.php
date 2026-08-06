@@ -58,7 +58,7 @@ class EptSubmissionStatusNotificationTest extends TestCase
             . "Yth. *Budi Santoso*,\n\n"
             . "Surat rekomendasi EPT Anda sudah dibuat.\n\n"
             . "Catatan:\nSilakan legalisir bila diperlukan.\n\n"
-            . "Unduh, cetak, lalu bawa ke Kantor Lembaga Bahasa untuk cap basah:\n"
+            . "Unduh, cetak, lalu bawa ke Kantor UPT Bahasa untuk cap basah:\n"
             . 'https://example.test/surat-rekomendasi.pdf';
 
         $this->mock(WhatsAppService::class, function ($mock) use ($expectedMessage) {

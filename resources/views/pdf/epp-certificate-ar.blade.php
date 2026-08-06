@@ -214,7 +214,7 @@
             <img class="logo" src="{{ $logoSrc }}" alt="Logo Institusi">
           @endif
           <div class="institution-text">
-            <div class="institution-name">Lembaga Bahasa</div>
+            <div class="institution-name">UPT Bahasa</div>
             <div class="institution-department">Universitas Muhammadiyah Metro</div>
           </div>
         </div>

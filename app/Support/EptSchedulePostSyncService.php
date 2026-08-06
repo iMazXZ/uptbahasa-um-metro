@@ -120,7 +120,7 @@ class EptSchedulePostSyncService
       <li>Ruang : {$location}</li>
     </ol>
   </li>
-  <li>Hal yang kurang jelas dapat ditanyakan langsung pada bagian Pendaftaran EPT di Lembaga Bahasa UM Metro</li>
+  <li>Hal yang kurang jelas dapat ditanyakan langsung pada bagian Pendaftaran EPT di UPT Bahasa UM Metro</li>
 </ol>
 <p><em>Geser ke kiri untuk melihat detail lengkap daftar peserta.</em></p>
 HTML;

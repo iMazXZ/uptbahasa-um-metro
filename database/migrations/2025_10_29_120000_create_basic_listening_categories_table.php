@@ -34,7 +34,7 @@ return new class extends Migration {
         $defaults = [
             ['name' => 'Tutor', 'slug' => 'tutor', 'position' => 1],
             ['name' => 'Supervisor', 'slug' => 'supervisor', 'position' => 2],
-            ['name' => 'Lembaga', 'slug' => 'institute', 'position' => 3],
+            ['name' => 'UPT Bahasa', 'slug' => 'institute', 'position' => 3],
         ];
 
         foreach ($defaults as $cat) {

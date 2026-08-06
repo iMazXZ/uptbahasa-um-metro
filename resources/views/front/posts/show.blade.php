@@ -1,6 +1,6 @@
 {{-- resources/views/front/posts/show.blade.php --}}
 @extends('layouts.front')
-@section('title', ($post->title ?? 'Detail') . ' - Lembaga Bahasa')
+@section('title', ($post->title ?? 'Detail') . ' - UPT Bahasa')
 
 @section('meta')
   @php
@@ -910,7 +910,7 @@
         </div>
 
         <div class="schedule-footer-note">
-          Hal yang kurang jelas dapat ditanyakan langsung pada bagian Pendaftaran EPT di Lembaga Bahasa UM Metro.
+          Hal yang kurang jelas dapat ditanyakan langsung pada bagian Pendaftaran EPT di UPT Bahasa UM Metro.
         </div>
 
         @if($post->eptGroup && $scheduleParticipants->count())

@@ -1,4 +1,4 @@
-# 🏛️ Web Lembaga Bahasa UM Metro
+# 🏛️ Web UPT Bahasa UM Metro
 
 <div align="center">
 
@@ -7,7 +7,7 @@
 ![Node.js](https://img.shields.io/badge/Node.js-18+-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
 ![WhatsApp](https://img.shields.io/badge/WhatsApp-Baileys-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)
 
-**Sistem Informasi Terintegrasi Lembaga Bahasa Universitas Muhammadiyah Metro**
+**Sistem Informasi Terintegrasi UPT Bahasa Universitas Muhammadiyah Metro**
 
 [Fitur](#-fitur-unggulan) • [Tech Stack](#-tech-stack) • [Instalasi](#-instalasi) • [WhatsApp Service](#-whatsapp-service-integration)
 
@@ -17,7 +17,7 @@
 
 ## 📋 Tentang Project
 
-Web Lembaga Bahasa UM Metro adalah platform digital komprehensif yang memfasilitasi seluruh layanan kebahasaan di UM Metro. Sistem ini tidak hanya menangani administrasi kursus, tetapi juga mengintegrasikan layanan **EPT (English Proficiency Test)**, **Penerjemahan Dokumen**, dan **Basic Listening** secara terpusat dengan notifikasi real-time via WhatsApp.
+Web UPT Bahasa UM Metro adalah platform digital komprehensif yang memfasilitasi seluruh layanan kebahasaan di UM Metro. Sistem ini tidak hanya menangani administrasi kursus, tetapi juga mengintegrasikan layanan **EPT (English Proficiency Test)**, **Penerjemahan Dokumen**, dan **Basic Listening** secara terpusat dengan notifikasi real-time via WhatsApp.
 
 ## 🌟 Fitur Unggulan
 

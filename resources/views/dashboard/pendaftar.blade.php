@@ -477,7 +477,7 @@
                             <div>
                                 <h4 class="text-xl font-bold text-white mb-1">Sementara Pendaftaran EPT Ditutup</h4>
                                 <p class="text-slate-200 text-sm leading-relaxed max-w-md">
-                                    Pendaftaran baru sedang tidak dibuka. Silakan tunggu informasi berikutnya dari Lembaga Bahasa.
+                                    Pendaftaran baru sedang tidak dibuka. Silakan tunggu informasi berikutnya dari UPT Bahasa.
                                 </p>
                             </div>
                         </div>
@@ -1018,7 +1018,7 @@
                         <i class="fa-solid fa-graduation-cap text-3xl text-white"></i>
                     </div>
                     <h3 class="text-lg font-bold text-white">Selamat Datang!</h3>
-                    <p class="text-blue-100 text-sm mt-1">Lembaga Bahasa UM Metro</p>
+                    <p class="text-blue-100 text-sm mt-1">UPT Bahasa UM Metro</p>
                 </div>
             </div>
 

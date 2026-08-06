@@ -970,7 +970,7 @@ class BlSurveyResults extends Page implements HasForms, HasTable
             'tutor'      => 'Tutor',
             'materi'     => 'Materi',
             'supervisor' => 'Supervisor',
-            'institute'  => 'Lembaga',
+            'institute'  => 'UPT Bahasa',
         ];
     }
 }

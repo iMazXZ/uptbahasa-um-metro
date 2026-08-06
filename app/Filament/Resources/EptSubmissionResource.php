@@ -28,7 +28,7 @@ class EptSubmissionResource extends BaseResource
     protected static ?string $model = EptSubmission::class;
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-check';
 
-    protected static ?string $navigationGroup = 'Layanan Lembaga Bahasa';
+    protected static ?string $navigationGroup = 'Layanan UPT Bahasa';
 
     public static ?string $slug = 'suratrekomendasi';
     protected static ?string $navigationLabel = 'Pengajuan Surat Rekomendasi';

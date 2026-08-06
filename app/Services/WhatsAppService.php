@@ -167,7 +167,7 @@ class WhatsAppService
                 ->post("{$this->baseUrl}/send-otp", [
                     'phone' => $phone,
                     'otp' => $otp,
-                    'appName' => config('app.name', 'Lembaga Bahasa'),
+                    'appName' => config('app.name', 'UPT Bahasa'),
                 ]);
 
             if ($response->successful() && $response->json('success') === true) {

@@ -28,7 +28,7 @@ class UsersStats extends BaseWidget
                 ->icon('heroicon-o-user')
                 ->color('warning'),
 
-            Card::make('Jumlah Asisten Lembaga', number_format($tutor))
+            Card::make('Jumlah Asisten UPT Bahasa', number_format($tutor))
                 ->icon('heroicon-o-academic-cap')
                 ->color('success'),
         ];

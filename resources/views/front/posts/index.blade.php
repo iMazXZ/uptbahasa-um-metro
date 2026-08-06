@@ -1,6 +1,6 @@
 @extends('layouts.front')
 
-@section('title', $title.' - Lembaga Bahasa')
+@section('title', $title.' - UPT Bahasa')
 
 @section('meta')
   @php
@@ -31,12 +31,12 @@
         : 'noindex,follow';
 
     $metaDescription = match ($metaCategory) {
-        'career' => 'Informasi lowongan dan peluang karier terbaru dari Lembaga Bahasa UM Metro.',
-        'schedule' => 'Jadwal tes EPT terbaru dari Lembaga Bahasa UM Metro.',
-        'scores'   => 'Informasi nilai tes EPT terbaru dari Lembaga Bahasa UM Metro.',
+        'career' => 'Informasi lowongan dan peluang karier terbaru dari UPT Bahasa UM Metro.',
+        'schedule' => 'Jadwal tes EPT terbaru dari UPT Bahasa UM Metro.',
+        'scores'   => 'Informasi nilai tes EPT terbaru dari UPT Bahasa UM Metro.',
         default    => $newsCategoryLabel
-            ? "Berita kategori {$newsCategoryLabel} dari Lembaga Bahasa UM Metro."
-            : 'Berita dan informasi terbaru dari Lembaga Bahasa UM Metro.',
+            ? "Berita kategori {$newsCategoryLabel} dari UPT Bahasa UM Metro."
+            : 'Berita dan informasi terbaru dari UPT Bahasa UM Metro.',
     };
   @endphp
   <meta name="description" content="{{ $metaDescription }}">
@@ -53,15 +53,15 @@
         'career' => 'Karier',
         'schedule' => 'Jadwal EPT',
         'scores'   => 'Nilai EPT',
-        default    => $newsCategoryLabel ? 'Kategori: ' . $newsCategoryLabel : 'Informasi Lembaga',
+        default    => $newsCategoryLabel ? 'Kategori: ' . $newsCategoryLabel : 'Informasi UPT Bahasa',
     };
     $heroSubtitle = match ($heroCategory) {
         'career' => 'Lihat lowongan terbaru, status rekrutmen, dan tautan pendaftaran.',
         'schedule' => 'Pantau jadwal tes EPT terbaru dan informasi pelaksanaan.',
         'scores'   => 'Cek pengumuman nilai EPT terbaru di sini.',
         default    => $newsCategoryLabel
-            ? "Kumpulan berita kategori {$newsCategoryLabel} dari Lembaga Bahasa."
-            : 'Temukan berita dan informasi terbaru dari Lembaga Bahasa.',
+            ? "Kumpulan berita kategori {$newsCategoryLabel} dari UPT Bahasa."
+            : 'Temukan berita dan informasi terbaru dari UPT Bahasa.',
     };
   @endphp
   <div class="relative bg-slate-900 overflow-hidden">

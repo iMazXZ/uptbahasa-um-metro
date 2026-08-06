@@ -68,7 +68,7 @@ class EptRegistrationStatusNotification extends Notification implements ShouldQu
                 ->line('Mohon menunggu penetapan jadwal tes. Ketika kuota peserta sudah terpenuhi, jadwal tes akan segera dikirimkan.')
                 ->line('Jika notifikasi WhatsApp tidak berfungsi, pantau info jadwal melalui Instagram: https://www.instagram.com/labahasa_um_metro/')
                 ->action('Buka Status Pendaftaran EPT', $this->dashboardUrl)
-                ->salutation('Hormat kami, Admin Lembaga Bahasa UM Metro');
+                ->salutation('Hormat kami, Admin UPT Bahasa UM Metro');
         }
 
         return $mail
@@ -77,7 +77,7 @@ class EptRegistrationStatusNotification extends Notification implements ShouldQu
             ->line('Alasan penolakan: ' . ($this->rejectionReason ?: 'Tidak ada keterangan.'))
             ->line('Silakan upload ulang bukti pembayaran yang valid melalui halaman pendaftaran EPT.')
             ->action('Buka Pendaftaran EPT', $this->dashboardUrl)
-            ->salutation('Hormat kami, Admin Lembaga Bahasa UM Metro');
+            ->salutation('Hormat kami, Admin UPT Bahasa UM Metro');
     }
 
     public function toArray(object $notifiable): array

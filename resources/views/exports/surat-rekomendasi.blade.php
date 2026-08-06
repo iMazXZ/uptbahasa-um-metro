@@ -26,7 +26,7 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<title>Surat Keterangan — Lembaga Bahasa UM Metro</title>
+<title>Surat Keterangan — UPT Bahasa UM Metro</title>
 <style>
   @page { size: A4 portrait; margin: 20mm 18mm 20mm 23mm; }
   *{ box-sizing: border-box; }
@@ -90,7 +90,7 @@
       <img class="logo" src="{{ $logoPath }}" alt="Logo UM">
     @endif
     <div class="u-line">Universitas Muhammadiyah Metro</div>
-    <div class="l-line">Lembaga Bahasa</div>
+    <div class="l-line">UPT Bahasa</div>
     <div class="addr">Jl. Gatot Subroto No.100, Yosodadi, Kec. Metro Tim., Kota Metro, Lampung 34124, Indonesia</div>
   </div>
   <div class="divider"></div>
@@ -127,7 +127,7 @@
   </div>
 
   {{-- PARAGRAF NILAI --}}
-  <p>Bahwa yang bersangkutan benar-benar telah mengikuti <em>English Proficiency Test (EPT)</em> Lembaga Bahasa dengan nilai sebagai berikut:</p>
+  <p>Bahwa yang bersangkutan benar-benar telah mengikuti <em>English Proficiency Test (EPT)</em> UPT Bahasa dengan nilai sebagai berikut:</p>
 
   {{-- LIST NILAI (Tes I/II/III) --}}
   <div class="scores">

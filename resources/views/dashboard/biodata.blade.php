@@ -48,7 +48,7 @@
         legacyScore: @js($initialLegacyScore),
         legacyScoreFound: {{ $initialLegacyScore !== '' ? 'true' : 'false' }},
         legacyScoreLoading: false,
-        legacyScoreMessage: @js($initialLegacyScore !== '' ? '' : 'Nilai Basic Listening belum tersedia di arsip. Jika Anda sudah mengikuti dan lulus kelas, silakan konfirmasi ke kantor Lembaga Bahasa.'),
+        legacyScoreMessage: @js($initialLegacyScore !== '' ? '' : 'Nilai Basic Listening belum tersedia di arsip. Jika Anda sudah mengikuti dan lulus kelas, silakan konfirmasi ke kantor UPT Bahasa.'),
         isS2: {{ str_starts_with($initialProdyName ?? '', 'S2') ? 'true' : 'false' }},
         prodiName: @js($initialProdyName),
         changePasswordOpen: {{ $shouldOpenPasswordModal ? 'true' : 'false' }},
@@ -722,7 +722,7 @@
                                     </div>
                                     <p id="legacy-score-message" style="{{ $initialLegacyScore !== '' ? 'display:none' : '' }}" class="text-xs text-amber-700">
                                         <i id="legacy-score-message-icon" class="fa-solid fa-circle-info text-amber-500"></i>
-                                        <span>Nilai Basic Listening belum tersedia di arsip. Jika Anda sudah mengikuti dan lulus kelas, silakan konfirmasi ke kantor Lembaga Bahasa.</span>
+                                        <span>Nilai Basic Listening belum tersedia di arsip. Jika Anda sudah mengikuti dan lulus kelas, silakan konfirmasi ke kantor UPT Bahasa.</span>
                                     </p>
                                     @error('nilaibasiclistening')
                                         <p class="mt-2 text-xs text-rose-600">{{ $message }}</p>
@@ -805,7 +805,7 @@
                                         </div>
                                     </div>
                                     <p class="text-xs text-slate-500">
-                                        Jika ada nilai yang belum muncul, silakan datang ke kantor Lembaga Bahasa sambil membawa bukti hasil Interactive Bahasa Arab.
+                                        Jika ada nilai yang belum muncul, silakan datang ke kantor UPT Bahasa sambil membawa bukti hasil Interactive Bahasa Arab.
                                     </p>
                                     @error('interactive_bahasa_arab_1') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
                                     @error('interactive_bahasa_arab_2') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
@@ -991,7 +991,7 @@ document.addEventListener('DOMContentLoaded', () => {
             legacyMessage.classList.remove('text-amber-700', 'text-slate-500');
             legacyMessage.classList.add('text-amber-700');
             if (span) {
-                span.textContent = message || 'Nilai Basic Listening belum tersedia di arsip. Jika Anda sudah mengikuti dan lulus kelas, silakan konfirmasi ke kantor Lembaga Bahasa.';
+                span.textContent = message || 'Nilai Basic Listening belum tersedia di arsip. Jika Anda sudah mengikuti dan lulus kelas, silakan konfirmasi ke kantor UPT Bahasa.';
             }
         }
 
@@ -1304,7 +1304,7 @@ document.addEventListener('DOMContentLoaded', () => {
             setLegacyState({
                 score: '',
                 found: false,
-                message: 'Nilai Basic Listening belum tersedia di arsip. Jika Anda sudah mengikuti dan lulus kelas, silakan konfirmasi ke kantor Lembaga Bahasa.',
+                message: 'Nilai Basic Listening belum tersedia di arsip. Jika Anda sudah mengikuti dan lulus kelas, silakan konfirmasi ke kantor UPT Bahasa.',
                 loading: false,
             });
         }
@@ -1441,7 +1441,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 setLegacyState({
                     score: '',
                     found: false,
-                    message: 'Nilai Basic Listening belum tersedia di arsip. Jika Anda sudah mengikuti dan lulus kelas, silakan konfirmasi ke kantor Lembaga Bahasa.',
+                    message: 'Nilai Basic Listening belum tersedia di arsip. Jika Anda sudah mengikuti dan lulus kelas, silakan konfirmasi ke kantor UPT Bahasa.',
                     loading: false,
                 });
                 return;
@@ -1469,7 +1469,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 setInteractiveClassState({
                     scores: result.interactive_class_scores || {},
                     found: !!result.interactive_class_found,
-                    message: result.interactive_class_message || 'Nilai Interactive Class belum ditemukan. Silakan ke kantor Lembaga Bahasa.',
+                    message: result.interactive_class_message || 'Nilai Interactive Class belum ditemukan. Silakan ke kantor UPT Bahasa.',
                     loading: false,
                     clearAutoFilled: !result.interactive_class_found,
                     replaceAll: true,
@@ -1480,7 +1480,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 setInteractiveArabicState({
                     scores: result.interactive_arabic_scores || {},
                     found: !!result.interactive_arabic_found,
-                    message: result.interactive_arabic_message || 'Nilai Bahasa Arab 1 dan 2 belum ditemukan di arsip. Jika Anda sudah mengikuti dan lulus kelas, silakan konfirmasi ke kantor Lembaga Bahasa.',
+                    message: result.interactive_arabic_message || 'Nilai Bahasa Arab 1 dan 2 belum ditemukan di arsip. Jika Anda sudah mengikuti dan lulus kelas, silakan konfirmasi ke kantor UPT Bahasa.',
                     loading: false,
                     clearAutoFilled: !result.interactive_arabic_found,
                     replaceAll: true,

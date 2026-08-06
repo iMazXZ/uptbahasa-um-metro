@@ -14,7 +14,7 @@
             <div class="text-sm text-green-800 dark:text-green-200">
                 Silakan <strong>Download Dokumen Surat Rekomendasi</strong> kemudian dicetak,
                 lalu minta <strong>Cap Basah</strong> dan <strong>Legalisir</strong>
-                ke Kantor Lembaga Bahasa di <strong>Kampus 3 Gedung FIKOM Lantai 2 UM Metro</strong> (bila diperlukan).
+                ke Kantor UPT Bahasa di <strong>Kampus 3 Gedung FIKOM Lantai 2 UM Metro</strong> (bila diperlukan).
 
                 @if($reason)
                     <br><br><span class="font-semibold">Alasan:</span><br> {{ $reason }}

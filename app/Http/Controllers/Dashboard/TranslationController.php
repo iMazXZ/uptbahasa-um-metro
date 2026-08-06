@@ -143,7 +143,7 @@ class TranslationController extends Controller
 
         return redirect()
             ->route('dashboard.translation')
-            ->with('success', 'Permohonan penerjemahan berhasil dikirim. Silakan menunggu proses verifikasi dari Lembaga Bahasa.');
+            ->with('success', 'Permohonan penerjemahan berhasil dikirim. Silakan menunggu proses verifikasi dari UPT Bahasa.');
     }
 
     /* ============================= EDIT / UPDATE (opsional) ================= */

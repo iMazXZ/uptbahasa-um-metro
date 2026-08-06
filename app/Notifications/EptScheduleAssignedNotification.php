@@ -79,7 +79,7 @@ class EptScheduleAssignedNotification extends Notification implements ShouldQueu
             ->line('Silakan download dan cetak Kartu Peserta dari dashboard.')
             ->line('Setelah tes selesai, nilai dan kelulusan tidak dikirim via WhatsApp. Silakan cek mandiri di https://lembagabahasa.site/nilai-ujian')
             ->line('Wajib print dan membawa kartu peserta serta KTP/Kartu Mahasiswa setiap kali tes.')
-            ->salutation('Hormat kami, Admin Lembaga Bahasa UM Metro');
+            ->salutation('Hormat kami, Admin UPT Bahasa UM Metro');
     }
 
     public function toArray(object $notifiable): array

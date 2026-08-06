@@ -38,7 +38,7 @@
 <html lang="id">
 <head>
     <meta charset="utf-8">
-    <title>Hasil Penerjemahan — Lembaga Bahasa UM Metro</title>
+    <title>Hasil Penerjemahan — UPT Bahasa UM Metro</title>
     <style>
         :root{ 
             --primary: #2563eb; 
@@ -286,7 +286,7 @@
                     @endif
                 </td>
                 <td class="kop">
-                    <div class="header-line2">Lembaga Bahasa Universitas Muhammadiyah Metro</div>
+                    <div class="header-line2">UPT Bahasa Universitas Muhammadiyah Metro</div>
                     <div class="addr">Jl. Gatot Subroto No.100, Yosodadi, Kec. Metro Timur, Kota Metro, Lampung 34124</div>
                 </td>
             </tr>

@@ -28,7 +28,7 @@ class PenerjemahanResource extends BaseResource
 
     protected static ?string $navigationIcon  = 'heroicon-s-language';
     protected static ?string $navigationLabel = 'Penerjemahan Dokumen Abstrak';
-    protected static ?string $navigationGroup = 'Layanan Lembaga Bahasa';
+    protected static ?string $navigationGroup = 'Layanan UPT Bahasa';
 
     public static ?string $slug  = 'penerjemahan';
     public static ?string $label = 'Penerjemahan Dokumen Abstrak';

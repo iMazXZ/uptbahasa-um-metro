@@ -1,1 +1,1 @@
-<img src="{{ asset('assets/LogoHeader.svg') }}" alt="Lembaga Bahasa UM Metro Logo" class="h-10">
+<img src="{{ asset('assets/LogoHeader.svg') }}" alt="UPT Bahasa UM Metro Logo" class="h-10">

@@ -25,7 +25,7 @@ class TranslatorAssignedNotification extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('📋 Tugas Penerjemahan Baru - Lembaga Bahasa UM Metro')
+            ->subject('📋 Tugas Penerjemahan Baru - UPT Bahasa UM Metro')
             ->greeting("Halo, {$notifiable->name}")
             ->line('Anda mendapat tugas penerjemahan baru.')
             ->line("**Pemohon:** {$this->pemohonName}")

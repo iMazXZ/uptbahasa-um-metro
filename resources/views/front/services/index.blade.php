@@ -1,11 +1,11 @@
 {{-- resources/views/front/services/index.blade.php --}}
 @extends('layouts.front')
 
-@section('title', 'Layanan Kami - Lembaga Bahasa UM Metro')
+@section('title', 'Layanan Kami - UPT Bahasa UM Metro')
 
 @section('meta')
-  <meta name="description" content="Informasi lengkap tentang layanan Lembaga Bahasa UM Metro: EPT, Penerjemahan Dokumen, Basic Listening, dan Pelatihan Bahasa.">
-  <meta name="keywords" content="Layanan Lembaga Bahasa, EPT, Penerjemahan, Basic Listening, UM Metro">
+  <meta name="description" content="Informasi lengkap tentang layanan UPT Bahasa UM Metro: EPT, Penerjemahan Dokumen, Basic Listening, dan Pelatihan Bahasa.">
+  <meta name="keywords" content="Layanan UPT Bahasa, EPT, Penerjemahan, Basic Listening, UM Metro">
 @endsection
 
 @section('content')

@@ -1,9 +1,9 @@
 @extends('layouts.front')
 
-@section('title', 'Syarat Layanan - Lembaga Bahasa UM Metro')
+@section('title', 'Syarat Layanan - UPT Bahasa UM Metro')
 
 @section('meta')
-  <meta name="description" content="Syarat Layanan Lembaga Bahasa UM Metro yang mengatur akses, penggunaan situs, dan kewajiban pengguna.">
+  <meta name="description" content="Syarat Layanan UPT Bahasa UM Metro yang mengatur akses, penggunaan situs, dan kewajiban pengguna.">
   <meta name="robots" content="index,follow">
 @endsection
 
@@ -28,7 +28,7 @@
   <div class="max-w-4xl mx-auto px-4 lg:px-8">
     <article class="bg-white border border-gray-100 shadow-sm rounded-2xl p-6 lg:p-10 prose prose-slate max-w-none">
       <p>
-        Dengan mengakses situs Lembaga Bahasa UM Metro, Anda menyetujui syarat layanan ini. Jika tidak setuju,
+        Dengan mengakses situs UPT Bahasa UM Metro, Anda menyetujui syarat layanan ini. Jika tidak setuju,
         silakan hentikan penggunaan situs.
       </p>
 
@@ -47,7 +47,7 @@
 
       <h2>3. Konten Dan Hak Kekayaan Intelektual</h2>
       <ul>
-        <li>Seluruh konten situs ini dimiliki atau digunakan secara sah oleh Lembaga Bahasa UM Metro.</li>
+        <li>Seluruh konten situs ini dimiliki atau digunakan secara sah oleh UPT Bahasa UM Metro.</li>
         <li>Dilarang menyalin, memodifikasi, atau mendistribusikan konten tanpa izin tertulis.</li>
       </ul>
 
@@ -82,7 +82,7 @@
       <h2>9. Kontak</h2>
       <p>Untuk pertanyaan terkait syarat layanan, Anda dapat menghubungi:</p>
       <ul>
-        <li>Lembaga Bahasa Universitas Muhammadiyah Metro.</li>
+        <li>UPT Bahasa Universitas Muhammadiyah Metro.</li>
         <li>Alamat: Jl. Ki Hajar Dewantara, Iringmulyo, Kec. Metro Timur, Kota Metro, Lampung.</li>
         <li>Telepon: 0858-9666-6588.</li>
         <li>Situs: <a href="https://ummetro.ac.id" target="_blank" rel="noopener">ummetro.ac.id</a>.</li>
