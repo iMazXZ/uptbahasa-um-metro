@@ -144,7 +144,7 @@
                             @error('whatsapp')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
                         </div>
 
-                        <div class="grid grid-cols-2 gap-3">
+                        <div class="space-y-4">
                             <div>
                                 <label for="password" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Kata Sandi</label>
                                 <div class="relative" x-data="{ show: false }">
