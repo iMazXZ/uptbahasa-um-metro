@@ -6,8 +6,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Crop Bukti Pembayaran - {{ $penerjemahan->users?->name }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('vendor/cropperjs/cropper.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/fontawesome/all.min.css') }}">
 </head>
 <body class="bg-gray-100 min-h-screen">
     <div class="container mx-auto px-4 py-8 max-w-4xl">
@@ -68,7 +68,7 @@
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+    <script src="{{ asset('vendor/cropperjs/cropper.min.js') }}"></script>
     <script>
         let cropper = null;
         

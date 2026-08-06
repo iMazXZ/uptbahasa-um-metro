@@ -27,7 +27,7 @@
             }
         }
     </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('vendor/fontawesome/all.min.css') }}">
     <style>
         .login-bg { background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%); }
     </style>
@@ -171,7 +171,7 @@
         </div>
     </div>
     
-    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="{{ asset('vendor/alpine/alpine.min.js') }}" defer></script>
     <script>
         document.querySelectorAll('input[required]').forEach(input => {
             input.addEventListener('invalid', () => {

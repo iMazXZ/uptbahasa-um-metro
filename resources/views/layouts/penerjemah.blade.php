@@ -33,14 +33,14 @@
     </script>
 
     {{-- Font Awesome --}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('vendor/fontawesome/all.min.css') }}">
 
     {{-- Alpine.js --}}
-    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="{{ asset('vendor/alpine/alpine.min.js') }}" defer></script>
 
     {{-- Trix Editor --}}
-    <link rel="stylesheet" href="https://unpkg.com/trix@2.1.1/dist/trix.css">
-    <script src="https://unpkg.com/trix@2.1.1/dist/trix.umd.min.js" defer></script>
+    <link rel="stylesheet" href="{{ asset('vendor/trix/trix.css') }}">
+    <script src="{{ asset('vendor/trix/trix.umd.min.js') }}" defer></script>
 
     <style>
         [x-cloak] { display: none !important; }
