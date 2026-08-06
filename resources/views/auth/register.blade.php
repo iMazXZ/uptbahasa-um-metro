@@ -141,7 +141,6 @@
                                     class="w-full pl-10 pr-3 py-2.5 rounded-lg border border-slate-300 bg-slate-50/50 focus:bg-white focus:border-um-blue focus:ring-2 focus:ring-um-blue/20 outline-none text-sm transition placeholder:text-slate-400 @error('whatsapp') border-red-300 @enderror"
                                     placeholder="08xxxxxxxxxx">
                             </div>
-                            <p class="mt-1 text-[11px] text-slate-400">Digunakan untuk notifikasi status layanan.</p>
                             @error('whatsapp')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
                         </div>
 
