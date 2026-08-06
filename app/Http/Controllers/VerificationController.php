@@ -411,7 +411,7 @@ class VerificationController extends Controller
                         : null,
                     'grade' => $grade->final_letter_cached,
                     'is_active' => true,
-                    'source_note' => 'Nilai aktif',
+                    'source_note' => 'Online',
                 ];
             });
 
