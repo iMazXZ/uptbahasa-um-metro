@@ -6,6 +6,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\EnsureBlProfileComplete;
 use App\Http\Middleware\CountPostView;
 use App\Http\Middleware\CheckMaintenanceMode;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 use Spatie\Permission\Middleware\RoleMiddleware;
@@ -42,5 +43,50 @@ return Application::configure(basePath: dirname(__DIR__))
                 return redirect()->route('filament.admin.auth.login')
                     ->with('status', 'Sesi Anda telah berakhir. Silakan login kembali.');
             }
+        });
+
+        // Handle CSRF token mismatch (error 419): redirect balik dengan pesan ramah
+        // alih-alih menampilkan halaman error 419.
+        // Catatan: Laravel mengubah TokenMismatchException menjadi HttpException(419)
+        // sebelum render handler dipanggil, jadi kita menangkap HttpException berstatus 419.
+        $exceptions->render(function (HttpException $e, $request) {
+            if ($e->getStatusCode() !== 419) {
+                return null;
+            }
+
+            $path = $request->path();
+
+            // Halaman auth (login/register/lupa-password)
+            if (str_contains($path, 'admin/login')) {
+                return redirect()->route('filament.admin.auth.login')
+                    ->with('status', 'Sesi Anda telah berakhir. Silakan login kembali.');
+            }
+            if (str_contains($path, 'admin/register')) {
+                return redirect()->route('filament.admin.auth.register')
+                    ->with('status', 'Sesi Anda telah berakhir. Silakan coba daftar kembali.');
+            }
+            if (str_contains($path, 'login')) {
+                return redirect()->route('login')
+                    ->with('status', 'Sesi Anda telah berakhir. Silakan login kembali.');
+            }
+            if (str_contains($path, 'register')) {
+                return redirect()->route('register')
+                    ->with('status', 'Sesi Anda telah berakhir. Silakan coba daftar kembali.');
+            }
+
+            // Halaman lain: redirect ke halaman sebelumnya jika ada, jika tidak ke dashboard/beranda
+            $referer = $request->headers->get('referer');
+            if ($referer) {
+                return redirect($referer)
+                    ->with('status', 'Sesi Anda telah berakhir. Silakan muat ulang halaman dan coba lagi.');
+            }
+
+            if ($request->user()) {
+                return redirect()->route('dashboard')
+                    ->with('status', 'Sesi Anda telah berakhir. Silakan muat ulang halaman dan coba lagi.');
+            }
+
+            return redirect()->route('login')
+                ->with('status', 'Sesi Anda telah berakhir. Silakan login kembali.');
         });
     })->create();
