@@ -299,6 +299,10 @@ class SiteSetting extends Model
 
         $yearInt = (int) ($user->year ?? 0);
         if ($yearInt <= 2024) {
+            if (! LegacyBasicListeningScores::requiresLegacyScoreForUser($user)) {
+                return true;
+            }
+
             return LegacyBasicListeningScores::effectiveScoreForUser($user) !== null;
         }
 
