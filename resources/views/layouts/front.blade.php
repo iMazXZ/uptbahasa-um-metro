@@ -15,7 +15,7 @@
 
   {{-- CSS/Libs --}}
   <script src="https://cdn.tailwindcss.com?plugins=typography,line-clamp"></script>
-  <link rel="stylesheet" href="{{ asset('vendor/fontawesome/all.min.css') }}" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="{{ asset('vendor/fontawesome/all.min.css') }}" />
   <link href="{{ asset('vendor/aos/aos.css') }}" rel="stylesheet">
 
   {{-- Alpine.js (Ringan & Powerful untuk UI Interaktif) --}}
