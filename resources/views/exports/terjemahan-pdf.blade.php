@@ -25,7 +25,7 @@
         ?? ($record->verification_url ?: ($verifyCode ? route('verification.show', ['code' => $verifyCode], true) : null));
 
     // Penandatangan
-    $chairName = 'Dedy Subandowo, M.A., Ph.D.';
+    $chairName = 'Dedy Subandowo,Ph.D';
     $chairNip  = '0215068603';
 
     // Sanitasi HTML terjemahan
