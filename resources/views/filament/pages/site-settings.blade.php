@@ -1,6 +1,7 @@
 <x-filament-panels::page>
     <div wire:poll.15s.keep-alive="pollWaMonitoring" class="space-y-6">
         {{-- WhatsApp API Status --}}
+        @if((bool) config('whatsapp.enabled'))
         <x-filament::section icon="heroicon-o-signal">
             <x-slot name="heading">
                 <div class="flex items-center gap-2">
@@ -89,8 +90,10 @@
                 </div>
             @endif
         </x-filament::section>
+        @endif
 
         {{-- WhatsApp Queue --}}
+        @if((bool) config('whatsapp.enabled'))
         <x-filament::section icon="heroicon-o-clock">
             <x-slot name="heading">
                 Monitor Antrean WhatsApp
@@ -218,8 +221,10 @@
                 @endif
             @endif
         </x-filament::section>
+        @endif
 
         {{-- WhatsApp Message Logs --}}
+        @if((bool) config('whatsapp.enabled'))
         @if(!empty($waLogs))
         <x-filament::section collapsible collapsed icon="heroicon-o-document-text">
             <x-slot name="heading">
@@ -256,6 +261,7 @@
                 @endforeach
             </div>
         </x-filament::section>
+        @endif
         @endif
     </div>
 
