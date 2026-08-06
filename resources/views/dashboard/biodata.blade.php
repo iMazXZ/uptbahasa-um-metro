@@ -451,10 +451,6 @@
                                         <i x-show="loading" class="fa-solid fa-spinner fa-spin"></i>
                                         <span>Simpan Nomor WhatsApp</span>
                                     </button>
-                                    <p class="text-xs text-slate-500 text-center">
-                                        <i class="fa-solid fa-circle-info text-slate-400"></i>
-                                        Nomor WhatsApp akan tersimpan dan terverifikasi otomatis
-                                    </p>
                                 </div>
 
                                 {{-- Step 2: Input OTP --}}
