@@ -173,6 +173,11 @@
                                         <span class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-600">
                                             {{ $item['result_label'] ?? 'Nilai' }}
                                         </span>
+                                        @if (!empty($item['source_note']))
+                                            <span class="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-700">
+                                                {{ $item['source_note'] }}
+                                            </span>
+                                        @endif
                                         @if (!empty($item['semester']))
                                             <span class="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-semibold text-blue-700">
                                                 {{ $item['semester_label'] ?? ('Semester ' . $item['semester']) }}
@@ -342,6 +347,7 @@
             <div class="flex flex-wrap items-center gap-2">
               <p class="text-xs font-semibold uppercase tracking-wide text-blue-600">${escapeHtml(item.source_year ?? 'ARSIP')}</p>
               <span class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-600">${escapeHtml(item.result_label ?? 'Nilai')}</span>
+              ${(item.source_note ?? null) ? `<span class="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-700">${escapeHtml(item.source_note)}</span>` : ''}
               ${(item.semester ?? null) ? `<span class="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-semibold text-blue-700">${escapeHtml(item.semester_label ?? ('Semester ' + item.semester))}</span>` : ''}
             </div>
             ${summary ? '' : `<h4 class="mt-2 text-lg font-semibold text-slate-900 leading-snug break-words">${escapeHtml(item.name ?? 'Tanpa nama')}</h4>`}

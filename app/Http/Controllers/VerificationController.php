@@ -365,6 +365,25 @@ class VerificationController extends Controller
             ]);
     }
 
+    private function searchActiveBasicListeningGrades(string $query)
+    {
+        $srnNormalized = LegacyBasicListeningScores::normalizeSrn($query);
+
+        if ($srnNormalized === null) {
+            return collect();
+        }
+
+        return BasicListeningGrade::query()
+            ->with('user.prody')
+            ->whereHas('user', function ($q) use ($srnNormalized): void {
+                $q->where('srn', $srnNormalized)
+                    ->orWhere('srn', 'like', $srnNormalized . '%');
+            })
+            ->whereNotNull('final_numeric_cached')
+            ->orderByDesc('user_year')
+            ->get();
+    }
+
     private function searchVerificationResults(string $query)
     {
         $legacy = $this->searchLegacyScoreRecords($query)
@@ -372,6 +391,29 @@ class VerificationController extends Controller
 
         $interactive = $this->searchInteractiveClassRecords($query)
             ->map(fn (InteractiveClassScore $score): array => $this->mapInteractiveScore($score));
+
+        $activeGrades = $this->searchActiveBasicListeningGrades($query)
+            ->map(function (BasicListeningGrade $grade): array {
+                $user = $grade->user;
+
+                return [
+                    'id' => $grade->id,
+                    'result_type' => 'basic_listening',
+                    'result_label' => 'Basic Listening',
+                    'srn' => $user->srn ?? null,
+                    'name' => $user->name ?? null,
+                    'study_program' => $user->prody?->name ?? null,
+                    'source_year' => $grade->user_year,
+                    'semester' => null,
+                    'semester_label' => null,
+                    'score' => $grade->final_numeric_cached !== null
+                        ? (int) round((float) $grade->final_numeric_cached)
+                        : null,
+                    'grade' => $grade->final_letter_cached,
+                    'is_active' => true,
+                    'source_note' => 'Nilai aktif',
+                ];
+            });
 
         if ($this->hasSingleIdentity($interactive)) {
             $interactive = $interactive
@@ -384,6 +426,7 @@ class VerificationController extends Controller
         }
 
         return $legacy
+            ->concat($activeGrades)
             ->concat($interactive)
             ->values();
     }
