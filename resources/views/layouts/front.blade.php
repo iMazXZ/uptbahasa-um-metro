@@ -54,6 +54,11 @@
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: #f1f1f1; }
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+    /* Skala proporsional untuk layar 1024-1366px (monitor 720p / laptop kecil) */
+    @media (min-width: 1024px) and (max-width: 1366px) {
+      html { font-size: 15px; }
+    }
     ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
     .prose .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }

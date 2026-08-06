@@ -36,6 +36,13 @@
         }
     </style>
 
+    {{-- Skala proporsional untuk layar 1024-1366px (monitor 720p / laptop kecil) --}}
+    <style>
+        @media (min-width: 1024px) and (max-width: 1366px) {
+            html { font-size: 15px; }
+        }
+    </style>
+
     {{-- Font Awesome --}}
     <link rel="stylesheet" href="{{ asset('vendor/fontawesome/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/inter/inter.css') }}">

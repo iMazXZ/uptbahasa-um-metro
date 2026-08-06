@@ -27,6 +27,11 @@
     </script>
     <link rel="stylesheet" href="{{ asset('vendor/fontawesome/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/inter/inter.css') }}">
+  <style>
+    @media (min-width: 1024px) and (max-width: 1366px) {
+      html { font-size: 15px; }
+    }
+  </style>
 </head>
 <body class="font-sans antialiased bg-slate-50">
     

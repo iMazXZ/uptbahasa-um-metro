@@ -42,6 +42,11 @@
 
     <style>
         [x-cloak] { display: none !important; }
+
+        /* Skala proporsional untuk layar 1024-1366px (monitor 720p / laptop kecil) */
+        @media (min-width: 1024px) and (max-width: 1366px) {
+            html { font-size: 15px; }
+        }
         
         /* Trix styling for large fonts */
         trix-toolbar {
