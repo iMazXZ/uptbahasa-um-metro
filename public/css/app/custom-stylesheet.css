@@ -1,0 +1,22 @@
+.fi-header-subheading {
+    font-size: 12px !important; /* Ubah ukuran font subjudul */
+}
+
+/* Keep Tiptap editor width stable inside Filament form columns */
+.tiptap-editor,
+.tiptap-editor .tiptap-wrapper,
+.tiptap-editor .tiptap-prosemirror-wrapper,
+.tiptap-editor .tiptap-content {
+    max-width: 100%;
+}
+
+.tiptap-editor .tiptap-toolbar-left {
+    min-width: 0;
+}
+
+.tiptap-editor .ProseMirror img,
+.tiptap-editor .ProseMirror video,
+.tiptap-editor .ProseMirror iframe {
+    max-width: 100% !important;
+    height: auto !important;
+}

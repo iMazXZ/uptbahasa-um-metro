@@ -1,0 +1,12 @@
+[08-May-2026 00:36:40 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home1/uptbahasaummetro/public_html/database/migrations/2025_10_20_223850_add_fib_to_basic_listening_questions.php:7
+Stack trace:
+#0 {main}
+  thrown in /home1/uptbahasaummetro/public_html/database/migrations/2025_10_20_223850_add_fib_to_basic_listening_questions.php on line 7
+[08-May-2026 00:38:00 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home1/uptbahasaummetro/public_html/database/migrations/0001_01_01_000002_create_jobs_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home1/uptbahasaummetro/public_html/database/migrations/0001_01_01_000002_create_jobs_table.php on line 7
+[08-May-2026 01:29:13 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home1/uptbahasaummetro/public_html/database/migrations/0001_01_01_000002_create_jobs_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home1/uptbahasaummetro/public_html/database/migrations/0001_01_01_000002_create_jobs_table.php on line 7

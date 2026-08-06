@@ -1,0 +1,28 @@
+User-agent: *
+# ===== Allow static assets (agar preview & SEO images/CSS/JS terbaca) =====
+Allow: /images/
+Allow: /storage/
+Allow: /css/
+Allow: /js/
+
+# ===== Block admin & auth (tidak relevan untuk publik) =====
+Disallow: /dashboard/
+Disallow: /filament/
+Disallow: /admin/
+Disallow: /login
+Disallow: /logout
+Disallow: /register
+Disallow: /password/
+
+# ===== Block dokumen internal & ekspor (hindari diindeks) =====
+Disallow: /laporan/
+Disallow: /export/
+Disallow: /penerjemahan/*/pdf
+Disallow: /ept-submissions/
+
+# ===== Block halaman verifikasi berbasis kode (bersifat utilitas) =====
+Disallow: /verification
+Disallow: /verification/
+
+# ===== Sitemap =====
+Sitemap: https://lembagabahasa.site/sitemap.xml

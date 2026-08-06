@@ -1,0 +1,61 @@
+services:
+  app:
+    build:
+      context: ./docker
+      args:
+        WWWGROUP: '${WWWGROUP:-501}'
+    image: lembagabahasa-app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - .:/var/www/html
+    networks:
+      - lembagabahasa
+    depends_on:
+      mysql:
+        condition: service_healthy
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    ports:
+      - '${FORWARD_DB_PORT:-3306}:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_DATABASE: '${DB_DATABASE}'
+      MYSQL_USER: '${DB_USERNAME}'
+      MYSQL_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    volumes:
+      - lembagabahasa-mysql:/var/lib/mysql
+    networks:
+      - lembagabahasa
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-p${DB_PASSWORD}']
+      retries: 5
+      timeout: 5s
+      interval: 5s
+
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - '${APP_PORT:-8080}:80'
+    volumes:
+      - .:/var/www/html
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - lembagabahasa
+    depends_on:
+      - app
+
+networks:
+  lembagabahasa:
+    driver: bridge
+
+volumes:
+  lembagabahasa-mysql:
+    driver: local

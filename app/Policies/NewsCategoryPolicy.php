@@ -1,0 +1,72 @@
+<?php
+
+namespace App\Policies;
+
+use App\Models\NewsCategory;
+use App\Models\User;
+use Illuminate\Auth\Access\HandlesAuthorization;
+
+class NewsCategoryPolicy
+{
+    use HandlesAuthorization;
+
+    public function viewAny(User $user): bool
+    {
+        return $user->can('view_any_post');
+    }
+
+    public function view(User $user, NewsCategory $newsCategory): bool
+    {
+        return $user->can('view_post');
+    }
+
+    public function create(User $user): bool
+    {
+        return $user->can('create_post');
+    }
+
+    public function update(User $user, NewsCategory $newsCategory): bool
+    {
+        return $user->can('update_post');
+    }
+
+    public function delete(User $user, NewsCategory $newsCategory): bool
+    {
+        return $user->can('delete_post');
+    }
+
+    public function deleteAny(User $user): bool
+    {
+        return $user->can('delete_any_post');
+    }
+
+    public function forceDelete(User $user, NewsCategory $newsCategory): bool
+    {
+        return $user->can('force_delete_post');
+    }
+
+    public function forceDeleteAny(User $user): bool
+    {
+        return $user->can('force_delete_any_post');
+    }
+
+    public function restore(User $user, NewsCategory $newsCategory): bool
+    {
+        return $user->can('restore_post');
+    }
+
+    public function restoreAny(User $user): bool
+    {
+        return $user->can('restore_any_post');
+    }
+
+    public function replicate(User $user, NewsCategory $newsCategory): bool
+    {
+        return $user->can('replicate_post');
+    }
+
+    public function reorder(User $user): bool
+    {
+        return $user->can('reorder_post');
+    }
+}
