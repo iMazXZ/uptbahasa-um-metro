@@ -169,6 +169,12 @@ Route::get('/register', [RegisterController::class, 'showRegistrationForm'])
 Route::post('/register', [RegisterController::class, 'register'])
     ->middleware('guest');
 
+Route::get('/lupa-password', function () {
+    return view('auth.password-reset-contact');
+})
+    ->middleware('guest')
+    ->name('password.reset.contact');
+
 /*
 |--------------------------------------------------------------------------
 | Layanan (Service Info Pages)

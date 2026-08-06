@@ -139,7 +139,7 @@
                                 <input type="checkbox" name="remember" class="w-4 h-4 rounded border-slate-300 text-um-blue focus:ring-um-blue/20">
                                 <span class="text-slate-600">Ingat saya</span>
                             </label>
-                            <a href="{{ route('filament.admin.auth.password-reset.request') }}" class="text-um-blue hover:underline font-medium">Lupa kata sandi?</a>
+                            <a href="{{ route('password.reset.contact') }}" class="text-um-blue hover:underline font-medium">Lupa kata sandi?</a>
                         </div>
 
                         <button type="submit" class="w-full py-3 rounded-lg bg-um-blue text-white text-sm font-semibold hover:bg-um-dark-blue active:scale-[0.99] transition shadow-md shadow-um-blue/20 mt-2">
