@@ -20,7 +20,22 @@
   <link href="{{ asset('vendor/aos/aos.css') }}" rel="stylesheet">
 
   {{-- Alpine.js (Ringan & Powerful untuk UI Interaktif) --}}
-  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script defer src="{{ asset('vendor/alpine/alpine.min.js') }}"></script>
+
+  {{-- Turbo (Hotwire): navigasi instan tanpa reload layout --}}
+  <script defer src="{{ asset('vendor/turbo/turbo.min.js') }}"></script>
+
+  <script>
+    // Re-inisialisasi Alpine & AOS setelah Turbo mengganti konten halaman
+    document.addEventListener('turbo:load', () => {
+      if (window.Alpine) {
+        Alpine.initTree(document.body);
+      }
+      if (window.AOS) {
+        AOS.refreshHard();
+      }
+    });
+  </script>
 
   <script>
     tailwind.config = {
@@ -94,15 +109,19 @@
   {{-- JS global --}}
   <script src="{{ asset('vendor/aos/aos.js') }}"></script>
   <script>
-    // AOS Init
-    document.addEventListener('DOMContentLoaded', () => {
-      AOS.init({
-        duration: 800,
-        once: true,
-        offset: 50,
-        disable: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-      });
-    });
+    // AOS Init (dipicu saat load awal maupun navigasi Turbo)
+    function initAOS() {
+      if (window.AOS) {
+        AOS.init({
+          duration: 800,
+          once: true,
+          offset: 50,
+          disable: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+        });
+      }
+    }
+    document.addEventListener('DOMContentLoaded', initAOS);
+    document.addEventListener('turbo:load', initAOS);
     // JS Menu Toggle dihapus karena diganti Alpine.js di Navbar
   </script>
 

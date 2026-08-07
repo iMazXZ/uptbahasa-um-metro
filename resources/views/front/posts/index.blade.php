@@ -126,7 +126,7 @@
     @endif
 
     {{-- FILTER BAR (q + sort). Tipe mengikuti route, jadi tidak dipilih ulang di sini --}}
-    <form method="GET" class="mb-8">
+    <form method="GET" class="mb-8" data-turbo="false">
       @if(($category ?? '') === 'career' && filled($careerStatus ?? null) && $careerStatus !== 'open')
         <input type="hidden" name="status" value="{{ $careerStatus }}">
       @endif
