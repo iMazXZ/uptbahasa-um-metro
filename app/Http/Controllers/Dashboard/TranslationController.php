@@ -143,7 +143,7 @@ class TranslationController extends Controller
 
         return redirect()
             ->route('dashboard.translation')
-            ->with('success', 'Permohonan penerjemahan berhasil dikirim. Silakan menunggu proses verifikasi dari UPT Bahasa.');
+            ->with('success', 'Permohonan penerjemahan berhasil dikirim. Silakan menunggu proses verifikasi dari UPT Bahasa.')->with('status_reminder', true);
     }
 
     /* ============================= EDIT / UPDATE (opsional) ================= */
@@ -215,6 +215,6 @@ class TranslationController extends Controller
 
         return redirect()
             ->route('dashboard.translation')
-            ->with('success', 'Permohonan penerjemahan berhasil diperbarui.');
+            ->with('success', 'Permohonan penerjemahan berhasil diperbarui.')->with('status_reminder', true);
     }
 }

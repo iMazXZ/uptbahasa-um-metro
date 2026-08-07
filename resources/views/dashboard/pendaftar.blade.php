@@ -44,34 +44,6 @@
 
 <div class="space-y-6">
 
-    {{-- BANNER: Info status layanan (WA/email nonaktif) --}}
-    <div x-data="{ showBanner: localStorage.getItem('statusBannerDismissed') !== '1' }"
-         x-show="showBanner"
-         x-cloak
-         x-transition:enter="transition ease-out duration-300"
-         x-transition:enter-start="opacity-0 -translate-y-1"
-         x-transition:enter-end="opacity-100 translate-y-0"
-         class="bg-gradient-to-r from-um-blue to-um-dark-blue rounded-2xl shadow-md overflow-hidden">
-        <div class="flex items-start gap-4 p-5">
-            <div class="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center shrink-0">
-                <i class="fa-solid fa-circle-info text-white text-lg"></i>
-            </div>
-            <div class="flex-1 min-w-0">
-                <h3 class="font-bold text-white leading-tight">Pantau Status di Sini</h3>
-                <p class="text-sm text-blue-100 mt-1 leading-relaxed">
-                    Setiap pengajuan (EPT, Penerjemahan, atau layanan lainnya) akan diproses dan diverifikasi oleh staf UPT Bahasa.
-                    Status terbaru dapat dilihat langsung di halaman ini (menu <strong class="text-white">Surat Rekomendasi</strong> dan <strong class="text-white">Terjemahan Abstrak</strong> di samping kiri).
-                    Pastikan untuk memeriksa secara berkala.
-                </p>
-            </div>
-            <button @click="localStorage.setItem('statusBannerDismissed', '1'); showBanner = false"
-                    class="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-blue-200 hover:text-white hover:bg-white/10 transition"
-                    title="Tutup pengingat">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </div>
-    </div>
-
     @php
         $dashboardNotifications = $latestNotifications ?? collect();
         $dashboardUnread = $unreadNotificationsCount ?? 0;

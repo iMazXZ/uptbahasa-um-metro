@@ -119,7 +119,7 @@ class EptRegistrationController extends Controller
         $this->sendNtfyNotification($createdRegistration, $user);
 
         return redirect()->route('dashboard.ept-registration.index')
-            ->with('success', 'Pendaftaran berhasil! Silakan tunggu verifikasi dari admin.');
+            ->with('success', 'Pendaftaran berhasil! Silakan tunggu verifikasi dari admin.')->with('status_reminder', true);
     }
 
     private function sendNtfyNotification(EptRegistration $registration, User $user): void

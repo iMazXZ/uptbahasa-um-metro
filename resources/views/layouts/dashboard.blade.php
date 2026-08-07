@@ -196,6 +196,9 @@
          x-cloak>
     </div>
 
+    {{-- Modal pengingat setelah pengajuan berhasil --}}
+    @include('partials.status-reminder-modal')
+
 </div>
 
 </body>
