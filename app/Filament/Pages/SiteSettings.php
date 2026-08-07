@@ -74,7 +74,7 @@ class SiteSettings extends Page implements HasForms
             'ept_all_prody' => SiteSetting::get('ept_all_prody', false),
             'ept_allowed_prody_ids' => SiteSetting::get('ept_allowed_prody_ids', []),
             'ept_allowed_prody_prefixes' => SiteSetting::get('ept_allowed_prody_prefixes', ['S2']),
-            'ept_require_whatsapp' => SiteSetting::get('ept_require_whatsapp', false),
+            
             'ept_require_role_pendaftar' => SiteSetting::get('ept_require_role_pendaftar', false),
             'ept_require_biodata' => SiteSetting::get('ept_require_biodata', false),
             'front_head_script' => SiteSetting::get('front_head_script', ''),
@@ -180,12 +180,6 @@ class SiteSettings extends Page implements HasForms
                             ->placeholder('Tambah prefix')
                             ->disabled(fn (Get $get) => (bool) $get('ept_all_prody')),
 
-                        Toggle::make('ept_require_whatsapp')
-                            ->label('WhatsApp Wajib')
-                            ->helperText('Jika aktif, user wajib mengisi (dan verifikasi jika OTP aktif) nomor WhatsApp.')
-                            ->onColor('success')
-                            ->offColor('gray'),
-
                         Toggle::make('ept_require_role_pendaftar')
                             ->label('Role Pendaftar Saja')
                             ->helperText('Jika aktif, hanya role pendaftar yang boleh mendaftar EPT.')
@@ -242,7 +236,7 @@ class SiteSettings extends Page implements HasForms
         SiteSetting::set('ept_all_prody', $data['ept_all_prody'] ?? false);
         SiteSetting::set('ept_allowed_prody_ids', $data['ept_allowed_prody_ids'] ?? []);
         SiteSetting::set('ept_allowed_prody_prefixes', $data['ept_allowed_prody_prefixes'] ?? []);
-        SiteSetting::set('ept_require_whatsapp', $data['ept_require_whatsapp'] ?? false);
+
         SiteSetting::set('ept_require_role_pendaftar', $data['ept_require_role_pendaftar'] ?? false);
         SiteSetting::set('ept_require_biodata', $data['ept_require_biodata'] ?? false);
         SiteSetting::set('front_head_script', $data['front_head_script'] ?? '');

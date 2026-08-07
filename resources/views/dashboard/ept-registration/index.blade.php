@@ -328,7 +328,7 @@
                 <div class="bg-blue-50 rounded-xl p-4 border border-blue-100">
                     <p class="text-sm text-blue-800 flex items-start gap-2">
                         <i class="fa-solid fa-info-circle text-blue-500 mt-0.5"></i>
-                        <span>Anda akan menerima notifikasi WhatsApp setelah pendaftaran diverifikasi oleh admin.</span>
+                        <span>Status pendaftaran akan ditampilkan di halaman ini setelah diverifikasi oleh admin.</span>
                     </p>
                 </div>
             </div>

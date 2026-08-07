@@ -249,10 +249,6 @@ class SiteSetting extends Model
             return [false, 'Fitur ini hanya untuk role pendaftar.'];
         }
 
-        if (static::isEptRequireWhatsApp() && ! static::hasValidWhatsapp($user)) {
-            return [false, 'Nomor WhatsApp wajib diisi dan diverifikasi.'];
-        }
-
         if (static::isEptRequireBiodata() && ! static::isEptBiodataComplete($user)) {
             return [false, 'Biodata belum lengkap.'];
         }
