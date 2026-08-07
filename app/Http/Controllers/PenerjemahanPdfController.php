@@ -152,8 +152,7 @@ class PenerjemahanPdfController extends Controller
     private function buildViewData(Penerjemahan $record): array
     {
         $verifyCode = $record->verification_code ?: null;
-        $verifyUrl  = $record->verification_url
-            ?: ($verifyCode ? route('verification.show', ['code' => $verifyCode], true) : null);
+        $verifyUrl  = $verifyCode ? route('verification.show', ['code' => $verifyCode], true) : null;
 
         // Gambar lokal (bukan base64, bukan URL)
         $logo  = public_path('images/logo-um.png');

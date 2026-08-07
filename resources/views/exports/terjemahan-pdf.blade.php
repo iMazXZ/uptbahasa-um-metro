@@ -22,7 +22,7 @@
     // Verifikasi (kode & URL)
     $verifyCode = $record->verification_code ?: null;
     $verifyUrl  = $verifyUrl
-        ?? ($record->verification_url ?: ($verifyCode ? route('verification.show', ['code' => $verifyCode], true) : null));
+        ?? ($verifyCode ? route('verification.show', ['code' => $verifyCode], true) : null);
 
     // Penandatangan
     $chairName = 'Dedy Subandowo,Ph.D';
