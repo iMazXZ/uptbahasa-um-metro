@@ -14,7 +14,22 @@
   @yield('meta')
 
   {{-- CSS/Libs --}}
-  <script src="https://cdn.tailwindcss.com?plugins=typography,line-clamp"></script>
+  <script src="{{ asset('vendor/tailwind/tailwind.js') }}"></script>
+  <script>
+    // Tandai body preload (anti-FOUC) lalu tampilkan setelah Tailwind siap
+    document.documentElement.classList.add('tw-preload');
+    document.addEventListener('DOMContentLoaded', () => {
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        document.documentElement.classList.remove('tw-preload');
+        document.documentElement.classList.add('tw-ready');
+      }));
+    });
+    // Fallback: pastikan selalu tampil maksimal 1.5 detik
+    setTimeout(() => {
+      document.documentElement.classList.remove('tw-preload');
+      document.documentElement.classList.add('tw-ready');
+    }, 1500);
+  </script>
   <link rel="stylesheet" href="{{ asset('vendor/fontawesome/all.min.css') }}" />
   <link rel="stylesheet" href="{{ asset('vendor/inter/inter.css') }}">
   <link href="{{ asset('vendor/aos/aos.css') }}" rel="stylesheet">
@@ -67,6 +82,9 @@
   @stack('styles')
   <style>
     [x-cloak] { display: none !important; } /* Untuk AlpineJS loading */
+    /* Anti-FOUC: sembunyikan konten sampai Tailwind selesai memproses style */
+    html.tw-preload body { opacity: 0; }
+    html.tw-ready body { opacity: 1; transition: opacity 0.15s ease-in; }
     * , *::before, *::after { box-sizing: border-box; }
     html, body { overflow-x: hidden; }
     

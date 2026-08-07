@@ -10,7 +10,21 @@
     {{-- Google Fonts: Inter --}}
 
     {{-- Tailwind CSS --}}
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="{{ asset('vendor/tailwind/tailwind.js') }}"></script>
+    <script>
+        // Anti-FOUC: sembunyikan konten sampai Tailwind siap
+        document.documentElement.classList.add('tw-preload');
+        document.addEventListener('DOMContentLoaded', () => {
+            requestAnimationFrame(() => requestAnimationFrame(() => {
+                document.documentElement.classList.remove('tw-preload');
+                document.documentElement.classList.add('tw-ready');
+            }));
+        });
+        setTimeout(() => {
+            document.documentElement.classList.remove('tw-preload');
+            document.documentElement.classList.add('tw-ready');
+        }, 1500);
+    </script>
     <script>
         tailwind.config = {
             theme: {
@@ -58,6 +72,8 @@
 
     <style>
         [x-cloak] { display: none !important; }
+        html.tw-preload body { opacity: 0; }
+        html.tw-ready body { opacity: 1; transition: opacity 0.15s ease-in; }
 
         /* Skala proporsional untuk layar 1024-1366px (monitor 720p / laptop kecil) */
         @media (min-width: 1024px) and (max-width: 1366px) {

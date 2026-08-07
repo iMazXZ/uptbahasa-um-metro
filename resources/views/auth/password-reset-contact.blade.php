@@ -9,7 +9,7 @@
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
 
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="{{ asset('vendor/tailwind/tailwind.js') }}"></script>
     <script>
         tailwind.config = {
             theme: {
