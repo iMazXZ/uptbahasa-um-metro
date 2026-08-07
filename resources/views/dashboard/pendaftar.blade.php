@@ -2,7 +2,7 @@
 @extends('layouts.dashboard')
 
 @section('title', 'Dashboard Pendaftar')
-@section('page-title', 'Overview')
+@section('page-title', 'Dashboard')
 
 @section('content')
 @php
