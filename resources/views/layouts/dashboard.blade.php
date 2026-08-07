@@ -42,7 +42,10 @@
     {{-- Skala proporsional untuk layar 1024-1366px (monitor 720p / laptop kecil) --}}
     <style>
         @media (min-width: 1024px) and (max-width: 1366px) {
-            html { font-size: 15px; }
+            html { font-size: 14px; }
+        }
+        @media (min-width: 1367px) {
+            html { font-size: 14.5px; }
         }
     </style>
 
@@ -176,7 +179,7 @@
         @include('layouts.partials.topbar')
 
         {{-- CONTENT SCROLLABLE AREA --}}
-        <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 scroll-smooth">
+        <main class="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-5 scroll-smooth">
             <div class="max-w-7xl mx-auto">
                 @yield('content')
             </div>

@@ -4,7 +4,7 @@
     $topbarUnreadCount = $topbarUser?->unreadNotifications()->count() ?? 0;
 @endphp
 
-<header class="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200 h-16 px-4 sm:px-6 lg:px-8 flex items-center justify-between transition-all duration-300">
+<header class="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200 h-14 px-4 sm:px-5 lg:px-6 flex items-center justify-between transition-all duration-300">
     <div class="flex items-center gap-4">
         {{-- Mobile Toggle Button --}}
         <button
@@ -15,7 +15,7 @@
             <i class="fa-solid fa-bars text-xl"></i>
         </button>
 
-        <h1 class="text-lg sm:text-xl font-bold text-slate-800 tracking-tight">
+        <h1 class="text-base sm:text-lg font-bold text-slate-800 tracking-tight">
             @yield('page-title', 'Dashboard')
         </h1>
     </div>
