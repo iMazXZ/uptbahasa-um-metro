@@ -502,7 +502,7 @@ Route::middleware('auth')->group(function () {
         ->name('dashboard.ept-registration.kartu');
 
     // API WhatsApp & biodata
-    Route::middleware('throttle:5,1')->group(function () {
+    Route::middleware('throttle:20,1')->group(function () {
         Route::post('/api/whatsapp/update', [WhatsAppController::class, 'update'])
             ->name('api.whatsapp.update');
 

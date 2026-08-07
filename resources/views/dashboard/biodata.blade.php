@@ -366,6 +366,19 @@
                                                 },
                                                 body: JSON.stringify({ whatsapp: this.phone })
                                             });
+
+                                            if (res.status === 429) {
+                                                this.error = 'Terlalu banyak percobaan. Silakan tunggu sebentar lalu coba lagi.';
+                                                this.loading = false;
+                                                return;
+                                            }
+
+                                            if (res.status === 419) {
+                                                this.error = 'Sesi berakhir. Muat ulang halaman lalu coba lagi.';
+                                                this.loading = false;
+                                                return;
+                                            }
+
                                             const data = await res.json();
                                             if (data.success) {
                                                 // Jika OTP dinonaktifkan, langsung ke verified
@@ -380,7 +393,7 @@
                                                 this.error = data.message || 'Gagal mengirim OTP';
                                             }
                                         } catch (e) {
-                                            this.error = 'Terjadi kesalahan';
+                                            this.error = 'Terjadi kesalahan. Coba muat ulang halaman.';
                                         }
                                         this.loading = false;
                                     },
