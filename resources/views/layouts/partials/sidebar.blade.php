@@ -34,7 +34,7 @@
         </div>
 
         {{-- Toggle button (Desktop only) --}}
-        <button @click="sidebarOpen = !sidebarOpen"
+        <button @click="toggleSidebar()"
                 class="hidden lg:flex p-1.5 rounded-md text-slate-400 hover:text-um-blue hover:bg-blue-50 transition-colors">
             <i class="fa-solid fa-bars-staggered text-sm"></i>
         </button>

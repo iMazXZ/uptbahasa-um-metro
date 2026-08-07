@@ -94,11 +94,21 @@
     sidebarOpen: true secara default di layar besar (lg), false di mobile.
 --}}
 <div x-data="{ 
-        sidebarOpen: window.innerWidth >= 1024, 
+        sidebarOpen: (() => {
+            if (window.innerWidth < 1024) return false;
+            const saved = localStorage.getItem('sidebarCollapsed');
+            return saved !== '1';
+        })(),
         sidebarHover: false,
         isMobile: window.innerWidth < 1024,
         swipeStartX: null,
         swipeStartY: null,
+        toggleSidebar() {
+            this.sidebarOpen = !this.sidebarOpen;
+            if (!this.isMobile) {
+                localStorage.setItem('sidebarCollapsed', this.sidebarOpen ? '0' : '1');
+            }
+        },
         startEdgeSwipe(event) {
             if (!this.isMobile || this.sidebarOpen) return;
             const touch = event.changedTouches?.[0];
@@ -123,7 +133,7 @@
             this.swipeStartY = null;
         }
      }"
-     @resize.window="isMobile = window.innerWidth < 1024; if(!isMobile) sidebarOpen = true"
+     @resize.window="isMobile = window.innerWidth < 1024; if(!isMobile) sidebarOpen = (localStorage.getItem('sidebarCollapsed') !== '1')"
      class="min-h-screen flex overflow-hidden bg-slate-50">
 
     {{-- SIDEBAR --}}
