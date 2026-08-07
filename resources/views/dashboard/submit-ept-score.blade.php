@@ -1,6 +1,8 @@
 {{-- resources/views/dashboard/submit-ept-score.blade.php --}}
 @extends('layouts.dashboard')
 
+@section('turbo-reload', true)
+
 @section('title', 'Pengajuan Surat Rekomendasi')
 @section('page-title', 'Surat Rekomendasi EPT')
 

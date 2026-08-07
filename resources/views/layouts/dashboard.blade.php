@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <title>@yield('title', 'Dashboard') - UPT Bahasa UM Metro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @hasSection('turbo-reload')
+        <meta name="turbo-visit-control" content="reload">
+    @endif
     <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
 
@@ -49,6 +52,18 @@
 
     {{-- Alpine.js --}}
     <script src="{{ asset('vendor/alpine/alpine.min.js') }}" defer></script>
+
+    {{-- Turbo (Hotwire): navigasi instan tanpa reload layout --}}
+    <script src="{{ asset('vendor/turbo/turbo.min.js') }}" defer></script>
+
+    <script>
+        // Re-inisialisasi Alpine setelah Turbo mengganti konten halaman
+        document.addEventListener('turbo:load', () => {
+            if (window.Alpine) {
+                Alpine.initTree(document.body);
+            }
+        });
+    </script>
 
     {{-- Trix Editor (untuk richtext di dashboard) --}}
     <link rel="stylesheet" href="{{ asset('vendor/trix/trix.css') }}">

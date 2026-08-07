@@ -36,6 +36,18 @@
     {{-- Alpine.js --}}
     <script src="{{ asset('vendor/alpine/alpine.min.js') }}" defer></script>
 
+    {{-- Turbo (Hotwire): navigasi instan tanpa reload layout --}}
+    <script src="{{ asset('vendor/turbo/turbo.min.js') }}" defer></script>
+
+    <script>
+        // Re-inisialisasi Alpine setelah Turbo mengganti konten halaman
+        document.addEventListener('turbo:load', () => {
+            if (window.Alpine) {
+                Alpine.initTree(document.body);
+            }
+        });
+    </script>
+
     {{-- Trix Editor --}}
     <link rel="stylesheet" href="{{ asset('vendor/trix/trix.css') }}">
     <script src="{{ asset('vendor/trix/trix.umd.min.js') }}" defer></script>

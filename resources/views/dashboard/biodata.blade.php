@@ -1,5 +1,7 @@
 @extends('layouts.dashboard')
 
+@section('turbo-reload', true)
+
 @section('title', 'Biodata')
 @section('page-title', 'Biodata Pengguna')
 

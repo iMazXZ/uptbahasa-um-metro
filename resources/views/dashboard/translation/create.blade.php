@@ -1,6 +1,8 @@
 {{-- resources/views/dashboard/translation/create.blade.php --}}
 @extends('layouts.dashboard')
 
+@section('turbo-reload', true)
+
 @section('title', 'Ajukan Penerjemahan')
 @section('page-title', 'Formulir Pengajuan')
 

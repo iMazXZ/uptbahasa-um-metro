@@ -1,6 +1,8 @@
 {{-- resources/views/dashboard/ept-registration/index.blade.php --}}
 @extends('layouts.dashboard')
 
+@section('turbo-reload', true)
+
 @section('title', 'Pendaftaran EPT')
 @section('page-title', 'Pendaftaran EPT')
 
