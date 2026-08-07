@@ -1,7 +1,6 @@
 {{-- resources/views/dashboard/ept-registration/index.blade.php --}}
 @extends('layouts.dashboard')
 
-@section('turbo-reload', true)
 
 @section('title', 'Pendaftaran EPT')
 @section('page-title', 'Pendaftaran EPT')
@@ -351,7 +350,7 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    function initEptRegistrationPage() {
         // === Button "Mengerti dan Unggah Bukti" ===
         const btnUnderstand = document.getElementById('btn-understand-ept');
         const buttonWrapper = document.getElementById('understand-button-wrapper-ept');
@@ -527,6 +526,14 @@
                 setProgress(0);
             });
         }
-    });
+    }
+
+    // Jalankan saat load awal maupun navigasi Turbo
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initEptRegistrationPage);
+    } else {
+        initEptRegistrationPage();
+    }
+    document.addEventListener('turbo:load', initEptRegistrationPage);
 </script>
 @endsection

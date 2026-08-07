@@ -1,7 +1,6 @@
 {{-- resources/views/dashboard/submit-ept-score.blade.php --}}
 @extends('layouts.dashboard')
 
-@section('turbo-reload', true)
 
 @section('title', 'Pengajuan Surat Rekomendasi')
 @section('page-title', 'Surat Rekomendasi EPT')
@@ -279,7 +278,7 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    function initEptRecommendationPage() {
         const recommendationForm = document.getElementById('ept-recommendation-form');
         const submitButton = document.getElementById('btn-submit-ept-recommendation');
         const submitLabel = document.getElementById('btn-submit-ept-recommendation-label');
@@ -369,6 +368,14 @@
             stopPseudoProgress();
             setProgress(0);
         });
-    });
+    }
+
+    // Jalankan saat load awal maupun navigasi Turbo
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initEptRecommendationPage);
+    } else {
+        initEptRecommendationPage();
+    }
+    document.addEventListener('turbo:load', initEptRecommendationPage);
 </script>
 @endsection

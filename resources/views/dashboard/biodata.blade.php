@@ -1,6 +1,5 @@
 @extends('layouts.dashboard')
 
-@section('turbo-reload', true)
 
 @section('title', 'Biodata')
 @section('page-title', 'Biodata Pengguna')
@@ -920,7 +919,7 @@
     </div>
 </div>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
+function initBiodataPage() {
     const srnInput = document.getElementById('biodata-srn');
     const yearSelect = document.getElementById('biodata-year');
     const prodyInput = document.getElementById('biodata-prody-id');
@@ -1576,16 +1575,19 @@ document.addEventListener('DOMContentLoaded', () => {
         validateAcademicFields();
     });
 
-    window.addEventListener('biodata-prodi-changed', (event) => {
-        if (event.detail?.id && prodyInput) {
-            prodyInput.value = event.detail.id;
-        }
-        if (event.detail?.prodiName) {
-            selectedProdyName = event.detail.prodiName;
-        }
-        lookupLegacyScore();
-        validateAcademicFields();
-    });
+    if (!window.__biodataProdiHandler) {
+        window.__biodataProdiHandler = (event) => {
+            if (event.detail?.id && prodyInput) {
+                prodyInput.value = event.detail.id;
+            }
+            if (event.detail?.prodiName) {
+                selectedProdyName = event.detail.prodiName;
+            }
+            lookupLegacyScore();
+            validateAcademicFields();
+        };
+        window.addEventListener('biodata-prodi-changed', window.__biodataProdiHandler);
+    }
 
     [interactiveArabicInput1, interactiveArabicInput2].forEach((input) => {
         input?.addEventListener('input', () => {
@@ -1607,6 +1609,14 @@ document.addEventListener('DOMContentLoaded', () => {
     validateSrnInput();
     validateAcademicFields();
     lookupLegacyScore();
-});
+}
+
+// Jalankan saat load awal maupun navigasi Turbo
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initBiodataPage);
+} else {
+    initBiodataPage();
+}
+document.addEventListener('turbo:load', initBiodataPage);
 </script>
 @endsection

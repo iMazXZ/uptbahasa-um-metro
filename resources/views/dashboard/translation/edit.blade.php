@@ -1,7 +1,6 @@
 {{-- resources/views/dashboard/translation/edit.blade.php --}}
 @extends('layouts.dashboard')
 
-@section('turbo-reload', true)
 
 @section('title', 'Perbaiki Permohonan')
 @section('page-title', 'Perbaiki Permohonan')
@@ -231,7 +230,7 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    function initTranslationEditPage() {
         const dropzone   = document.getElementById('payment-dropzone-edit');
         const input      = document.getElementById('bukti_pembayaran_input_edit');
         const previewBox = document.getElementById('payment-preview-wrapper-edit');
@@ -292,7 +291,15 @@
                 handleFile(dt.files[0]);
             });
         }
-    });
+    }
+
+    // Jalankan saat load awal maupun navigasi Turbo
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initTranslationEditPage);
+    } else {
+        initTranslationEditPage();
+    }
+    document.addEventListener('turbo:load', initTranslationEditPage);
 </script>
 
 @endsection

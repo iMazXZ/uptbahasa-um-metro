@@ -1,7 +1,6 @@
 {{-- resources/views/dashboard/translation/create.blade.php --}}
 @extends('layouts.dashboard')
 
-@section('turbo-reload', true)
 
 @section('title', 'Ajukan Penerjemahan')
 @section('page-title', 'Formulir Pengajuan')
@@ -228,7 +227,7 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    function initTranslationCreatePage() {
         // === Button "Mengerti dan Unggah Foto" ===
         const btnUnderstand = document.getElementById('btn-understand');
         const buttonWrapper = document.getElementById('understand-button-wrapper');
@@ -424,7 +423,15 @@
                 setProgress(0);
             });
         }
-    });
+    }
+
+    // Jalankan saat load awal maupun navigasi Turbo
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initTranslationCreatePage);
+    } else {
+        initTranslationCreatePage();
+    }
+    document.addEventListener('turbo:load', initTranslationCreatePage);
 </script>
 
 @endsection
