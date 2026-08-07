@@ -54,6 +54,11 @@
       if (window.AOS) {
         AOS.refreshHard();
       }
+      // Reveal konten: tunggu Tailwind CDN memproses class baru setelah swap body
+      setTimeout(() => {
+        document.documentElement.classList.remove('tw-preload');
+        document.documentElement.classList.add('tw-ready');
+      }, 200);
     });
   </script>
 
