@@ -431,7 +431,7 @@
     } else {
         initTranslationCreatePage();
     }
-    document.addEventListener('turbo:load', initTranslationCreatePage);
+    window.__pageInit = initTranslationCreatePage;
 </script>
 
 @endsection

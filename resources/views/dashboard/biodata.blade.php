@@ -1611,12 +1611,12 @@ function initBiodataPage() {
     lookupLegacyScore();
 }
 
-// Jalankan saat load awal maupun navigasi Turbo
+// Jalankan saat load awal; Turbo akan memanggil via window.__pageInit (listener tunggal di layout)
+window.__pageInit = initBiodataPage;
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initBiodataPage);
 } else {
     initBiodataPage();
 }
-document.addEventListener('turbo:load', initBiodataPage);
 </script>
 @endsection

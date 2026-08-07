@@ -376,6 +376,6 @@
     } else {
         initEptRecommendationPage();
     }
-    document.addEventListener('turbo:load', initEptRecommendationPage);
+    window.__pageInit = initEptRecommendationPage;
 </script>
 @endsection

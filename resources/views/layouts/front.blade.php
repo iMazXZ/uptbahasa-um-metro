@@ -26,10 +26,15 @@
   <script defer src="{{ asset('vendor/turbo/turbo.min.js') }}"></script>
 
   <script>
-    // Re-inisialisasi Alpine & AOS setelah Turbo mengganti konten halaman
+    // Re-inisialisasi Alpine & AOS setelah Turbo mengganti konten halaman.
+    // Listener tunggal di layout (head tidak di-evaluasi ulang oleh Turbo).
+    // Halaman yang punya script inline cukup mendaftarkan fungsi-nya ke window.__pageInit.
     document.addEventListener('turbo:load', () => {
       if (window.Alpine) {
         Alpine.initTree(document.body);
+      }
+      if (typeof window.__pageInit === 'function') {
+        window.__pageInit();
       }
       if (window.AOS) {
         AOS.refreshHard();

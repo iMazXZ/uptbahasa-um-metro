@@ -40,10 +40,14 @@
     <script src="{{ asset('vendor/turbo/turbo.min.js') }}" defer></script>
 
     <script>
-        // Re-inisialisasi Alpine setelah Turbo mengganti konten halaman
+        // Re-inisialisasi Alpine setelah Turbo mengganti konten halaman.
+        // Listener tunggal di layout (head tidak di-evaluasi ulang oleh Turbo).
         document.addEventListener('turbo:load', () => {
             if (window.Alpine) {
                 Alpine.initTree(document.body);
+            }
+            if (typeof window.__pageInit === 'function') {
+                window.__pageInit();
             }
         });
     </script>

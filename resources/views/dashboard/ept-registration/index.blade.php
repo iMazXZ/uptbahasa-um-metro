@@ -534,6 +534,6 @@
     } else {
         initEptRegistrationPage();
     }
-    document.addEventListener('turbo:load', initEptRegistrationPage);
+    window.__pageInit = initEptRegistrationPage;
 </script>
 @endsection

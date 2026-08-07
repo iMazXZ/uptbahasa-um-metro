@@ -299,7 +299,7 @@
     } else {
         initTranslationEditPage();
     }
-    document.addEventListener('turbo:load', initTranslationEditPage);
+    window.__pageInit = initTranslationEditPage;
 </script>
 
 @endsection
