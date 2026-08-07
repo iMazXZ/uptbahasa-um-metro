@@ -109,7 +109,9 @@ class VerificationController extends Controller
                 'done_at'           => optional($rec->completion_date)->timezone(config('app.timezone', 'Asia/Jakarta')),
 
                 'verification_code' => $rec->verification_code ?? '-',
-                'verification_url'  => $rec->verification_url,
+                'verification_url'  => filled($rec->verification_code)
+                    ? route('verification.show', ['code' => $rec->verification_code], true)
+                    : $rec->verification_url,
 
                 // Jika file tersimpan di storage publik
                 'pdf_url'           => ($rec->pdf_path && Storage::disk('public')->exists($rec->pdf_path))
@@ -165,7 +167,7 @@ class VerificationController extends Controller
                 'done_at'           => now()->timezone(config('app.timezone', 'Asia/Jakarta')),
 
                 'verification_code' => $rec->verification_code ?? '-',
-                'verification_url'  => $rec->verification_url ?? route('verification.show', ['code' => $code], true),
+                'verification_url'  => route('verification.show', ['code' => $code], true),
 
                 'pdf_url'           => $pdfUrl,
 
@@ -210,7 +212,9 @@ class VerificationController extends Controller
                 'done_at'           => optional($rec->approved_at)->timezone(config('app.timezone', 'Asia/Jakarta')),
 
                 'verification_code' => $rec->verification_code ?? '-',
-                'verification_url'  => $rec->verification_url,
+                'verification_url'  => filled($rec->verification_code)
+                    ? route('verification.show', ['code' => $rec->verification_code], true)
+                    : $rec->verification_url,
 
                 // PDF EPT via route generator (on-the-fly atau tersimpan sesuai implementasi kamu)
                 'pdf_url'           => route('verification.ept.pdf', ['code' => $code]),
