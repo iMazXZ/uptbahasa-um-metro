@@ -4,21 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>419 - Halaman Kadaluwarsa</title>
-    <script src="{{ asset('vendor/tailwind/tailwind.js') }}"></script>
     <link href="{{ asset('vendor/fontawesome/all.min.css') }}" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'um-blue': '#1e40af',
-                        'um-green': '#059669',
-                        'um-gold': '#f59e0b',
-                    }
-                }
-            }
-        }
-    </script>
 </head>
 <body class="bg-gradient-to-br from-slate-800 via-slate-900 to-gray-900 flex items-center justify-center min-h-screen text-white">
 

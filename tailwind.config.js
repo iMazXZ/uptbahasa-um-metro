@@ -12,9 +12,19 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Inter', 'Figtree', ...defaultTheme.fontFamily.sans],
+            },
+            colors: {
+                'um-blue': '#1e40af',
+                'um-dark-blue': '#1e3a8a',
+                'um-navy': '#172554',
+                'um-green': '#059669',
+                'um-gold': '#f59e0b',
             },
         },
     },
-    plugins: [],
+    plugins: [
+        require('@tailwindcss/typography'),
+        require('@tailwindcss/forms'),
+    ],
 };

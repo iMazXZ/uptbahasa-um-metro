@@ -7,24 +7,7 @@
     <title>Reset Kata Sandi - UPT Bahasa UM Metro</title>
     <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
-
-
-    <script src="{{ asset('vendor/tailwind/tailwind.js') }}"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: {
-                        'um-blue': '#1e40af',
-                        'um-dark-blue': '#1e3a8a',
-                        'um-navy': '#172554',
-                        'um-gold': '#f59e0b',
-                    }
-                }
-            }
-        }
-    </script>
+    <link rel="stylesheet" href="{{ asset('css/tailwind-build.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/fontawesome/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/inter/inter.css') }}">
   <style>

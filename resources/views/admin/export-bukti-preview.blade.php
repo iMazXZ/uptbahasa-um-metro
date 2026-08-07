@@ -25,7 +25,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Preview Export Bukti Pembayaran</title>
-    <script src="{{ asset('vendor/tailwind/tailwind.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('css/tailwind-build.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/fontawesome/all.min.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <link rel="stylesheet" href="{{ asset('vendor/cropperjs/cropper.min.css') }}">
