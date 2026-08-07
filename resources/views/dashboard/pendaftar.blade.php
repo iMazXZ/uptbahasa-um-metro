@@ -46,6 +46,7 @@
 
     @php
         $dashboardNotifications = $latestNotifications ?? collect();
+        $dashboardNotifications = $dashboardNotifications->take(3);
         $dashboardUnread = $unreadNotificationsCount ?? 0;
         $dashboardReadCount = $dashboardNotifications->whereNotNull('read_at')->count();
     @endphp
@@ -88,21 +89,21 @@
                         $data = $notification->data ?? [];
                         $isUnread = blank($notification->read_at);
                     @endphp
-                    <div class="flex items-start gap-3 px-4 py-4 transition hover:bg-slate-50 sm:gap-4 sm:px-5 {{ $isUnread ? 'bg-blue-50/40' : '' }}">
-                        <div class="w-11 h-11 rounded-2xl bg-slate-100 text-slate-600 flex items-center justify-center shrink-0">
+                    <div class="flex items-start gap-3 px-4 py-3 transition hover:bg-slate-50 sm:gap-3.5 sm:px-5 {{ $isUnread ? 'bg-blue-50/40' : '' }}">
+                        <div class="w-9 h-9 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center shrink-0">
                             <i class="{{ $data['icon'] ?? 'fa-regular fa-bell' }}"></i>
                         </div>
                         <div class="min-w-0 flex-1">
-                            <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                            <div class="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                                 <a href="{{ route('dashboard.notifications.open', $notification->id) }}" class="min-w-0 flex-1">
-                                    <h4 class="text-sm font-bold text-slate-800 leading-5 line-clamp-2 sm:line-clamp-1">{{ $data['title'] ?? 'Notifikasi Baru' }}</h4>
-                                    <p class="mt-1 text-sm leading-6 text-slate-500 line-clamp-3 sm:line-clamp-2">{{ $data['body'] ?? 'Ada pembaruan pada akun Anda.' }}</p>
+                                    <h4 class="text-sm font-bold text-slate-800 leading-5 line-clamp-1">{{ $data['title'] ?? 'Notifikasi Baru' }}</h4>
+                                    <p class="mt-0.5 text-xs leading-5 text-slate-500 line-clamp-2">{{ $data['body'] ?? 'Ada pembaruan pada akun Anda.' }}</p>
                                 </a>
                                 <div class="flex items-center justify-between gap-3 sm:w-auto sm:flex-col sm:items-end sm:justify-start">
                                     <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-400">
                                         @if($isUnread)
                                             <span class="inline-flex items-center gap-1 font-semibold text-um-blue">
-                                                <span class="h-2.5 w-2.5 rounded-full bg-um-blue"></span>
+                                                <span class="h-2 w-2 rounded-full bg-um-blue"></span>
                                                 Baru
                                             </span>
                                         @endif
@@ -110,7 +111,7 @@
                                     </div>
                                     <form method="POST" action="{{ route('dashboard.notifications.destroy', $notification->id) }}">
                                         @csrf
-                                        <button type="submit" class="inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition hover:bg-rose-50 hover:text-rose-600" title="Hapus notifikasi">
+                                        <button type="submit" class="inline-flex h-7 w-7 items-center justify-center rounded-full text-slate-400 transition hover:bg-rose-50 hover:text-rose-600" title="Hapus notifikasi">
                                             <i class="fa-regular fa-trash-can text-sm"></i>
                                         </button>
                                     </form>
