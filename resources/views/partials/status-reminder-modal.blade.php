@@ -37,19 +37,8 @@
             {{-- Body --}}
             <div class="px-6 py-5">
                 <p class="text-sm text-slate-600 leading-relaxed">
-                    Terima kasih, pengajuan Anda telah diterima dan akan <strong>diproses oleh staf UPT Bahasa</strong>.
+                    Pengajuan Anda telah diterima dan sedang diproses. Pantau perkembangannya di halaman ini.
                 </p>
-
-                <div class="mt-4 p-4 rounded-xl bg-blue-50 border border-blue-100">
-                    <div class="flex items-start gap-3">
-                        <i class="fa-solid fa-circle-info text-um-blue mt-0.5"></i>
-                        <p class="text-sm text-blue-900 leading-relaxed">
-                            <strong>Perhatikan:</strong> status pengajuan saat ini tidak dikirim melalui WhatsApp atau email.
-                            Silakan <strong>cek status secara berkala di halaman ini</strong> melalui menu
-                            <strong>Surat Rekomendasi</strong> atau <strong>Terjemahan Abstrak</strong>.
-                        </p>
-                    </div>
-                </div>
             </div>
 
             {{-- Footer --}}
