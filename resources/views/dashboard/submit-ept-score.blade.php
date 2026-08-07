@@ -152,10 +152,9 @@
                                         ? route('verification.ept.pdf', ['code' => $row->verification_code, 'dl' => 1])
                                         : route('ept-submissions.pdf', [$row, 'dl' => 1]);
 
-                                    $verifyUrlRow = $row->verification_url
-                                        ?: (filled($row->verification_code)
-                                            ? route('verification.show', ['code' => $row->verification_code], true)
-                                            : null);
+                                    $verifyUrlRow = filled($row->verification_code)
+                                        ? route('verification.show', ['code' => $row->verification_code], true)
+                                        : ($row->verification_url ?: null);
                                 @endphp
 
                                 <div class="flex flex-col sm:flex-row gap-2 mt-2 pt-3 border-t border-slate-100">
