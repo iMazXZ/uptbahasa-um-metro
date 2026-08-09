@@ -127,8 +127,8 @@ class EptRegistrationController extends Controller
                         uploaded: $ktpFile,
                         targetDisk: 'private',
                         targetDir: 'ept-registrations/ktp',
-                        quality: 85,
-                        maxWidth: 1600,
+                        quality: 80,
+                        maxWidth: 1200,
                         maxHeight: null,
                         basename: 'ktp_' . Str::of($user->id)->padLeft(6, '0') . '_' . time() . '.webp'
                     )['path'];
@@ -139,8 +139,8 @@ class EptRegistrationController extends Controller
                         uploaded: $selfieFile,
                         targetDisk: 'private',
                         targetDir: 'ept-registrations/selfie',
-                        quality: 85,
-                        maxWidth: 1600,
+                        quality: 80,
+                        maxWidth: 1200,
                         maxHeight: null,
                         basename: 'selfie_' . Str::of($user->id)->padLeft(6, '0') . '_' . time() . '.webp'
                     )['path'];

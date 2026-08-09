@@ -30,7 +30,11 @@ class ImageTransformer
         ?int $maxHeight = null,
         ?string $basename = null
     ): array {
-        $manager = new \Intervention\Image\ImageManager(new \Intervention\Image\Drivers\Gd\Driver());
+        $manager = new \Intervention\Image\ImageManager(
+            extension_loaded('imagick')
+                ? new \Intervention\Image\Drivers\Imagick\Driver()
+                : new \Intervention\Image\Drivers\Gd\Driver()
+        );
 
         $real = $uploaded->getRealPath();
         if (!is_file($real)) {

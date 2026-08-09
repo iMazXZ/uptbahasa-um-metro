@@ -40,4 +40,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /var/www/html
 
+# Batas upload PHP (file sampai 8MB per file, total body 32MB)
+RUN echo "upload_max_filesize = 16M" >> /usr/local/etc/php/conf.d/uploads.ini \
+    && echo "post_max_size = 48M" >> /usr/local/etc/php/conf.d/uploads.ini \
+    && echo "max_execution_time = 180" >> /usr/local/etc/php/conf.d/uploads.ini \
+    && echo "max_input_time = 180" >> /usr/local/etc/php/conf.d/uploads.ini
+
 EXPOSE 9000
