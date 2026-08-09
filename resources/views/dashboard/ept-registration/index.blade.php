@@ -285,53 +285,13 @@
                     <form id="ept-registration-form" action="{{ route('dashboard.ept-registration.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="space-y-4">
-                        {{-- Label Bukti Pembayaran --}}
-                        <label class="block text-sm font-bold text-slate-800 mb-3">
-                            Bukti Pembayaran <span class="text-red-500">*</span>
-                        </label>
-
-                        {{-- Info Box Biru --}}
-                        <div class="bg-blue-50 rounded-xl p-4 border border-blue-100 -mt-1">
-                            <p class="text-sm text-blue-800 flex items-start gap-2">
-                                <i class="fa-solid fa-info-circle text-blue-500 mt-0.5"></i>
-                                <span>Buat Tagihan dan Bayar <strong>UANG TOEFL/EPT</strong> terlebih dahulu di <strong><a href="https://siakad.ummetro.ac.id/app/keuangan/buat-tagihan" target="_blank" class="underline hover:text-blue-600">SIAKAD</a></strong>, kemudian unggah bukti pembayaran di bawah ini.</span>
-                            </p>
-                        </div>
-
-                        {{-- Warning Box Kuning --}}
-                        <div class="bg-amber-50 rounded-xl p-4 border border-amber-200">
-                            <p class="text-sm font-semibold text-amber-800 mb-2 flex items-center gap-2">
-                                <i class="fa-solid fa-triangle-exclamation text-amber-500"></i>
-                                Perhatian! Pastikan foto bukti pembayaran:
-                            </p>
-                            <ul class="text-sm text-amber-700 space-y-1 ml-6 list-disc">
-                                <li>Pastikan foto jelas, <strong>tidak buram</strong> atau ada bayangan</li>
-                                <li>NPM dan jumlah pembayaran harus <strong>terlihat dengan jelas</strong></li>
-                                <li>Gunakan hasil scan (CamScanner/scanner dokumen) atau <strong>screenshot langsung dari aplikasi bank</strong></li>
-                            </ul>
-                            <p class="text-sm text-amber-700 mt-4 flex items-center gap-2">
-                                Pendaftaran akan Ditolak jika Bukti Pembayaran yang dilampirkan Tidak Valid / Tidak Terlihat Jelas.
-                            </p>
-                        </div>
-
-                        <div class="h-4 sm:h-5"></div>
-
-                        {{-- Mode EPT: diambil dari pilihan step 2 --}}
-                        <input type="hidden" name="mode" :value="mode">
-                        <div class="rounded-xl border border-blue-100 bg-blue-50 p-4 flex items-center gap-3">
-                            <i class="fa-solid fa-location-dot text-um-blue"></i>
-                            <p class="text-sm text-blue-900">
-                                Mode pelaksanaan: <strong x-text="mode === 'online' ? 'EPT Online (daring)' : 'EPT Offline (luring)'"></strong>
-                            </p>
-                        </div>
-
-                        {{-- Status Peserta --}}
+                        {{-- Status Peserta (langkah 1) --}}
                         <div class="space-y-3">
                         <label class="block text-sm font-bold text-slate-800">
                             Status Peserta <span class="text-red-500">*</span>
                         </label>
                         <p class="text-sm text-slate-500">
-                            Pilih status Anda terlebih dahulu sebelum mengunggah bukti pembayaran.
+                            Pilih status Anda terlebih dahulu untuk menentukan kuota tes dan biaya pendaftaran.
                         </p>
                         <div id="student-status-options-ept" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             @foreach($studentStatusOptions as $value => $label)
@@ -370,9 +330,31 @@
                             </button>
                         </div>
 
-                        {{-- Upload Area (hidden initially) --}}
+                        {{-- Upload Area (hidden sampai status dipilih) --}}
                         <div id="upload-wrapper-ept" class="{{ $selectedStudentStatus ? '' : 'hidden' }} space-y-6">
+
+                        {{-- Info ringkas: mode + tagihan --}}
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div class="rounded-xl border border-blue-100 bg-blue-50 p-4 flex items-center gap-3">
+                                <i class="fa-solid fa-location-dot text-um-blue shrink-0"></i>
+                                <p class="text-sm text-blue-900">
+                                    Mode pelaksanaan: <strong x-text="mode === 'online' ? 'EPT Online (daring)' : 'EPT Offline (luring)'"></strong>
+                                </p>
+                            </div>
+                            <div class="rounded-xl border border-blue-100 bg-blue-50 p-4 flex items-center gap-3">
+                                <i class="fa-solid fa-file-invoice-dollar text-um-blue shrink-0"></i>
+                                <p class="text-sm text-blue-900">
+                                    Bayar <strong>UANG TOEFL/EPT</strong> di <strong><a href="https://siakad.ummetro.ac.id/app/keuangan/buat-tagihan" target="_blank" class="underline hover:text-blue-600">SIAKAD</a></strong> lalu unggah buktinya.
+                                </p>
+                            </div>
+                        </div>
+
+                        {{-- Bukti Pembayaran --}}
                         <div>
+                            <label class="block text-sm font-bold text-slate-800 mb-3">
+                                Bukti Pembayaran <span class="text-red-500">*</span>
+                            </label>
+
                             <div class="relative group">
                                 <div id="payment-dropzone-ept"
                                     class="border-2 border-dashed border-slate-300 rounded-xl p-6 text-center
@@ -419,7 +401,16 @@
                                 </div>
                             </div>
                             @error('bukti_pembayaran') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+
+                            {{-- Warning ringkas --}}
+                            <p class="mt-2 text-xs text-amber-700 flex items-start gap-2">
+                                <i class="fa-solid fa-triangle-exclamation text-amber-500 mt-0.5"></i>
+                                <span>Pastikan foto jelas (tidak buram), NPM & jumlah terlihat, dan gunakan screenshot aplikasi bank / hasil scan. Bukti tidak valid akan <strong>ditolak</strong>.</span>
+                            </p>
                         </div>
+
+                        {{-- Mode EPT: diambil dari pilihan step 2 --}}
+                        <input type="hidden" name="mode" :value="mode">
 
                         {{-- Verifikasi Identitas (khusus EPT Online) --}}
                         <div x-show="mode === 'online'" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
