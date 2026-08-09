@@ -84,12 +84,12 @@
                     <div class="flex items-center justify-between gap-4 flex-wrap">
                         <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
                             <i class="fa-solid fa-file-invoice text-slate-400"></i>
-                            <span x-text="step === 1 ? 'Syarat &amp; Ketentuan' : (step === 2 ? 'Pilih Mode Pelaksanaan' : 'Formulir Pendaftaran')"></span>
+                            <span x-text="step === 1 ? 'Pilih Mode Pelaksanaan' : (step === 2 ? 'Syarat &amp; Ketentuan' : 'Formulir Pendaftaran')"></span>
                         </h2>
 
                         {{-- Indikator progress --}}
                         <div class="flex items-center gap-2">
-                            <template x-for="(label, i) in ['Syarat', 'Mode', 'Form']" :key="i">
+                            <template x-for="(label, i) in ['Mode', 'Syarat', 'Form']" :key="i">
                                 <div class="flex items-center gap-2">
                                     <div class="flex items-center gap-1.5">
                                         <span class="flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold"
@@ -109,8 +109,44 @@
                 </div>
                 <div class="p-6 sm:p-8">
 
-                    {{-- STEP 1: Syarat & Ketentuan --}}
+                    {{-- STEP 1: Pilih Mode Pelaksanaan --}}
                     <div x-show="step === 1" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                        <h3 class="text-base font-bold text-slate-900 mb-1">Pilih Mode Pelaksanaan EPT</h3>
+                        <p class="text-sm text-slate-500 mb-5">Tentukan bagaimana Anda akan mengikuti tes EPT.</p>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div @click="mode = 'offline'; step = 2"
+                                 :class="mode === 'offline' ? 'border-um-blue bg-blue-50 ring-2 ring-um-blue/20' : 'border-slate-200 hover:border-slate-300'"
+                                 class="cursor-pointer rounded-2xl border-2 bg-white p-6 transition-all">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-slate-500">
+                                        <i class="fa-solid fa-building-columns text-xl"></i>
+                                    </div>
+                                    <i class="fa-solid fa-circle-check mt-1 text-2xl" :class="mode === 'offline' ? 'text-um-blue' : 'text-slate-200'"></i>
+                                </div>
+                                <h4 class="mt-4 font-bold text-slate-900">EPT Offline</h4>
+                                <p class="mt-1 text-xs text-slate-500 leading-relaxed">Tes dilaksanakan secara luring di lokasi kampus sesuai jadwal dan grup yang ditentukan.</p>
+                            </div>
+
+                            <div @click="mode = 'online'; step = 2"
+                                 :class="mode === 'online' ? 'border-um-blue bg-blue-50 ring-2 ring-um-blue/20' : 'border-slate-200 hover:border-slate-300'"
+                                 class="cursor-pointer rounded-2xl border-2 bg-white p-6 transition-all">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
+                                        <i class="fa-solid fa-laptop text-xl"></i>
+                                    </div>
+                                    <i class="fa-solid fa-circle-check mt-1 text-2xl" :class="mode === 'online' ? 'text-um-blue' : 'text-slate-200'"></i>
+                                </div>
+                                <h4 class="mt-4 font-bold text-slate-900">EPT Online</h4>
+                                <p class="mt-1 text-xs text-slate-500 leading-relaxed">Tes dilaksanakan secara daring melalui sistem EPT Online dengan akses kode dari admin.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- STEP 2: Syarat & Ketentuan (sesuai mode terpilih) --}}
+                    <div x-show="step === 2" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                        {{-- S&K EPT OFFLINE --}}
+                        <div x-show="mode === 'offline'">
                         <div class="mb-4 rounded-2xl border border-blue-200 bg-blue-50 p-5">
                             <div class="flex items-center gap-3">
                                 <div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-white shrink-0">
@@ -156,6 +192,42 @@
                                 </p>
                             </div>
                         </div>
+                        </div>
+
+                        {{-- S&K EPT ONLINE --}}
+                        <div x-show="mode === 'online'">
+                        <div class="mb-4 rounded-2xl border border-blue-200 bg-blue-50 p-5">
+                            <div class="flex items-center gap-3">
+                                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-white shrink-0">
+                                    <i class="fa-solid fa-bullhorn"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-blue-900">INFORMASI PENTING PENDAFTARAN EPT ONLINE</h3>
+                                    <p class="text-sm text-blue-700 mt-0.5">Harap membaca dan memahami ketentuan berikut sebelum melanjutkan pendaftaran:</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4 text-sm text-slate-700 leading-relaxed">
+                            <div class="rounded-xl border border-slate-200 p-5">
+                                <ul class="space-y-2 list-disc pl-6">
+                                    <li>Tes EPT dilaksanakan secara <strong>daring (online)</strong> melalui platform tes EPT dan <strong>Microsoft Teams</strong> sebagai media pengawasan.</li>
+                                    <li>Peserta wajib mengikuti tes sesuai jadwal yang telah ditentukan dan bergabung ke ruang Microsoft Teams paling lambat <strong>30 menit sebelum tes dimulai.</strong></li>
+                                    <li>Peserta wajib menyiapkan:
+                                        <ul class="list-disc pl-6 mt-1 space-y-1">
+                                            <li><strong>Laptop/PC</strong> untuk mengerjakan tes;</li>
+                                            <li><strong>Handphone</strong> untuk pengawasan melalui Microsoft Teams;</li>
+                                            <li><strong>Koneksi internet</strong> yang stabil;</li>
+                                            <li><strong>Tripod/penyangga HP</strong> untuk memastikan kamera dapat mengawasi peserta selama tes berlangsung.</li>
+                                        </ul>
+                                    </li>
+                                    <li>Peserta wajib menggunakan <strong>nama asli sesuai data pendaftaran</strong> pada akun Microsoft Teams maupun platform tes.</li>
+                                    <li>Selama pelaksanaan tes, <strong>kamera HP wajib aktif</strong> dan peserta harus berada dalam jangkauan kamera. Posisi kamera harus memungkinkan pengawas melihat wajah peserta, layar laptop, keyboard, dan kedua tangan peserta.</li>
+                                    <li>Peserta wajib berada <strong>sendirian di dalam ruangan</strong> selama pelaksanaan tes dan memastikan kondisi ruangan mendukung proses pengawasan.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        </div>
 
                         <div class="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4">
                             <p class="text-sm text-amber-800">
@@ -169,61 +241,16 @@
                             <span class="text-sm text-slate-700">Saya telah membaca dan menyetujui seluruh syarat dan ketentuan pendaftaran EPT di atas.</span>
                         </label>
 
-                        <div class="mt-5">
-                            <button type="button"
-                                    @click="step = 2"
-                                    :disabled="!accepted"
-                                    :class="accepted ? 'bg-um-blue hover:bg-um-dark-blue shadow-lg shadow-blue-900/20' : 'bg-slate-300 cursor-not-allowed'"
-                                    class="w-full inline-flex items-center justify-center gap-2 px-8 py-3 rounded-full text-white font-bold text-sm transition-all">
-                                <i class="fa-solid fa-arrow-right"></i>
-                                Lanjut ke Pendaftaran
-                            </button>
-                        </div>
-                    </div>
-
-                    {{-- STEP 2: Pilih Mode Pelaksanaan --}}
-                    <div x-show="step === 2" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
-                        <h3 class="text-base font-bold text-slate-900 mb-1">Pilih Mode Pelaksanaan EPT</h3>
-                        <p class="text-sm text-slate-500 mb-5">Tentukan bagaimana Anda akan mengikuti tes EPT.</p>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div @click="mode = 'offline'"
-                                 :class="mode === 'offline' ? 'border-um-blue bg-blue-50 ring-2 ring-um-blue/20' : 'border-slate-200 hover:border-slate-300'"
-                                 class="cursor-pointer rounded-2xl border-2 bg-white p-6 transition-all">
-                                <div class="flex items-start justify-between">
-                                    <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-slate-500">
-                                        <i class="fa-solid fa-building-columns text-xl"></i>
-                                    </div>
-                                    <i class="fa-solid fa-circle-check mt-1 text-2xl" :class="mode === 'offline' ? 'text-um-blue' : 'text-slate-200'"></i>
-                                </div>
-                                <h4 class="mt-4 font-bold text-slate-900">EPT Offline</h4>
-                                <p class="mt-1 text-xs text-slate-500 leading-relaxed">Tes dilaksanakan secara luring di lokasi kampus sesuai jadwal dan grup yang ditentukan.</p>
-                            </div>
-
-                            <div @click="mode = 'online'"
-                                 :class="mode === 'online' ? 'border-um-blue bg-blue-50 ring-2 ring-um-blue/20' : 'border-slate-200 hover:border-slate-300'"
-                                 class="cursor-pointer rounded-2xl border-2 bg-white p-6 transition-all">
-                                <div class="flex items-start justify-between">
-                                    <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
-                                        <i class="fa-solid fa-laptop text-xl"></i>
-                                    </div>
-                                    <i class="fa-solid fa-circle-check mt-1 text-2xl" :class="mode === 'online' ? 'text-um-blue' : 'text-slate-200'"></i>
-                                </div>
-                                <h4 class="mt-4 font-bold text-slate-900">EPT Online</h4>
-                                <p class="mt-1 text-xs text-slate-500 leading-relaxed">Tes dilaksanakan secara daring melalui sistem EPT Online dengan akses kode dari admin.</p>
-                            </div>
-                        </div>
-
-                        <div class="mt-6 flex flex-col sm:flex-row gap-3">
+                        <div class="mt-5 flex flex-col sm:flex-row gap-3">
                             <button type="button"
                                     @click="step = 1"
                                     class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-slate-200 bg-white text-slate-600 font-bold text-sm hover:bg-slate-50 transition">
-                                <i class="fa-solid fa-arrow-left"></i> Kembali
+                                <i class="fa-solid fa-arrow-left"></i> Ganti Mode
                             </button>
                             <button type="button"
                                     @click="step = 3"
-                                    :disabled="!mode"
-                                    :class="mode ? 'bg-um-blue hover:bg-um-dark-blue shadow-lg shadow-blue-900/20' : 'bg-slate-300 cursor-not-allowed'"
+                                    :disabled="!accepted"
+                                    :class="accepted ? 'bg-um-blue hover:bg-um-dark-blue shadow-lg shadow-blue-900/20' : 'bg-slate-300 cursor-not-allowed'"
                                     class="flex-1 inline-flex items-center justify-center gap-2 px-8 py-3 rounded-full text-white font-bold text-sm transition-all">
                                 Lanjut ke Formulir <i class="fa-solid fa-arrow-right"></i>
                             </button>
@@ -418,9 +445,9 @@
 
                     <div class="mt-4">
                         <button type="button"
-                                @click="step = 2"
+                                @click="step = 1"
                                 class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-slate-200 bg-white text-slate-600 text-xs font-bold hover:bg-slate-50 transition">
-                            <i class="fa-solid fa-arrow-left"></i> Kembali pilih mode
+                            <i class="fa-solid fa-arrow-left"></i> Ganti Mode
                         </button>
                     </div>
                     </div>
