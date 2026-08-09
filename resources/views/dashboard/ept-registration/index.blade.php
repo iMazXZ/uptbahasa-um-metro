@@ -96,7 +96,7 @@
                                     <i class="fa-solid fa-bullhorn"></i>
                                 </div>
                                 <div>
-                                    <h3 class="font-bold text-blue-900">📢 INFORMASI PENTING PENDAFTARAN EPT</h3>
+                                    <h3 class="font-bold text-blue-900">INFORMASI PENTING PENDAFTARAN EPT</h3>
                                     <p class="text-sm text-blue-700 mt-0.5">Harap membaca dan memahami ketentuan berikut sebelum melanjutkan pendaftaran:</p>
                                 </div>
                             </div>
