@@ -81,10 +81,31 @@
         @if($canCreateRegistration)
             <div class="bg-white rounded-xl border border-slate-200 shadow-sm" x-data="{ step: 1, accepted: false, mode: '' }">
                 <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
-                    <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
-                        <i class="fa-solid fa-file-invoice text-slate-400"></i>
-                        Formulir Pendaftaran
-                    </h2>
+                    <div class="flex items-center justify-between gap-4 flex-wrap">
+                        <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-file-invoice text-slate-400"></i>
+                            <span x-text="step === 1 ? 'Syarat &amp; Ketentuan' : (step === 2 ? 'Pilih Mode Pelaksanaan' : 'Formulir Pendaftaran')"></span>
+                        </h2>
+
+                        {{-- Indikator progress --}}
+                        <div class="flex items-center gap-2">
+                            <template x-for="(label, i) in ['Syarat', 'Mode', 'Form']" :key="i">
+                                <div class="flex items-center gap-2">
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold"
+                                              :class="step >= (i + 1) ? 'bg-um-blue text-white' : 'bg-slate-200 text-slate-500'"
+                                              x-text="i + 1"></span>
+                                        <span class="hidden sm:inline text-[11px] font-semibold"
+                                              :class="step === (i + 1) ? 'text-um-blue' : 'text-slate-400'"
+                                              x-text="label"></span>
+                                    </div>
+                                    <template x-if="i < 2">
+                                        <span class="h-px w-4 sm:w-6" :class="step > (i + 1) ? 'bg-um-blue' : 'bg-slate-200'"></span>
+                                    </template>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
                 </div>
                 <div class="p-6 sm:p-8">
 
