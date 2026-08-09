@@ -334,25 +334,20 @@ class EptRegistrationResource extends BaseResource
                     ->formatStateUsing(fn (?string $state) => EptRegistration::modeLabel($state))
                     ->sortable()
                     ->toggleable(),
-                Tables\Columns\BadgeColumn::make('identitas')
-                    ->label('Identitas')
-                    ->formatStateUsing(fn (EptRegistration $record): string => $record->mode === EptRegistration::MODE_ONLINE
-                        ? (filled($record->foto_ktp) && filled($record->foto_selfie) ? 'Lengkap' : 'Belum')
-                        : '-')
-                    ->color(fn (EptRegistration $record): string => $record->mode === EptRegistration::MODE_ONLINE
-                        ? (filled($record->foto_ktp) && filled($record->foto_selfie) ? 'success' : 'warning')
-                        : 'gray')
-                    ->toggleable(),
                 Tables\Columns\TextColumn::make('bukti_pembayaran')
                     ->label('Bukti')
                     ->formatStateUsing(fn ($state): string => filled($state) ? 'Lihat' : '-')
-                    ->url(fn (EptRegistration $record): ?string => filled($record->bukti_pembayaran)
-                        ? Storage::disk('public')->url($record->bukti_pembayaran)
-                        : null)
-                    ->openUrlInNewTab()
                     ->icon('heroicon-o-photo')
                     ->color('info')
                     ->placeholder('-')
+                    ->action(Tables\Actions\Action::make('lihat_bukti')
+                        ->label('Lihat Bukti')
+                        ->icon('heroicon-o-photo')
+                        ->modalHeading(fn (EptRegistration $record): string => 'Bukti Pendaftaran - ' . ($record->user?->name ?? ''))
+                        ->modalSubmitAction(false)
+                        ->modalCancelActionLabel('Tutup')
+                        ->modalWidth('3xl')
+                        ->modalContent(fn (EptRegistration $record) => view('filament.components.ept-registration-proofs', ['record' => $record])))
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('user.prody.name')
                     ->label('Prodi')
