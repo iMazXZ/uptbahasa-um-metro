@@ -43,6 +43,15 @@
     <script src="{{ asset('vendor/turbo/turbo.min.js') }}" defer></script>
 
     <script>
+        // Navigasi ke panel Filament (/admin) harus full reload normal,
+        // karena Turbo tidak kompatibel dengan Livewire/Filament.
+        document.addEventListener('turbo:click', (event) => {
+            const url = event.detail.url || '';
+            if (url.includes('/admin')) {
+                event.preventDefault();
+                window.location.href = url;
+            }
+        });
         // Re-inisialisasi Alpine setelah Turbo mengganti konten halaman.
         // Listener ini cukup satu kali (head tidak pernah di-evaluasi ulang oleh Turbo).
         // Halaman yang punya script inline cukup mendaftarkan fungsi-nya ke window.__pageInit.
