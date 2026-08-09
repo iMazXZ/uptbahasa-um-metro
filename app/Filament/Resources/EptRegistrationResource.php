@@ -59,6 +59,9 @@ class EptRegistrationResource extends BaseResource
                 Forms\Components\Placeholder::make('user_prody')
                     ->label('Program Studi')
                     ->content(fn ($record) => $record->user->prody->name ?? '-'),
+                Forms\Components\Placeholder::make('registration_mode')
+                    ->label('Mode Pelaksanaan')
+                    ->content(fn ($record) => \App\Models\EptRegistration::modeLabel($record?->mode)),
                 Forms\Components\Placeholder::make('student_status')
                     ->label('Status Peserta')
                     ->content(fn ($record) => $record?->student_status_label ?? '-'),
@@ -303,6 +306,12 @@ class EptRegistrationResource extends BaseResource
                     ->copyable()
                     ->copyMessage('NPM disalin')
                     ->toggleable(),
+                Tables\Columns\BadgeColumn::make('mode')
+                    ->label('Mode')
+                    ->color(fn (?string $state): string => $state === EptRegistration::MODE_ONLINE ? 'success' : 'gray')
+                    ->formatStateUsing(fn (?string $state) => EptRegistration::modeLabel($state))
+                    ->sortable()
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('bukti_pembayaran')
                     ->label('Bukti')
                     ->formatStateUsing(fn ($state): string => filled($state) ? 'Lihat' : '-')
@@ -399,6 +408,9 @@ class EptRegistrationResource extends BaseResource
                 Tables\Filters\SelectFilter::make('student_status')
                     ->label('Status Peserta')
                     ->options(EptRegistration::studentStatusOptions()),
+                Tables\Filters\SelectFilter::make('mode')
+                    ->label('Mode Pelaksanaan')
+                    ->options(EptRegistration::modeOptions()),
                 Tables\Filters\SelectFilter::make('assigned_group')
                     ->label('Grup Tes')
                     ->options(fn (): array => \App\Models\EptGroup::query()

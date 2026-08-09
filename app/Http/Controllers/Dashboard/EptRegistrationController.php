@@ -58,9 +58,12 @@ class EptRegistrationController extends Controller
         }
 
         $request->validate([
+            'mode' => ['required', 'in:' . implode(',', array_keys(EptRegistration::modeOptions()))],
             'student_status' => ['required', 'in:' . implode(',', array_keys(EptRegistration::studentStatusOptions()))],
             'bukti_pembayaran' => ['required', 'image', 'mimes:jpeg,jpg,png,webp', 'max:8192'],
         ], [
+            'mode.required' => 'Mode pelaksanaan EPT wajib dipilih.',
+            'mode.in' => 'Mode pelaksanaan EPT tidak valid.',
             'student_status.required' => 'Status peserta wajib dipilih.',
             'student_status.in' => 'Status peserta tidak valid.',
             'bukti_pembayaran.required' => 'Bukti pembayaran wajib diunggah.',
@@ -103,6 +106,7 @@ class EptRegistrationController extends Controller
 
             return EptRegistration::create([
                 'user_id' => $user->id,
+                'mode' => $request->string('mode')->toString(),
                 'student_status' => $request->string('student_status')->toString(),
                 'test_quota' => EptRegistration::defaultTestQuotaForStudentStatus(
                     $request->string('student_status')->toString()

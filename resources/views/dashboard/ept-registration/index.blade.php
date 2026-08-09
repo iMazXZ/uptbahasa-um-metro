@@ -144,6 +144,45 @@
 
                         <div class="h-4 sm:h-5"></div>
 
+                        {{-- Mode EPT: Online / Offline --}}
+                        <div class="space-y-3">
+                            <label class="block text-sm font-bold text-slate-800">
+                                Mode Pelaksanaan EPT <span class="text-red-500">*</span>
+                            </label>
+                            <p class="text-sm text-slate-500">
+                                Pilih apakah Anda mengikuti tes EPT secara online atau offline (di lokasi kampus).
+                            </p>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                @foreach(\App\Models\EptRegistration::modeOptions() as $modeValue => $modeLabel)
+                                    <label class="relative block">
+                                        <input
+                                            type="radio"
+                                            name="mode"
+                                            value="{{ $modeValue }}"
+                                            class="sr-only peer"
+                                            {{ old('mode', 'offline') === $modeValue ? 'checked' : '' }}
+                                        >
+                                        <span class="flex items-start justify-between gap-3 rounded-xl border border-slate-200 bg-white px-4 py-4 transition-all peer-checked:border-um-blue peer-checked:bg-blue-50 hover:border-slate-300 hover:bg-slate-50">
+                                            <span class="min-w-0">
+                                                <span class="block text-sm font-semibold text-slate-700 peer-checked:text-um-blue">{{ $modeLabel }}</span>
+                                                <span class="mt-1 block text-xs text-slate-500">
+                                                    @if($modeValue === 'online')
+                                                        Tes dilaksanakan secara daring via sistem EPT Online.
+                                                    @else
+                                                        Tes dilaksanakan di lokasi kampus sesuai jadwal grup.
+                                                    @endif
+                                                </span>
+                                            </span>
+                                            <i class="fa-solid fa-circle-check mt-0.5 text-slate-300 peer-checked:text-um-blue"></i>
+                                        </span>
+                                    </label>
+                                @endforeach
+                            </div>
+                            @error('mode')
+                                <p class="text-xs text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
                         {{-- Status Peserta --}}
                         <div class="space-y-3">
                         <label class="block text-sm font-bold text-slate-800">

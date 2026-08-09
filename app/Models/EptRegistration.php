@@ -19,12 +19,16 @@ class EptRegistration extends Model
     public const STUDENT_STATUS_KONVERSI = 'konversi';
     public const STUDENT_STATUS_GENERAL = 'general';
 
+    public const MODE_OFFLINE = 'offline';
+    public const MODE_ONLINE = 'online';
+
     public const DEFAULT_MULTI_TEST_QUOTA = 3;
     public const EXTRA_MULTI_TEST_QUOTA = 4;
     public const GENERAL_TEST_QUOTA = 1;
 
     protected $fillable = [
         'user_id',
+        'mode',
         'student_status',
         'test_quota',
         'bukti_pembayaran',
@@ -86,6 +90,24 @@ class EptRegistration extends Model
     public static function studentStatusLabel(?string $status): string
     {
         return static::studentStatusOptions()[$status] ?? 'Regular';
+    }
+
+    public static function modeOptions(): array
+    {
+        return [
+            self::MODE_ONLINE => 'EPT Online',
+            self::MODE_OFFLINE => 'EPT Offline',
+        ];
+    }
+
+    public static function modeLabel(?string $mode): string
+    {
+        return static::modeOptions()[$mode] ?? 'EPT Offline';
+    }
+
+    public function isOnline(): bool
+    {
+        return $this->mode === self::MODE_ONLINE;
     }
 
     public static function defaultTestQuotaForStudentStatus(?string $status): int
