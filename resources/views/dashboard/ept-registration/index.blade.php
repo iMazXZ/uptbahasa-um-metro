@@ -126,7 +126,7 @@
                         <div class="space-y-4 text-sm text-slate-700 leading-relaxed">
                             <div class="rounded-xl border border-slate-200 p-5">
                                 <h4 class="font-bold text-slate-900 mb-2"><i class="fa-solid fa-calendar-check text-um-blue mr-1.5"></i>1. Pelaksanaan Tes</h4>
-                                <ul class="space-y-1.5 list-disc ml-5">
+                                <ul class="space-y-1.5 list-disc pl-6">
                                     <li>Tes EPT dilaksanakan secara <strong>luring (offline).</strong></li>
                                     <li>Jadwal pelaksanaan EPT akan diumumkan setelah <strong>kuota minimal 20 peserta</strong> terpenuhi dan berdasarkan <strong>ketersediaan ruangan.</strong></li>
                                     <li>Jadwal akan diumumkan paling lambat <strong>H-2 sebelum pelaksanaan tes.</strong></li>
@@ -136,10 +136,10 @@
 
                             <div class="rounded-xl border border-slate-200 p-5">
                                 <h4 class="font-bold text-slate-900 mb-2"><i class="fa-solid fa-arrows-rotate text-um-blue mr-1.5"></i>2. Ketentuan Reschedule</h4>
-                                <ul class="space-y-1.5 list-disc ml-5">
+                                <ul class="space-y-1.5 list-disc pl-6">
                                     <li>Permohonan reschedule hanya dapat diajukan paling lambat <strong>H-1 sebelum jadwal tes</strong> yang telah ditetapkan.</li>
                                     <li>Reschedule hanya diberikan atas alasan yang dapat dipertanggungjawabkan, yaitu:
-                                        <ul class="list-circle ml-5 mt-1 space-y-1">
+                                        <ul class="list-disc pl-6 mt-1 space-y-1">
                                             <li>Sakit, dibuktikan dengan surat keterangan dokter/surat sakit;</li>
                                             <li>Perjalanan dinas, dibuktikan dengan surat perjalanan dinas atau surat tugas;</li>
                                             <li>Sidang skripsi, Seminar Proposal (Sempro), atau kegiatan akademik wajib lainnya, dibuktikan dengan SK Sidang, SK Sempro, atau surat resmi dari program studi/fakultas.</li>
