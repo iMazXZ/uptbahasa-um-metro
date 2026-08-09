@@ -25,7 +25,10 @@
     <script>
         // Navigasi ke panel Filament (/admin) harus full reload normal,
         // karena Turbo tidak kompatibel dengan Livewire/Filament.
-        document.addEventListener('turbo:click', (event) => {
+        // Navigasi ke panel Filament (/admin) harus full reload normal,
+        // karena Turbo tidak kompatibel dengan Livewire/Filament.
+        // Ditangani di turbo:before-visit agar mencakup semua bentuk navigasi.
+        document.addEventListener('turbo:before-visit', (event) => {
             const url = event.detail.url || '';
             if (url.includes('/admin')) {
                 event.preventDefault();
