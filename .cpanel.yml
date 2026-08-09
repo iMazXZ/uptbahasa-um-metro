@@ -4,3 +4,4 @@ deployment:
     - /bin/cp -Rf * $DEPLOYPATH/
     - /bin/cp -Rf .htaccess .env.example $DEPLOYPATH/
     - cd $DEPLOYPATH && php artisan optimize:clear || true
+    - cd $DEPLOYPATH && php artisan migrate --force || true
