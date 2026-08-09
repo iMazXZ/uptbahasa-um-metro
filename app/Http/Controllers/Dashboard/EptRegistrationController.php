@@ -61,6 +61,8 @@ class EptRegistrationController extends Controller
             'mode' => ['required', 'in:' . implode(',', array_keys(EptRegistration::modeOptions()))],
             'student_status' => ['required', 'in:' . implode(',', array_keys(EptRegistration::studentStatusOptions()))],
             'bukti_pembayaran' => ['required', 'image', 'mimes:jpeg,jpg,png,webp', 'max:8192'],
+            'foto_ktp' => ['required_if:mode,online', 'image', 'mimes:jpeg,jpg,png,webp', 'max:8192'],
+            'foto_selfie' => ['required_if:mode,online', 'image', 'mimes:jpeg,jpg,png,webp', 'max:8192'],
         ], [
             'mode.required' => 'Mode pelaksanaan EPT wajib dipilih.',
             'mode.in' => 'Mode pelaksanaan EPT tidak valid.',
@@ -70,6 +72,14 @@ class EptRegistrationController extends Controller
             'bukti_pembayaran.image' => 'File harus berupa gambar.',
             'bukti_pembayaran.mimes' => 'Format gambar harus JPG, PNG, atau WebP.',
             'bukti_pembayaran.max' => 'Ukuran file maksimal 8MB.',
+            'foto_ktp.required_if' => 'Foto KTP wajib diunggah untuk pendaftaran EPT Online.',
+            'foto_ktp.image' => 'Foto KTP harus berupa gambar.',
+            'foto_ktp.mimes' => 'Format foto KTP harus JPG, PNG, atau WebP.',
+            'foto_ktp.max' => 'Ukuran foto KTP maksimal 8MB.',
+            'foto_selfie.required_if' => 'Foto selfie wajib diunggah untuk pendaftaran EPT Online.',
+            'foto_selfie.image' => 'Foto selfie harus berupa gambar.',
+            'foto_selfie.mimes' => 'Format foto selfie harus JPG, PNG, atau WebP.',
+            'foto_selfie.max' => 'Ukuran foto selfie maksimal 8MB.',
         ]);
 
         $createdRegistration = DB::transaction(function () use ($request, $user): ?EptRegistration {
@@ -104,14 +114,49 @@ class EptRegistrationController extends Controller
                 basename: $basename
             );
 
+            $mode = $request->string('mode')->toString();
+            $ktpPath = null;
+            $selfiePath = null;
+
+            if ($mode === EptRegistration::MODE_ONLINE) {
+                $ktpFile = $request->file('foto_ktp');
+                $selfieFile = $request->file('foto_selfie');
+
+                if ($ktpFile) {
+                    $ktpPath = ImageTransformer::toWebpFromUploaded(
+                        uploaded: $ktpFile,
+                        targetDisk: 'private',
+                        targetDir: 'ept-registrations/ktp',
+                        quality: 85,
+                        maxWidth: 1600,
+                        maxHeight: null,
+                        basename: 'ktp_' . Str::of($user->id)->padLeft(6, '0') . '_' . time() . '.webp'
+                    )['path'];
+                }
+
+                if ($selfieFile) {
+                    $selfiePath = ImageTransformer::toWebpFromUploaded(
+                        uploaded: $selfieFile,
+                        targetDisk: 'private',
+                        targetDir: 'ept-registrations/selfie',
+                        quality: 85,
+                        maxWidth: 1600,
+                        maxHeight: null,
+                        basename: 'selfie_' . Str::of($user->id)->padLeft(6, '0') . '_' . time() . '.webp'
+                    )['path'];
+                }
+            }
+
             return EptRegistration::create([
                 'user_id' => $user->id,
-                'mode' => $request->string('mode')->toString(),
+                'mode' => $mode,
                 'student_status' => $request->string('student_status')->toString(),
                 'test_quota' => EptRegistration::defaultTestQuotaForStudentStatus(
                     $request->string('student_status')->toString()
                 ),
                 'bukti_pembayaran' => $result['path'],
+                'foto_ktp' => $ktpPath,
+                'foto_selfie' => $selfiePath,
                 'status' => 'pending',
             ]);
         });

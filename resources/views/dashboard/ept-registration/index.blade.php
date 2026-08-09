@@ -421,6 +421,76 @@
                             @error('bukti_pembayaran') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
 
+                        {{-- Verifikasi Identitas (khusus EPT Online) --}}
+                        <div x-show="mode === 'online'" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                            <div class="rounded-xl border border-blue-100 bg-blue-50 p-4">
+                                <p class="text-sm text-blue-900 flex items-start gap-2">
+                                    <i class="fa-solid fa-id-card text-um-blue mt-0.5"></i>
+                                    <span>Karena Anda memilih <strong>EPT Online</strong>, wajib mengunggah foto KTP dan foto selfie untuk verifikasi identitas oleh admin.</span>
+                                </p>
+                            </div>
+
+                            <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {{-- Foto KTP --}}
+                                <div>
+                                    <label class="block text-sm font-bold text-slate-800 mb-2">
+                                        Foto KTP <span class="text-red-500">*</span>
+                                    </label>
+                                    <div class="relative group">
+                                        <div id="ktp-dropzone-ept"
+                                            class="border-2 border-dashed border-slate-300 rounded-xl p-5 text-center
+                                                    hover:border-um-blue hover:bg-blue-50/50 transition-colors
+                                                    flex flex-col items-center justify-center gap-2 cursor-pointer">
+                                            <div class="w-9 h-9 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-1 text-slate-400 group-hover:text-um-blue group-hover:bg-blue-100 transition-colors">
+                                                <i class="fa-solid fa-id-card"></i>
+                                            </div>
+                                            <p class="text-xs text-slate-600">Klik atau seret file ke sini</p>
+                                            <p class="text-[11px] text-slate-400">JPG, PNG, WebP (Maks. 8MB)</p>
+                                            <div id="ktp-preview-wrapper-ept" class="mt-2 hidden">
+                                                <img id="ktp-preview-ept" src="" alt="Preview KTP"
+                                                     class="h-16 w-24 rounded-lg object-cover border border-slate-200 shadow-sm mx-auto">
+                                                <p id="ktp-filename-ept" class="mt-1 text-[11px] font-semibold text-emerald-600 truncate max-w-[180px]">
+                                                    <i class="fa-solid fa-check mr-1"></i>File siap diunggah
+                                                </p>
+                                            </div>
+                                            <input id="foto_ktp_input_ept" type="file" name="foto_ktp"
+                                                   accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                                        </div>
+                                    </div>
+                                    @error('foto_ktp') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                                </div>
+
+                                {{-- Foto Selfie --}}
+                                <div>
+                                    <label class="block text-sm font-bold text-slate-800 mb-2">
+                                        Foto Selfie <span class="text-red-500">*</span>
+                                    </label>
+                                    <div class="relative group">
+                                        <div id="selfie-dropzone-ept"
+                                            class="border-2 border-dashed border-slate-300 rounded-xl p-5 text-center
+                                                    hover:border-um-blue hover:bg-blue-50/50 transition-colors
+                                                    flex flex-col items-center justify-center gap-2 cursor-pointer">
+                                            <div class="w-9 h-9 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-1 text-slate-400 group-hover:text-um-blue group-hover:bg-blue-100 transition-colors">
+                                                <i class="fa-solid fa-user"></i>
+                                            </div>
+                                            <p class="text-xs text-slate-600">Klik atau seret file ke sini</p>
+                                            <p class="text-[11px] text-slate-400">JPG, PNG, WebP (Maks. 8MB)</p>
+                                            <div id="selfie-preview-wrapper-ept" class="mt-2 hidden">
+                                                <img id="selfie-preview-ept" src="" alt="Preview Selfie"
+                                                     class="h-16 w-24 rounded-lg object-cover border border-slate-200 shadow-sm mx-auto">
+                                                <p id="selfie-filename-ept" class="mt-1 text-[11px] font-semibold text-emerald-600 truncate max-w-[180px]">
+                                                    <i class="fa-solid fa-check mr-1"></i>File siap diunggah
+                                                </p>
+                                            </div>
+                                            <input id="foto_selfie_input_ept" type="file" name="foto_selfie"
+                                                   accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                                        </div>
+                                    </div>
+                                    @error('foto_selfie') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                                </div>
+                            </div>
+                        </div>
+
                         {{-- Submit Button --}}
                         <div class="pt-4 border-t border-slate-100">
                             <button id="btn-submit-ept" type="submit"
@@ -627,6 +697,64 @@
                 handleFile(dt.files[0]);
             });
         }
+
+        // === Preview Foto KTP & Selfie (EPT Online) ===
+        function bindPhotoDropzone(dropzoneId, inputId, previewBoxId, previewImgId, fileNameId) {
+            const dropzone = document.getElementById(dropzoneId);
+            const input = document.getElementById(inputId);
+            const previewBox = document.getElementById(previewBoxId);
+            const previewImg = document.getElementById(previewImgId);
+            const fileNameEl = document.getElementById(fileNameId);
+
+            if (!dropzone || !input || !previewBox || !previewImg || !fileNameEl) return;
+
+            function handleFile(file) {
+                if (!file) return;
+                fileNameEl.textContent = file.name;
+                if (!file.type.startsWith('image/')) {
+                    previewImg.src = '';
+                    previewBox.classList.remove('hidden');
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewImg.src = e.target.result;
+                    previewBox.classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+
+            input.addEventListener('change', function (e) {
+                const file = e.target.files && e.target.files[0];
+                handleFile(file);
+            });
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropzone.addEventListener(eventName, function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dropzone.classList.add('border-um-blue', 'bg-blue-50/50');
+                });
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropzone.addEventListener(eventName, function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dropzone.classList.remove('border-um-blue', 'bg-blue-50/50');
+                });
+            });
+
+            dropzone.addEventListener('drop', function (e) {
+                const dt = e.dataTransfer;
+                if (!dt || !dt.files || !dt.files[0]) return;
+                input.files = dt.files;
+                handleFile(dt.files[0]);
+            });
+        }
+
+        bindPhotoDropzone('ktp-dropzone-ept', 'foto_ktp_input_ept', 'ktp-preview-wrapper-ept', 'ktp-preview-ept', 'ktp-filename-ept');
+        bindPhotoDropzone('selfie-dropzone-ept', 'foto_selfie_input_ept', 'selfie-preview-wrapper-ept', 'selfie-preview-ept', 'selfie-filename-ept');
 
         // === Submit Guard + Progress Indicator ===
         const registrationForm = document.getElementById('ept-registration-form');

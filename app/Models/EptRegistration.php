@@ -32,6 +32,8 @@ class EptRegistration extends Model
         'student_status',
         'test_quota',
         'bukti_pembayaran',
+        'foto_ktp',
+        'foto_selfie',
         'status',
         'approved_at',
         'rejected_at',
@@ -53,6 +55,12 @@ class EptRegistration extends Model
         static::deleting(function (self $registration): void {
             if (filled($registration->bukti_pembayaran)) {
                 Storage::disk('public')->delete($registration->bukti_pembayaran);
+            }
+            if (filled($registration->foto_ktp)) {
+                Storage::disk('private')->delete($registration->foto_ktp);
+            }
+            if (filled($registration->foto_selfie)) {
+                Storage::disk('private')->delete($registration->foto_selfie);
             }
         });
     }

@@ -286,6 +286,28 @@ class EptRegistrationResource extends BaseResource
                         ->copyable()
                         ->copyMessage('Path bukti pembayaran disalin'),
                 ]),
+
+            InfoSection::make('Verifikasi Identitas (EPT Online)')
+                ->visible(fn (EptRegistration $record): bool => $record->mode === EptRegistration::MODE_ONLINE)
+                ->schema([
+                    \Filament\Infolists\Components\Grid::make(2)
+                        ->schema([
+                            ImageEntry::make('foto_ktp')
+                                ->label('Foto KTP')
+                                ->state(fn (EptRegistration $record): string => $record->foto_ktp
+                                    ? route('admin.ept-registrations.identity-photo', ['registration' => $record->id, 'type' => 'ktp'])
+                                    : '')
+                                ->height(260)
+                                ->placeholder('-'),
+                            ImageEntry::make('foto_selfie')
+                                ->label('Foto Selfie')
+                                ->state(fn (EptRegistration $record): string => $record->foto_selfie
+                                    ? route('admin.ept-registrations.identity-photo', ['registration' => $record->id, 'type' => 'selfie'])
+                                    : '')
+                                ->height(260)
+                                ->placeholder('-'),
+                        ]),
+                ]),
         ]);
     }
 
@@ -311,6 +333,15 @@ class EptRegistrationResource extends BaseResource
                     ->color(fn (?string $state): string => $state === EptRegistration::MODE_ONLINE ? 'success' : 'gray')
                     ->formatStateUsing(fn (?string $state) => EptRegistration::modeLabel($state))
                     ->sortable()
+                    ->toggleable(),
+                Tables\Columns\BadgeColumn::make('identitas')
+                    ->label('Identitas')
+                    ->formatStateUsing(fn (EptRegistration $record): string => $record->mode === EptRegistration::MODE_ONLINE
+                        ? (filled($record->foto_ktp) && filled($record->foto_selfie) ? 'Lengkap' : 'Belum')
+                        : '-')
+                    ->color(fn (EptRegistration $record): string => $record->mode === EptRegistration::MODE_ONLINE
+                        ? (filled($record->foto_ktp) && filled($record->foto_selfie) ? 'success' : 'warning')
+                        : 'gray')
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('bukti_pembayaran')
                     ->label('Bukti')

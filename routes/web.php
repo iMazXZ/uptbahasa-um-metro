@@ -623,6 +623,10 @@ Route::post('/admin/ept-group/{group}/send-wa/{registration}', function (
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth'])->prefix('admin')->group(function () {
+    Route::get('/ept-registrations/{registration}/identity-photo/{type}', [\App\Http\Controllers\Admin\EptIdentityPhotoController::class, 'show'])
+        ->whereIn('type', ['ktp', 'selfie'])
+        ->name('admin.ept-registrations.identity-photo');
+
     Route::get('/crop-bukti/{penerjemahan}', [\App\Http\Controllers\Admin\CropBuktiController::class, 'show'])
         ->name('admin.crop-bukti.show');
     
