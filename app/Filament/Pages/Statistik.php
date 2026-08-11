@@ -104,9 +104,17 @@ class Statistik extends Page implements HasForms
         $this->refreshData();
     }
 
+    public function updated($property, $value): void
+    {
+        // Dipanggil setiap field form berubah (data.dataset, data.from, dll)
+        if (str_starts_with((string) $property, 'data.')) {
+            $this->refreshData();
+        }
+    }
+
     public function refreshData(): void
     {
-        $data = $this->form->getRawState() ?: ($this->data ?? []);
+        $data = $this->data ?? [];
 
         $datasetKey = $data['dataset'] ?? 'ept';
         $from = $data['from'] ?? null;
@@ -142,7 +150,7 @@ class Statistik extends Page implements HasForms
 
     public function export(): \Symfony\Component\HttpFoundation\BinaryFileResponse
     {
-        $data = $this->form->getRawState() ?: ($this->data ?? []);
+        $data = $this->data ?? [];
 
         $datasetKey = $data['dataset'] ?? 'ept';
         $from = isset($data['from']) && $data['from'] ? \Carbon\Carbon::parse($data['from'])->format('Y-m-d') : null;

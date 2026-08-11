@@ -99,7 +99,7 @@
     @push('scripts')
     <script src="{{ asset('vendor/chartjs/chart.umd.min.js') }}"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        function initStatistikCharts() {
             const monthlyEl = document.getElementById('statistik-monthly');
             const prodiEl = document.getElementById('statistik-prodi');
             if (!monthlyEl || !window.Chart) return;
@@ -112,6 +112,8 @@
 
             if (window.statistikCharts.monthly) window.statistikCharts.monthly.destroy();
             if (window.statistikCharts.prodi) window.statistikCharts.prodi.destroy();
+            window.statistikCharts.monthly = null;
+            window.statistikCharts.prodi = null;
 
             if (monthLabels.length > 0) {
                 window.statistikCharts.monthly = new Chart(monthlyEl, {
@@ -159,6 +161,18 @@
                     }
                 });
             }
+        }
+
+        // Init saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', initStatistikCharts);
+
+        // Re-init setiap kali Livewire memperbarui halaman (ganti filter)
+        document.addEventListener('livewire:init', () => {
+            Livewire.hook('commit', ({ succeed }) => {
+                succeed(() => {
+                    initStatistikCharts();
+                });
+            });
         });
     </script>
     @endpush
