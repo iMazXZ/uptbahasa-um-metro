@@ -1,21 +1,21 @@
 <x-filament-panels::page>
     {{-- FILTER --}}
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
-        <div class="flex flex-wrap items-end gap-4">
-            <div class="min-w-[200px]">
-                <label class="block text-xs font-semibold text-slate-600 mb-1.5">Jenis Data</label>
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+        <div class="flex flex-wrap items-end gap-x-6 gap-y-4">
+            <div class="min-w-[220px]">
+                <label class="block text-xs font-semibold text-slate-600 mb-2">Jenis Data</label>
                 <select wire:model.live="dataset"
-                        class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 focus:border-um-blue focus:ring-2 focus:ring-um-blue/20 outline-none">
+                        class="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-700 focus:border-um-blue focus:ring-2 focus:ring-um-blue/20 outline-none">
                     @foreach($this->datasetOptions() as $value => $label)
                         <option value="{{ $value }}">{{ $label }}</option>
                     @endforeach
                 </select>
             </div>
 
-            <div class="min-w-[160px]">
-                <label class="block text-xs font-semibold text-slate-600 mb-1.5">Mode (EPT)</label>
+            <div class="min-w-[180px]">
+                <label class="block text-xs font-semibold text-slate-600 mb-2">Mode (EPT)</label>
                 <select wire:model.live="mode"
-                        class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 focus:border-um-blue focus:ring-2 focus:ring-um-blue/20 outline-none">
+                        class="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-700 focus:border-um-blue focus:ring-2 focus:ring-um-blue/20 outline-none">
                     @foreach($this->modeOptions() as $value => $label)
                         <option value="{{ $value }}">{{ $label }}</option>
                     @endforeach
@@ -23,18 +23,18 @@
             </div>
 
             <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1.5">Dari Tanggal</label>
+                <label class="block text-xs font-semibold text-slate-600 mb-2">Dari Tanggal</label>
                 <input type="date" wire:model.live="from"
-                       class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 focus:border-um-blue focus:ring-2 focus:ring-um-blue/20 outline-none">
+                       class="rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-700 focus:border-um-blue focus:ring-2 focus:ring-um-blue/20 outline-none">
             </div>
 
             <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1.5">Sampai Tanggal</label>
+                <label class="block text-xs font-semibold text-slate-600 mb-2">Sampai Tanggal</label>
                 <input type="date" wire:model.live="to"
-                       class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 focus:border-um-blue focus:ring-2 focus:ring-um-blue/20 outline-none">
+                       class="rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-700 focus:border-um-blue focus:ring-2 focus:ring-um-blue/20 outline-none">
             </div>
 
-            <div class="ml-auto flex items-center gap-3">
+            <div class="ml-auto flex items-center gap-3 pb-0.5">
                 <span wire:loading wire:target="applyFilters,updated"
                       class="text-xs text-slate-400 flex items-center gap-1.5">
                     <x-filament::loading-indicator class="h-4 w-4" />
@@ -49,36 +49,36 @@
 
     {{-- RINGKASAN --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">Total</p>
-            <p class="text-3xl font-black text-um-blue mt-1">{{ number_format($grandTotal) }}</p>
+            <p class="text-3xl font-black text-um-blue mt-2">{{ number_format($grandTotal) }}</p>
         </div>
-        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">Rata-rata / Bulan</p>
-            <p class="text-3xl font-black text-emerald-700 mt-1">
+            <p class="text-3xl font-black text-emerald-700 mt-2">
                 {{ count($monthCounts) > 0 ? number_format(array_sum($monthCounts) / count($monthCounts), 1) : 0 }}
             </p>
         </div>
-        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">Bulan Tertinggi</p>
             @php
                 $maxIdx = $monthCounts ? array_search(max($monthCounts), $monthCounts) : null;
             @endphp
-            <p class="text-lg font-bold text-amber-700 mt-1 truncate">
+            <p class="text-lg font-bold text-amber-700 mt-2 truncate">
                 {{ $maxIdx !== null ? ($monthLabels[$maxIdx] ?? '-') : '-' }}
                 <span class="text-sm font-semibold">({{ $maxIdx !== null ? number_format($monthCounts[$maxIdx]) : 0 }})</span>
             </p>
         </div>
-        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">Jumlah Prodi</p>
-            <p class="text-3xl font-black text-rose-600 mt-1">{{ count($prodiRows) }}</p>
+            <p class="text-3xl font-black text-rose-600 mt-2">{{ count($prodiRows) }}</p>
         </div>
     </div>
 
     {{-- GRAFIK --}}
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-        <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
-            <div class="flex items-center justify-between mb-4">
+        <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+            <div class="flex items-center justify-between mb-5">
                 <h3 class="font-bold text-slate-800">Perkembangan per Bulan</h3>
                 <span class="text-xs text-slate-500">{{ count($monthLabels) }} bulan</span>
             </div>
@@ -87,8 +87,8 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
-            <h3 class="font-bold text-slate-800 mb-4">Top 10 Prodi</h3>
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+            <h3 class="font-bold text-slate-800 mb-5">Top 10 Prodi</h3>
             <div wire:key="prodi-chart">
                 <canvas id="statistik-prodi" height="300"></canvas>
             </div>
@@ -96,8 +96,8 @@
     </div>
 
     {{-- TABEL --}}
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 mt-6 overflow-hidden">
-        <div class="flex items-center justify-between mb-4">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 mt-6 overflow-hidden">
+        <div class="flex items-center justify-between mb-5 flex-wrap gap-3">
             <h3 class="font-bold text-slate-800">Rincian per Prodi</h3>
             <div class="flex items-center gap-3">
                 <span class="text-xs text-slate-500">{{ count($prodiRows) }} prodi</span>
