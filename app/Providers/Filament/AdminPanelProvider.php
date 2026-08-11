@@ -27,6 +27,7 @@ use App\Filament\Widgets\StatsWidget;
 use App\Filament\Pages\Auth\RequestPasswordReset;
 use App\Filament\Widgets\PengumumanWidget;
 use App\Filament\Pages\DashboardKustom;
+use App\Filament\Pages\Statistik;
 use Illuminate\Support\Facades\Blade;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 // use Filament\Enums\ThemeMode;
@@ -61,6 +62,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
                 DashboardKustom::class,
+                Statistik::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
