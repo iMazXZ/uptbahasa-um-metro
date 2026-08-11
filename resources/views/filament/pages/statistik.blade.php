@@ -1,126 +1,145 @@
 <x-filament-panels::page>
-    <div class="flex items-center justify-between gap-4 flex-wrap">
-        <div class="flex flex-wrap items-end gap-3">
-            <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Jenis Data</label>
+    {{-- FILTER --}}
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
+        <div class="flex flex-wrap items-end gap-4">
+            <div class="min-w-[200px]">
+                <label class="block text-xs font-semibold text-slate-600 mb-1.5">Jenis Data</label>
                 <select wire:model.live="dataset"
-                        class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 focus:border-um-blue focus:ring-um-blue/30">
+                        class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 focus:border-um-blue focus:ring-2 focus:ring-um-blue/20 outline-none">
                     @foreach($this->datasetOptions() as $value => $label)
                         <option value="{{ $value }}">{{ $label }}</option>
                     @endforeach
                 </select>
             </div>
-            <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Mode (EPT)</label>
+
+            <div class="min-w-[160px]">
+                <label class="block text-xs font-semibold text-slate-600 mb-1.5">Mode (EPT)</label>
                 <select wire:model.live="mode"
-                        class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 focus:border-um-blue focus:ring-um-blue/30">
+                        class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 focus:border-um-blue focus:ring-2 focus:ring-um-blue/20 outline-none">
                     @foreach($this->modeOptions() as $value => $label)
                         <option value="{{ $value }}">{{ $label }}</option>
                     @endforeach
                 </select>
             </div>
+
             <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Dari Tanggal</label>
+                <label class="block text-xs font-semibold text-slate-600 mb-1.5">Dari Tanggal</label>
                 <input type="date" wire:model.live="from"
-                       class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 focus:border-um-blue focus:ring-um-blue/30">
+                       class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 focus:border-um-blue focus:ring-2 focus:ring-um-blue/20 outline-none">
             </div>
+
             <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Sampai Tanggal</label>
+                <label class="block text-xs font-semibold text-slate-600 mb-1.5">Sampai Tanggal</label>
                 <input type="date" wire:model.live="to"
-                       class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 focus:border-um-blue focus:ring-um-blue/30">
+                       class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 focus:border-um-blue focus:ring-2 focus:ring-um-blue/20 outline-none">
             </div>
-        </div>
-        <div class="shrink-0">
-            <x-filament::button wire:click="export" color="success" icon="heroicon-o-arrow-down-tray">
-                Export Excel
-            </x-filament::button>
+
+            <div class="ml-auto flex items-center gap-3">
+                <span wire:loading wire:target="applyFilters,updated"
+                      class="text-xs text-slate-400 flex items-center gap-1.5">
+                    <x-filament::loading-indicator class="h-4 w-4" />
+                    Memuat...
+                </span>
+                <x-filament::button wire:click="export" color="success" icon="heroicon-o-arrow-down-tray">
+                    Export Excel
+                </x-filament::button>
+            </div>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {{-- Grafik per Bulan --}}
+    {{-- RINGKASAN --}}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">Total</p>
+            <p class="text-3xl font-black text-um-blue mt-1">{{ number_format($grandTotal) }}</p>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">Rata-rata / Bulan</p>
+            <p class="text-3xl font-black text-emerald-700 mt-1">
+                {{ count($monthCounts) > 0 ? number_format(array_sum($monthCounts) / count($monthCounts), 1) : 0 }}
+            </p>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">Bulan Tertinggi</p>
+            @php
+                $maxIdx = $monthCounts ? array_search(max($monthCounts), $monthCounts) : null;
+            @endphp
+            <p class="text-lg font-bold text-amber-700 mt-1 truncate">
+                {{ $maxIdx !== null ? ($monthLabels[$maxIdx] ?? '-') : '-' }}
+                <span class="text-sm font-semibold">({{ $maxIdx !== null ? number_format($monthCounts[$maxIdx]) : 0 }})</span>
+            </p>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">Jumlah Prodi</p>
+            <p class="text-3xl font-black text-rose-600 mt-1">{{ count($prodiRows) }}</p>
+        </div>
+    </div>
+
+    {{-- GRAFIK --}}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
         <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="font-bold text-slate-800">Perkembangan per Bulan</h3>
                 <span class="text-xs text-slate-500">{{ count($monthLabels) }} bulan</span>
             </div>
-            <canvas id="statistik-monthly" height="120"></canvas>
+            <div wire:key="monthly-chart">
+                <canvas id="statistik-monthly" height="120"></canvas>
+            </div>
         </div>
 
-        {{-- Ringkasan --}}
         <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
-            <h3 class="font-bold text-slate-800 mb-4">Ringkasan</h3>
-            <div class="space-y-3">
-                <div class="rounded-xl bg-blue-50 border border-blue-100 p-4">
-                    <p class="text-xs font-medium text-blue-600 uppercase tracking-wide">Total</p>
-                    <p class="text-3xl font-black text-blue-800 mt-1">{{ number_format($grandTotal ?? 0) }}</p>
-                </div>
-                <div class="rounded-xl bg-emerald-50 border border-emerald-100 p-4">
-                    <p class="text-xs font-medium text-emerald-600 uppercase tracking-wide">Rata-rata / Bulan</p>
-                    <p class="text-3xl font-black text-emerald-800 mt-1">
-                        {{ count($monthCounts) > 0 ? number_format(array_sum($monthCounts) / count($monthCounts), 1) : 0 }}
-                    </p>
-                </div>
-                <div class="rounded-xl bg-amber-50 border border-amber-100 p-4">
-                    <p class="text-xs font-medium text-amber-600 uppercase tracking-wide">Bulan Tertinggi</p>
-                    @php($maxIdx = array_search(max($monthCounts ?: [0]), $monthCounts ?: [0]))
-                    <p class="text-lg font-bold text-amber-800 mt-1">
-                        {{ ($monthLabels[$maxIdx] ?? '-') }}
-                        <span class="text-sm font-semibold">({{ number_format(max($monthCounts ?: [0])) }})</span>
-                    </p>
-                </div>
+            <h3 class="font-bold text-slate-800 mb-4">Top 10 Prodi</h3>
+            <div wire:key="prodi-chart">
+                <canvas id="statistik-prodi" height="300"></canvas>
             </div>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-        {{-- Grafik Top 10 Prodi --}}
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
-            <h3 class="font-bold text-slate-800 mb-4">Top 10 Prodi</h3>
-            <canvas id="statistik-prodi" height="300"></canvas>
-        </div>
-
-        {{-- Tabel per Prodi --}}
-        <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-sm p-5 overflow-hidden">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="font-bold text-slate-800">Rincian per Prodi</h3>
+    {{-- TABEL --}}
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 mt-6 overflow-hidden">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-slate-800">Rincian per Prodi</h3>
+            <div class="flex items-center gap-3">
                 <span class="text-xs text-slate-500">{{ count($prodiRows) }} prodi</span>
+                <span class="text-xs font-semibold text-um-blue bg-blue-50 px-2.5 py-1 rounded-full">
+                    {{ \Carbon\Carbon::parse($from)->translatedFormat('d M Y') }} — {{ \Carbon\Carbon::parse($to)->translatedFormat('d M Y') }}
+                </span>
             </div>
-
-            @if(count($prodiRows) > 0)
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm">
-                    <thead>
-                        <tr class="border-b border-slate-200 text-left">
-                            <th class="py-2 pr-3 font-semibold text-slate-500">#</th>
-                            <th class="py-2 pr-3 font-semibold text-slate-500">Program Studi</th>
-                            <th class="py-2 pr-3 font-semibold text-slate-500 text-right">Jumlah</th>
-                            <th class="py-2 font-semibold text-slate-500 text-right w-40">Persentase</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100">
-                        @foreach($prodiRows as $i => $row)
-                        <tr class="hover:bg-slate-50">
-                            <td class="py-2 pr-3 text-slate-400">{{ $i + 1 }}</td>
-                            <td class="py-2 pr-3 font-medium text-slate-800">{{ $row['prodi'] }}</td>
-                            <td class="py-2 pr-3 text-right font-semibold text-slate-800">{{ number_format($row['total']) }}</td>
-                            <td class="py-2">
-                                <div class="flex items-center gap-2 justify-end">
-                                    <div class="h-1.5 w-24 rounded-full bg-slate-100 overflow-hidden">
-                                        <div class="h-full rounded-full bg-um-blue" style="width: {{ min(100, $row['persen']) }}%"></div>
-                                    </div>
-                                    <span class="text-xs text-slate-500 w-12 text-right">{{ $row['persen'] }}%</span>
-                                </div>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-            @else
-            <p class="text-sm text-slate-400 text-center py-8">Tidak ada data pada rentang ini.</p>
-            @endif
         </div>
+
+        @if(count($prodiRows) > 0)
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm" wire:key="prodi-table">
+                <thead>
+                    <tr class="border-b border-slate-200 text-left">
+                        <th class="py-2 pr-3 font-semibold text-slate-500">#</th>
+                        <th class="py-2 pr-3 font-semibold text-slate-500">Program Studi</th>
+                        <th class="py-2 pr-3 font-semibold text-slate-500 text-right">Jumlah</th>
+                        <th class="py-2 font-semibold text-slate-500 text-right w-48">Persentase</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    @foreach($prodiRows as $i => $row)
+                    <tr class="hover:bg-slate-50">
+                        <td class="py-2 pr-3 text-slate-400">{{ $i + 1 }}</td>
+                        <td class="py-2 pr-3 font-medium text-slate-800">{{ $row['prodi'] }}</td>
+                        <td class="py-2 pr-3 text-right font-semibold text-slate-800">{{ number_format($row['total']) }}</td>
+                        <td class="py-2">
+                            <div class="flex items-center gap-2 justify-end">
+                                <div class="h-1.5 w-24 rounded-full bg-slate-100 overflow-hidden">
+                                    <div class="h-full rounded-full bg-um-blue" style="width: {{ min(100, $row['persen']) }}%"></div>
+                                </div>
+                                <span class="text-xs text-slate-500 w-12 text-right">{{ $row['persen'] }}%</span>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        @else
+        <p class="text-sm text-slate-400 text-center py-8">Tidak ada data pada rentang ini.</p>
+        @endif
     </div>
 
     @push('scripts')
@@ -129,7 +148,7 @@
         function initStatistikCharts() {
             const monthlyEl = document.getElementById('statistik-monthly');
             const prodiEl = document.getElementById('statistik-prodi');
-            if (!monthlyEl || !window.Chart) return;
+            if (!window.Chart) return;
 
             window.statistikCharts = window.statistikCharts || {};
 
@@ -137,12 +156,10 @@
             const monthCounts = @json($monthCounts);
             const prodiRows = @json(array_slice($prodiRows, 0, 10));
 
-            if (window.statistikCharts.monthly) window.statistikCharts.monthly.destroy();
-            if (window.statistikCharts.prodi) window.statistikCharts.prodi.destroy();
-            window.statistikCharts.monthly = null;
-            window.statistikCharts.prodi = null;
+            if (window.statistikCharts.monthly) { window.statistikCharts.monthly.destroy(); window.statistikCharts.monthly = null; }
+            if (window.statistikCharts.prodi) { window.statistikCharts.prodi.destroy(); window.statistikCharts.prodi = null; }
 
-            if (monthLabels.length > 0) {
+            if (monthlyEl && monthLabels.length > 0) {
                 window.statistikCharts.monthly = new Chart(monthlyEl, {
                     type: 'line',
                     data: {
@@ -160,9 +177,7 @@
                     },
                     options: {
                         plugins: { legend: { display: false } },
-                        scales: {
-                            y: { beginAtZero: true, ticks: { precision: 0 } }
-                        }
+                        scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
                     }
                 });
             }
@@ -182,29 +197,18 @@
                     options: {
                         indexAxis: 'y',
                         plugins: { legend: { display: false } },
-                        scales: {
-                            x: { beginAtZero: true, ticks: { precision: 0 } }
-                        }
+                        scales: { x: { beginAtZero: true, ticks: { precision: 0 } } }
                     }
                 });
             }
         }
 
-        // Init saat halaman dimuat
         document.addEventListener('DOMContentLoaded', initStatistikCharts);
-
-        // Re-init setiap kali Livewire memperbarui halaman (ganti filter)
         document.addEventListener('livewire:init', () => {
             Livewire.hook('commit', ({ succeed }) => {
-                succeed(() => {
-                    initStatistikCharts();
-                });
+                succeed(() => initStatistikCharts());
             });
         });
     </script>
     @endpush
-
-    <style>
-        .filament-page-statistik { /* noop */ }
-    </style>
 </x-filament-panels::page>

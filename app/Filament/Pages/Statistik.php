@@ -2,15 +2,17 @@
 
 namespace App\Filament\Pages;
 
+use App\Exports\StatistikPerProdiExport;
 use App\Filament\Pages\Support\EptRegistrasiDataset;
 use App\Filament\Pages\Support\PenerjemahanDataset;
 use App\Filament\Pages\Support\StatistikDataset;
 use App\Filament\Pages\Support\SuratRekomendasiDataset;
 use App\Filament\Pages\Support\UserDataset;
 use App\Models\EptRegistration;
-use App\Exports\StatistikPerProdiExport;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
+use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Illuminate\Support\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 
 class Statistik extends Page
@@ -25,18 +27,15 @@ class Statistik extends Page
 
     protected static string $view = 'filament.pages.statistik';
 
-
-    // Property filter Livewire murni (wire:model.live — dijamin memicu updated())
     public string $dataset = 'ept';
     public string $mode = '';
-    public ?string $from = null;
-    public ?string $to = null;
+    public string $from = '';
+    public string $to = '';
 
-    public array $datasets = [];
     public array $monthLabels = [];
     public array $monthCounts = [];
     public array $prodiRows = [];
-    public ?int $grandTotal = null;
+    public int $grandTotal = 0;
 
     public function datasetOptions(): array
     {
@@ -59,87 +58,104 @@ class Statistik extends Page
 
     public function mount(): void
     {
-        $this->dataset = 'ept';
-        $this->mode = '';
         $this->from = now()->subYear()->startOfMonth()->format('Y-m-d');
         $this->to = now()->format('Y-m-d');
 
-        $this->refreshData();
+        $this->applyFilters();
     }
 
-    public function updated($property, $value): void
+    /**
+     * Dipanggil oleh wire:model.live setiap filter berubah.
+     */
+    public function updated(string $property): void
     {
-        // wire:model.live pada filter — pastikan refresh saat berubah
         if (in_array($property, ['dataset', 'mode', 'from', 'to'], true)) {
-            $this->refreshData();
+            $this->applyFilters();
         }
     }
 
-    public function refreshData(): void
+    /**
+     * Hitung ulang semua data berdasarkan filter (grafik, tabel, ringkasan).
+     */
+    public function applyFilters(): void
     {
-        $datasetKey = $this->dataset ?: 'ept';
-        $from = $this->from;
-        $to = $this->to;
-        $mode = $this->mode;
+        $from = $this->normalizeDate($this->from);
+        $to = $this->normalizeDate($this->to);
+        $mode = $this->mode ?: null;
 
-        $dataset = $this->resolveDataset($datasetKey);
+        $dataset = $this->resolveDataset($this->dataset);
         if (! $dataset) {
-            $this->datasets = [];
-            $this->monthLabels = [];
-            $this->monthCounts = [];
-            $this->prodiRows = [];
-            $this->grandTotal = null;
+            $this->resetResults();
             return;
         }
 
-        $from = $from ? \Carbon\Carbon::parse($from)->format('Y-m-d') : null;
-        $to = $to ? \Carbon\Carbon::parse($to)->format('Y-m-d') : null;
+        $perBulan = $dataset->perBulan($from, $to, $mode);
+        $perProdi = $dataset->perProdi($from, $to, $mode);
 
-        $perBulan = $dataset->perBulan($from, $to, $mode ?: null);
-        $perProdi = $dataset->perProdi($from, $to, $mode ?: null);
+        $this->monthLabels = $perBulan->keys()
+            ->map(fn (string $periode) => Carbon::createFromFormat('Y-m', $periode)->translatedFormat('M Y'))
+            ->values()
+            ->all();
 
-        $this->datasets = $perBulan->map(fn ($total, $periode) => [
-            'periode' => \Carbon\Carbon::createFromFormat('Y-m', $periode)->translatedFormat('M Y'),
-            'total' => (int) $total,
-        ])->values()->all();
-
-        $this->monthLabels = array_column($this->datasets, 'periode');
-        $this->monthCounts = array_column($this->datasets, 'total');
+        $this->monthCounts = $perBulan->values()->map(fn ($v) => (int) $v)->all();
         $this->prodiRows = $perProdi->values()->all();
         $this->grandTotal = (int) $perProdi->sum('total');
     }
 
-    public function export(): \Symfony\Component\HttpFoundation\BinaryFileResponse
+    public function export()
     {
-        $datasetKey = $this->dataset ?: 'ept';
-        $from = $this->from ? \Carbon\Carbon::parse($this->from)->format('Y-m-d') : null;
-        $to = $this->to ? \Carbon\Carbon::parse($this->to)->format('Y-m-d') : null;
-        $mode = $this->mode;
+        $from = $this->normalizeDate($this->from);
+        $to = $this->normalizeDate($this->to);
+        $mode = $this->mode ?: null;
 
-        $dataset = $this->resolveDataset($datasetKey);
+        $dataset = $this->resolveDataset($this->dataset);
         if (! $dataset) {
-            abort(422, 'Dataset tidak valid.');
+            Notification::make()->title('Dataset tidak valid')->danger()->send();
+            return null;
         }
 
         $label = $dataset::label();
         $periodLabel = sprintf(
             'Periode: %s s.d. %s',
-            $from ? \Carbon\Carbon::parse($from)->translatedFormat('d M Y') : 'Awal',
-            $to ? \Carbon\Carbon::parse($to)->translatedFormat('d M Y') : 'Sekarang'
+            $from ? Carbon::parse($from)->translatedFormat('d M Y') : 'Awal',
+            $to ? Carbon::parse($to)->translatedFormat('d M Y') : 'Sekarang'
         );
-
         if ($mode) {
-            $periodLabel .= ' | ' . \App\Models\EptRegistration::modeLabel($mode);
+            $periodLabel .= ' | ' . EptRegistration::modeLabel($mode);
         }
 
-        $rows = $dataset->perProdi($from, $to, $mode ?: null);
-
+        $rows = $dataset->perProdi($from, $to, $mode);
         $filename = 'statistik_' . strtolower(str_replace(' ', '-', $label)) . '_' . now()->format('Ymd_His') . '.xlsx';
 
         return Excel::download(
-            new StatistikPerProdiExport(collect($rows->values()->all()), "STATISTIK {$label} PER PRODI", $periodLabel),
+            new StatistikPerProdiExport(
+                collect($rows->values()->all()),
+                "STATISTIK {$label} PER PRODI",
+                $periodLabel
+            ),
             $filename
         );
+    }
+
+    protected function normalizeDate(?string $value): ?string
+    {
+        if (! $value) {
+            return null;
+        }
+
+        try {
+            return Carbon::parse($value)->format('Y-m-d');
+        } catch (\Throwable) {
+            return null;
+        }
+    }
+
+    protected function resetResults(): void
+    {
+        $this->monthLabels = [];
+        $this->monthCounts = [];
+        $this->prodiRows = [];
+        $this->grandTotal = 0;
     }
 
     protected function resolveDataset(string $key): ?StatistikDataset
