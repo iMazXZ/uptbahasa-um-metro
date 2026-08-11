@@ -10,17 +10,11 @@ use App\Filament\Pages\Support\UserDataset;
 use App\Models\EptRegistration;
 use App\Exports\StatistikPerProdiExport;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
 use Filament\Pages\Page;
 use Maatwebsite\Excel\Facades\Excel;
 
-class Statistik extends Page implements HasForms
+class Statistik extends Page
 {
-    use InteractsWithForms;
     use HasPageShield;
 
     protected static ?string $navigationIcon = 'heroicon-o-chart-bar';
@@ -44,57 +38,23 @@ class Statistik extends Page implements HasForms
     public array $prodiRows = [];
     public ?int $grandTotal = null;
 
-    protected function getFormSchema(): array
+    public function datasetOptions(): array
     {
         return [
-            Select::make('dataset')
-                ->label('Jenis Data')
-                ->options([
-                    'ept' => EptRegistrasiDataset::label(),
-                    'surat' => SuratRekomendasiDataset::label(),
-                    'penerjemahan' => PenerjemahanDataset::label(),
-                    'users' => UserDataset::label(),
-                ])
-                ->default('ept')
-                ->live()
-                ->afterStateUpdated(fn () => $this->refreshData())
-                ->native(false),
-
-            Select::make('mode')
-                ->label('Mode (EPT)')
-                ->options([
-                    '' => 'Semua Mode',
-                    EptRegistration::MODE_ONLINE => 'EPT Online',
-                    EptRegistration::MODE_OFFLINE => 'EPT Offline',
-                ])
-                ->default('')
-                ->live()
-                ->afterStateUpdated(fn () => $this->refreshData())
-                ->native(false),
-
-            DatePicker::make('from')
-                ->label('Dari Tanggal')
-                ->default(now()->subYear()->startOfMonth())
-                ->native(false)
-                ->displayFormat('d M Y')
-                ->live()
-                ->afterStateUpdated(fn () => $this->refreshData()),
-
-            DatePicker::make('to')
-                ->label('Sampai Tanggal')
-                ->default(now())
-                ->native(false)
-                ->displayFormat('d M Y')
-                ->live()
-                ->afterStateUpdated(fn () => $this->refreshData()),
+            'ept' => EptRegistrasiDataset::label(),
+            'surat' => SuratRekomendasiDataset::label(),
+            'penerjemahan' => PenerjemahanDataset::label(),
+            'users' => UserDataset::label(),
         ];
     }
 
-    public function form(Form $form): Form
+    public function modeOptions(): array
     {
-        return $form
-            ->schema($this->getFormSchema())
-            ->statePath('');
+        return [
+            '' => 'Semua Mode',
+            EptRegistration::MODE_ONLINE => 'EPT Online',
+            EptRegistration::MODE_OFFLINE => 'EPT Offline',
+        ];
     }
 
     public function mount(): void
@@ -103,8 +63,6 @@ class Statistik extends Page implements HasForms
         $this->mode = '';
         $this->from = now()->subYear()->startOfMonth()->format('Y-m-d');
         $this->to = now()->format('Y-m-d');
-
-        $this->form->fill();
 
         $this->refreshData();
     }

@@ -1,8 +1,35 @@
 <x-filament-panels::page>
     <div class="flex items-center justify-between gap-4 flex-wrap">
-        <form wire:submit="refreshData">
-            {{ $this->form }}
-        </form>
+        <div class="flex flex-wrap items-end gap-3">
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Jenis Data</label>
+                <select wire:model.live="dataset"
+                        class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 focus:border-um-blue focus:ring-um-blue/30">
+                    @foreach($this->datasetOptions() as $value => $label)
+                        <option value="{{ $value }}">{{ $label }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Mode (EPT)</label>
+                <select wire:model.live="mode"
+                        class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 focus:border-um-blue focus:ring-um-blue/30">
+                    @foreach($this->modeOptions() as $value => $label)
+                        <option value="{{ $value }}">{{ $label }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Dari Tanggal</label>
+                <input type="date" wire:model.live="from"
+                       class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 focus:border-um-blue focus:ring-um-blue/30">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Sampai Tanggal</label>
+                <input type="date" wire:model.live="to"
+                       class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 focus:border-um-blue focus:ring-um-blue/30">
+            </div>
+        </div>
         <div class="shrink-0">
             <x-filament::button wire:click="export" color="success" icon="heroicon-o-arrow-down-tray">
                 Export Excel
