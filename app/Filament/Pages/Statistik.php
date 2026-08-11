@@ -106,12 +106,12 @@ class Statistik extends Page implements HasForms
 
     public function refreshData(): void
     {
-        $state = $this->form->getState();
+        $data = $this->form->getRawState() ?: ($this->data ?? []);
 
-        $datasetKey = $state['dataset'] ?? 'ept';
-        $from = $state['from'] ?? null;
-        $to = $state['to'] ?? null;
-        $mode = $state['mode'] ?? '';
+        $datasetKey = $data['dataset'] ?? 'ept';
+        $from = $data['from'] ?? null;
+        $to = $data['to'] ?? null;
+        $mode = $data['mode'] ?? '';
 
         $dataset = $this->resolveDataset($datasetKey);
         if (! $dataset) {
@@ -122,6 +122,9 @@ class Statistik extends Page implements HasForms
             $this->grandTotal = null;
             return;
         }
+
+        $from = $from ? \Carbon\Carbon::parse($from)->format('Y-m-d') : null;
+        $to = $to ? \Carbon\Carbon::parse($to)->format('Y-m-d') : null;
 
         $perBulan = $dataset->perBulan($from, $to, $mode ?: null);
         $perProdi = $dataset->perProdi($from, $to, $mode ?: null);
@@ -139,12 +142,12 @@ class Statistik extends Page implements HasForms
 
     public function export(): \Symfony\Component\HttpFoundation\BinaryFileResponse
     {
-        $state = $this->form->getState();
+        $data = $this->form->getRawState() ?: ($this->data ?? []);
 
-        $datasetKey = $state['dataset'] ?? 'ept';
-        $from = $state['from'] ?? null;
-        $to = $state['to'] ?? null;
-        $mode = $state['mode'] ?? '';
+        $datasetKey = $data['dataset'] ?? 'ept';
+        $from = isset($data['from']) && $data['from'] ? \Carbon\Carbon::parse($data['from'])->format('Y-m-d') : null;
+        $to = isset($data['to']) && $data['to'] ? \Carbon\Carbon::parse($data['to'])->format('Y-m-d') : null;
+        $mode = $data['mode'] ?? '';
 
         $dataset = $this->resolveDataset($datasetKey);
         if (! $dataset) {
