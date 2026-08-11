@@ -31,7 +31,12 @@ class Statistik extends Page implements HasForms
 
     protected static string $view = 'filament.pages.statistik';
 
-    public ?array $data = [];
+
+    // Property filter Livewire murni (wire:model.live — dijamin memicu updated())
+    public string $dataset = 'ept';
+    public string $mode = '';
+    public ?string $from = null;
+    public ?string $to = null;
 
     public array $datasets = [];
     public array $monthLabels = [];
@@ -89,37 +94,35 @@ class Statistik extends Page implements HasForms
     {
         return $form
             ->schema($this->getFormSchema())
-            ->statePath('data');
+            ->statePath('');
     }
 
     public function mount(): void
     {
-        $this->form->fill([
-            'dataset' => 'ept',
-            'mode' => '',
-            'from' => now()->subYear()->startOfMonth()->format('Y-m-d'),
-            'to' => now()->format('Y-m-d'),
-        ]);
+        $this->dataset = 'ept';
+        $this->mode = '';
+        $this->from = now()->subYear()->startOfMonth()->format('Y-m-d');
+        $this->to = now()->format('Y-m-d');
+
+        $this->form->fill();
 
         $this->refreshData();
     }
 
     public function updated($property, $value): void
     {
-        // Dipanggil setiap field form berubah (data.dataset, data.from, dll)
-        if (str_starts_with((string) $property, 'data.')) {
+        // wire:model.live pada filter — pastikan refresh saat berubah
+        if (in_array($property, ['dataset', 'mode', 'from', 'to'], true)) {
             $this->refreshData();
         }
     }
 
     public function refreshData(): void
     {
-        $data = $this->data ?? [];
-
-        $datasetKey = $data['dataset'] ?? 'ept';
-        $from = $data['from'] ?? null;
-        $to = $data['to'] ?? null;
-        $mode = $data['mode'] ?? '';
+        $datasetKey = $this->dataset ?: 'ept';
+        $from = $this->from;
+        $to = $this->to;
+        $mode = $this->mode;
 
         $dataset = $this->resolveDataset($datasetKey);
         if (! $dataset) {
@@ -150,12 +153,10 @@ class Statistik extends Page implements HasForms
 
     public function export(): \Symfony\Component\HttpFoundation\BinaryFileResponse
     {
-        $data = $this->data ?? [];
-
-        $datasetKey = $data['dataset'] ?? 'ept';
-        $from = isset($data['from']) && $data['from'] ? \Carbon\Carbon::parse($data['from'])->format('Y-m-d') : null;
-        $to = isset($data['to']) && $data['to'] ? \Carbon\Carbon::parse($data['to'])->format('Y-m-d') : null;
-        $mode = $data['mode'] ?? '';
+        $datasetKey = $this->dataset ?: 'ept';
+        $from = $this->from ? \Carbon\Carbon::parse($this->from)->format('Y-m-d') : null;
+        $to = $this->to ? \Carbon\Carbon::parse($this->to)->format('Y-m-d') : null;
+        $mode = $this->mode;
 
         $dataset = $this->resolveDataset($datasetKey);
         if (! $dataset) {
