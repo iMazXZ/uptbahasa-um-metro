@@ -89,8 +89,37 @@
 
         <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
             <h3 class="font-bold text-slate-800 mb-5">Top 10 Prodi</h3>
-            <div wire:key="prodi-chart">
-                <canvas id="statistik-prodi" height="300"></canvas>
+            <div class="space-y-3">
+                @foreach(array_slice($prodiRows, 0, 10) as $i => $row)
+                    @php
+                        $rank = $i + 1;
+                        $maxTotal = max(array_column(array_slice($prodiRows, 0, 10), 'total')) ?: 1;
+                        $barWidth = max(6, min(100, round(($row['total'] / $maxTotal) * 100)));
+                        $rankStyle = match ($rank) {
+                            1 => 'bg-amber-100 text-amber-700 border-amber-200',
+                            2 => 'bg-slate-100 text-slate-600 border-slate-200',
+                            3 => 'bg-orange-100 text-orange-700 border-orange-200',
+                            default => 'bg-slate-50 text-slate-400 border-slate-100',
+                        };
+                    @endphp
+                    <div class="flex items-center gap-3">
+                        <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-xs font-bold {{ $rankStyle }}">
+                            {{ $rank }}
+                        </span>
+                        <div class="min-w-0 flex-1">
+                            <div class="flex items-center justify-between gap-2 mb-1">
+                                <p class="truncate text-sm font-medium text-slate-700" title="{{ $row['prodi'] }}">
+                                    {{ $row['prodi'] }}
+                                </p>
+                                <span class="shrink-0 text-xs font-bold text-um-blue">{{ number_format($row['total']) }}</span>
+                            </div>
+                            <div class="h-1.5 w-full rounded-full bg-slate-100 overflow-hidden">
+                                <div class="h-full rounded-full {{ $rank === 1 ? 'bg-gradient-to-r from-amber-400 to-amber-500' : ($rank === 2 ? 'bg-slate-400' : ($rank === 3 ? 'bg-orange-400' : 'bg-um-blue')) }}"
+                                     style="width: {{ $barWidth }}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
         </div>
     </div>
@@ -147,17 +176,14 @@
     <script>
         function initStatistikCharts() {
             const monthlyEl = document.getElementById('statistik-monthly');
-            const prodiEl = document.getElementById('statistik-prodi');
             if (!window.Chart) return;
 
             window.statistikCharts = window.statistikCharts || {};
 
             const monthLabels = @json($monthLabels);
             const monthCounts = @json($monthCounts);
-            const prodiRows = @json(array_slice($prodiRows, 0, 10));
 
             if (window.statistikCharts.monthly) { window.statistikCharts.monthly.destroy(); window.statistikCharts.monthly = null; }
-            if (window.statistikCharts.prodi) { window.statistikCharts.prodi.destroy(); window.statistikCharts.prodi = null; }
 
             if (monthlyEl && monthLabels.length > 0) {
                 window.statistikCharts.monthly = new Chart(monthlyEl, {
@@ -178,26 +204,6 @@
                     options: {
                         plugins: { legend: { display: false } },
                         scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
-                    }
-                });
-            }
-
-            if (prodiEl && prodiRows.length > 0) {
-                window.statistikCharts.prodi = new Chart(prodiEl, {
-                    type: 'bar',
-                    data: {
-                        labels: prodiRows.map(r => r.prodi.length > 18 ? r.prodi.slice(0, 17) + '…' : r.prodi),
-                        datasets: [{
-                            label: 'Jumlah',
-                            data: prodiRows.map(r => r.total),
-                            backgroundColor: 'rgba(30, 64, 175, 0.7)',
-                            borderRadius: 4,
-                        }]
-                    },
-                    options: {
-                        indexAxis: 'y',
-                        plugins: { legend: { display: false } },
-                        scales: { x: { beginAtZero: true, ticks: { precision: 0 } } }
                     }
                 });
             }
