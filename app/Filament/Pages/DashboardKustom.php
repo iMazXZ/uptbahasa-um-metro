@@ -58,6 +58,7 @@ class DashboardKustom extends Page
         if (auth()->user()?->hasRole('Admin')) {
             $widgets[] = AdminQueuesWidget::class;
             $widgets[] = BlSummaryWidget::class;
+            $widgets[] = \App\Filament\Widgets\EptRegistrationMonthlyChart::class;
         }
 
         return $widgets;
