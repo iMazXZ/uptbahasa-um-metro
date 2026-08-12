@@ -56,7 +56,7 @@ class Statistik extends Page
             EptRegistration::MODE_OFFLINE => 'EPT Offline',
         ];
 
-        $this->from = now()->subYear()->startOfMonth()->format('Y-m-d');
+        $this->from = now()->startOfYear()->format('Y-m-d');
         $this->to = now()->format('Y-m-d');
 
         $this->applyFilters();
