@@ -181,11 +181,12 @@
     @push('scripts')
     <script src="{{ asset('vendor/chartjs/chart.umd.min.js') }}"></script>
     <script>
-        function initStatistikCharts() {
+        let statistikChart = null;
+        let statistikLastKey = '';
+
+        function initStatistikCharts(force = false) {
             const monthlyEl = document.getElementById('statistik-monthly');
             if (!monthlyEl || !window.Chart) return;
-
-            window.statistikCharts = window.statistikCharts || {};
 
             // Data dibaca dari atribut canvas — selalu segar setelah Livewire re-render
             let monthLabels = [];
@@ -195,10 +196,15 @@
                 monthCounts = JSON.parse(monthlyEl.dataset.counts || '[]');
             } catch (e) { /* abaikan */ }
 
-            if (window.statistikCharts.monthly) { window.statistikCharts.monthly.destroy(); window.statistikCharts.monthly = null; }
+            // Skip re-render jika data tidak berubah (hindari refresh terus-menerus)
+            const key = JSON.stringify(monthLabels) + '|' + JSON.stringify(monthCounts);
+            if (!force && key === statistikLastKey) return;
+            statistikLastKey = key;
+
+            if (statistikChart) { statistikChart.destroy(); statistikChart = null; }
 
             if (monthLabels.length > 0) {
-                window.statistikCharts.monthly = new Chart(monthlyEl, {
+                statistikChart = new Chart(monthlyEl, {
                     type: 'line',
                     data: {
                         labels: monthLabels,
@@ -221,7 +227,7 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', initStatistikCharts);
+        document.addEventListener('DOMContentLoaded', () => initStatistikCharts(true));
         document.addEventListener('livewire:init', () => {
             Livewire.hook('commit', ({ succeed }) => {
                 succeed(() => initStatistikCharts());
