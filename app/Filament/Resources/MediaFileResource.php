@@ -12,6 +12,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables;
 use Filament\Tables\Columns\Layout\Panel;
+use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Table;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
@@ -40,10 +41,13 @@ class MediaFileResource extends BaseResource
                     ->label('Folder')
                     ->multiple()
                     ->options(fn () => MediaFile::query()
+                        ->select('directory')
+                        ->selectRaw('COUNT(*) as total')
                         ->whereNotNull('directory')
-                        ->distinct()
+                        ->groupBy('directory')
                         ->orderBy('directory')
-                        ->pluck('directory', 'directory')
+                        ->get()
+                        ->mapWithKeys(fn ($row) => [$row->directory => "{$row->directory} ({$row->total})"])
                         ->toArray())
                     ->query(function ($query, $state) {
                         $dirs = array_filter((array) $state);
@@ -54,7 +58,7 @@ class MediaFileResource extends BaseResource
                         return $query->whereIn('directory', $dirs);
                     }),
                 SelectFilter::make('extension')
-                    ->label('Ext')
+                    ->label('Ekstensi')
                     ->multiple()
                     ->options([
                         'webp' => 'webp',
@@ -88,7 +92,9 @@ class MediaFileResource extends BaseResource
             ])
             ->contentGrid([
                 'md' => 2,
+                'lg' => 3,
                 'xl' => 4,
+                '2xl' => 5,
             ])
             ->recordUrl(null)
             ->recordAction(null)
@@ -98,49 +104,61 @@ class MediaFileResource extends BaseResource
                         ->label('Preview')
                         ->height(180)
                         ->extraImgAttributes([
-                            'class' => 'w-full h-44 object-cover rounded-lg',
+                            'class' => 'w-full h-44 object-cover rounded-t-xl',
                             'loading' => 'lazy',
                         ])
                         ->getStateUsing(fn (MediaFile $record): string => Storage::disk($record->disk)->url($record->path))
                         ->columnSpanFull(),
-                    Tables\Columns\TextColumn::make('filename')
-                        ->label('Nama File')
-                        ->searchable()
-                        ->wrap()
-                        ->limit(60)
-                        ->tooltip(fn (MediaFile $record) => $record->filename),
-                    Tables\Columns\TextColumn::make('directory')
-                        ->label('Folder')
-                        ->default('/')
-                        ->badge()
-                        ->sortable()
-                        ->searchable(),
-                    Tables\Columns\TextColumn::make('size')
-                        ->label('Ukuran')
-                        ->sortable()
-                        ->formatStateUsing(fn (?int $state) => $state ? static::humanBytes($state) : '-'),
-                    Tables\Columns\TextColumn::make('dimensions')
-                        ->label('Dimensi')
-                        ->getStateUsing(function (MediaFile $record) {
-                            if ($record->width && $record->height) {
-                                return "{$record->width}×{$record->height}";
-                            }
 
-                            return null;
-                        })
-                        ->toggleable(),
-                    Tables\Columns\TextColumn::make('last_modified_at')
-                        ->label('Diubah')
-                        ->dateTime('d M Y H:i')
-                        ->sortable(),
-                ]),
+                    Stack::make([
+                        Tables\Columns\TextColumn::make('filename')
+                            ->label('Nama File')
+                            ->searchable()
+                            ->wrap()
+                            ->limit(40)
+                            ->tooltip(fn (MediaFile $record) => $record->filename)
+                            ->extraAttributes([
+                                'class' => 'text-[13px] font-semibold text-gray-800',
+                            ]),
+
+                        Stack::make([
+                            Tables\Columns\TextColumn::make('directory')
+                                ->label('Folder')
+                                ->default('/')
+                                ->badge()
+                                ->color(fn (MediaFile $record): string => static::folderColor($record->directory))
+                                ->extraAttributes([
+                                    'class' => 'text-[11px]',
+                                ]),
+                            Tables\Columns\TextColumn::make('size')
+                                ->label('Ukuran')
+                                ->formatStateUsing(fn (?int $state) => $state ? static::humanBytes($state) : '-')
+                                ->extraAttributes([
+                                    'class' => 'text-[11px] text-gray-500',
+                                ]),
+                        ])->space(1),
+
+                        Tables\Columns\TextColumn::make('last_modified_at')
+                            ->label('Diubah')
+                            ->dateTime('d M Y H:i')
+                            ->extraAttributes([
+                                'class' => 'text-[11px] text-gray-400',
+                            ]),
+                    ])->space(2),
+                ])
+                    ->extraAttributes([
+                        'class' => 'rounded-xl overflow-hidden !p-0 ring-1 ring-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200',
+                    ]),
             ])
             ->actions([
                 Tables\Actions\Action::make('open')
                     ->label('Buka')
                     ->icon('heroicon-m-arrow-top-right-on-square')
                     ->url(fn (MediaFile $record) => Storage::disk($record->disk)->url($record->path))
-                    ->openUrlInNewTab(),
+                    ->openUrlInNewTab()
+                    ->tooltip('Buka di tab baru')
+                    ->button()
+                    ->size('sm'),
                 Tables\Actions\Action::make('rename')
                     ->label('Ganti Nama')
                     ->icon('heroicon-m-pencil-square')
@@ -180,7 +198,10 @@ class MediaFileResource extends BaseResource
                         $record->filename = $newFilename;
                         $record->last_modified_at = now();
                         $record->save();
-                    }),
+                    })
+                    ->tooltip('Ganti nama file')
+                    ->button()
+                    ->size('sm'),
                 Tables\Actions\Action::make('delete_file')
                     ->label('Hapus')
                     ->color('danger')
@@ -193,7 +214,10 @@ class MediaFileResource extends BaseResource
                         }
 
                         $record->delete();
-                    }),
+                    })
+                    ->tooltip('Hapus file')
+                    ->button()
+                    ->size('sm'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkAction::make('delete_selected')
@@ -246,6 +270,19 @@ class MediaFileResource extends BaseResource
         }
 
         return round($bytes, 1) . ' ' . $units[$i];
+    }
+
+    protected static function folderColor(?string $directory): string
+    {
+        $colors = ['gray', 'primary', 'success', 'warning', 'info', 'danger'];
+
+        if (! $directory) {
+            return 'gray';
+        }
+
+        $hash = crc32($directory) % count($colors);
+
+        return $colors[$hash];
     }
 
     /**
@@ -301,12 +338,15 @@ class MediaFileResource extends BaseResource
                 'size' => $size,
                 'width' => $width,
                 'height' => $height,
-                'last_modified_at' => $modifiedAt ? Carbon::createFromTimestamp($modifiedAt) : null,
+                'last_modified_at' => Carbon::createFromTimestamp($modifiedAt),
             ];
 
-            if ($existingPaths->has($path)) {
-                MediaFile::where('id', $existingPaths[$path])->update($payload);
-                $updated++;
+            if (isset($existingPaths[$path])) {
+                $record = MediaFile::find($existingPaths[$path]);
+                if ($record) {
+                    $record->update($payload);
+                    $updated++;
+                }
             } else {
                 MediaFile::create($payload);
                 $added++;
@@ -314,9 +354,12 @@ class MediaFileResource extends BaseResource
         }
 
         $removed = 0;
-        $missing = array_diff($existingPaths->keys()->all(), $files->all());
-        if (!empty($missing)) {
-            $removed = MediaFile::whereIn('path', $missing)->delete();
+        $storedPaths = MediaFile::where('disk', $diskName)->pluck('path');
+        foreach ($storedPaths as $storedPath) {
+            if (! $disk->exists($storedPath)) {
+                MediaFile::where('disk', $diskName)->where('path', $storedPath)->delete();
+                $removed++;
+            }
         }
 
         return [$added, $updated, $removed];
