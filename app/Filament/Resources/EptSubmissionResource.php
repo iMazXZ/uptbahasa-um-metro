@@ -39,7 +39,7 @@ class EptSubmissionResource extends BaseResource
     protected static function suggestedSuratNomor(?EptSubmission $ignoreRecord = null): string
     {
         $year = now()->year;
-        $pattern = '/^(\d{3})\/II\.3\.AU\/F\/KET\/LB_UMM\/' . preg_quote((string) $year, '/') . '$/';
+        $pattern = '/^(\d{3})\/II\.3\.AU\/F\/KET\/UB_UMM\/' . preg_quote((string) $year, '/') . '$/';
 
         $maxSequence = EptSubmission::query()
             ->whereNotNull('surat_nomor')
@@ -58,7 +58,7 @@ class EptSubmissionResource extends BaseResource
 
         $nextSequence = str_pad((string) ($maxSequence + 1), 3, '0', STR_PAD_LEFT);
 
-        return "{$nextSequence}/II.3.AU/F/KET/LB_UMM/{$year}";
+        return "{$nextSequence}/II.3.AU/F/KET/UB_UMM/{$year}";
     }
 
     public static function form(Form $form): Form
@@ -279,8 +279,8 @@ class EptSubmissionResource extends BaseResource
                                     ->default($record->surat_nomor)
                                     ->required()
                                     ->maxLength(100)
-                                    ->rule('regex:/^\d{3}\/II\.3\.AU\/F\/KET\/LB_UMM\/\d{4}$/')
-                                    ->helperText('Format: 001/II.3.AU/F/KET/LB_UMM/2025')
+                                    ->rule('regex:/^\d{3}\/II\.3\.AU\/F\/KET\/UB_UMM\/\d{4}$/')
+                                    ->helperText('Format: 001/II.3.AU/F/KET/UB_UMM/2025')
                                     ->rule(fn () => Rule::unique('ept_submissions', 'surat_nomor')
                                         ->ignore($record->id)
                                         ->where(fn ($q) => $q->whereNotNull('surat_nomor')))
@@ -357,8 +357,8 @@ class EptSubmissionResource extends BaseResource
                                     ->default($record->surat_nomor ?: $suggest)
                                     ->required()
                                     ->maxLength(100)
-                                    ->rule('regex:/^\d{3}\/II\.3\.AU\/F\/KET\/LB_UMM\/\d{4}$/')
-                                    ->helperText('Format: 001/II.3.AU/F/KET/LB_UMM/2025')
+                                    ->rule('regex:/^\d{3}\/II\.3\.AU\/F\/KET\/UB_UMM\/\d{4}$/')
+                                    ->helperText('Format: 001/II.3.AU/F/KET/UB_UMM/2025')
                                     ->rule(fn () => Rule::unique('ept_submissions', 'surat_nomor')
                                         ->ignore($record->id)
                                         ->where(fn ($q) => $q->whereNotNull('surat_nomor')))
