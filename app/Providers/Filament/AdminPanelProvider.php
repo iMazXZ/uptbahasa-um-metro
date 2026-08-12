@@ -68,9 +68,9 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 
             ])
-            ->brandLogo(fn () => view('filament.logo'))
-            ->favicon(asset('favicon.ico'))
             ->brandName('UPT Bahasa UM Metro')
+            ->brandLogoHeight('1.5rem')
+            ->favicon(asset('favicon.ico'))
             ->navigationGroups([
                 'Layanan UPT Bahasa',
                 'EPT',
