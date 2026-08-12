@@ -4,7 +4,7 @@
         <div class="flex flex-wrap items-end gap-x-6 gap-y-4">
             <div class="min-w-[220px]">
                 <label class="block text-xs font-semibold text-slate-600 mb-2">Jenis Data</label>
-                <select wire:model.live="dataset"
+                <select wire:model="dataset"
                         class="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-700 focus:border-um-blue focus:ring-2 focus:ring-um-blue/20 outline-none">
                     @foreach($datasetOptions as $value => $label)
                         <option value="{{ $value }}" @selected($value === $dataset)>{{ $label }}</option>
@@ -14,7 +14,7 @@
 
             <div class="min-w-[180px]">
                 <label class="block text-xs font-semibold text-slate-600 mb-2">Mode (EPT)</label>
-                <select wire:model.live="mode"
+                <select wire:model="mode"
                         class="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-700 focus:border-um-blue focus:ring-2 focus:ring-um-blue/20 outline-none">
                     @foreach($modeOptions as $value => $label)
                         <option value="{{ $value }}" @selected($value === $mode)>{{ $label }}</option>
@@ -24,22 +24,22 @@
 
             <div>
                 <label class="block text-xs font-semibold text-slate-600 mb-2">Dari Tanggal</label>
-                <input type="date" wire:model.live="from"
+                <input type="date" wire:model="from"
                        class="rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-700 focus:border-um-blue focus:ring-2 focus:ring-um-blue/20 outline-none">
             </div>
 
             <div>
                 <label class="block text-xs font-semibold text-slate-600 mb-2">Sampai Tanggal</label>
-                <input type="date" wire:model.live="to"
+                <input type="date" wire:model="to"
                        class="rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-700 focus:border-um-blue focus:ring-2 focus:ring-um-blue/20 outline-none">
             </div>
 
             <div class="ml-auto flex items-center gap-3 pb-0.5">
-                <span wire:loading wire:target="applyFilters,updated"
-                      class="text-xs text-slate-400 flex items-center gap-1.5">
-                    <x-filament::loading-indicator class="h-4 w-4" />
-                    Memuat...
-                </span>
+                <x-filament::button wire:click="applyFilters" color="primary" icon="heroicon-o-funnel"
+                                    wire:loading.attr="disabled" wire:target="applyFilters">
+                    <span wire:loading.remove wire:target="applyFilters">Terapkan Filter</span>
+                    <span wire:loading wire:target="applyFilters">Memuat...</span>
+                </x-filament::button>
                 <x-filament::button wire:click="export" color="success" icon="heroicon-o-arrow-down-tray">
                     Export Excel
                 </x-filament::button>
