@@ -104,7 +104,7 @@ class MediaFileResource extends BaseResource
                         ->label('Preview')
                         ->height(180)
                         ->extraImgAttributes([
-                            'class' => 'w-full h-44 object-cover rounded-t-xl',
+                            'class' => 'w-full h-44 object-cover',
                             'loading' => 'lazy',
                         ])
                         ->getStateUsing(fn (MediaFile $record): string => Storage::disk($record->disk)->url($record->path))
@@ -114,29 +114,29 @@ class MediaFileResource extends BaseResource
                         Tables\Columns\TextColumn::make('filename')
                             ->label('Nama File')
                             ->searchable()
-                            ->wrap()
-                            ->limit(40)
+                            ->limit(28)
                             ->tooltip(fn (MediaFile $record) => $record->filename)
                             ->extraAttributes([
-                                'class' => 'text-[13px] font-semibold text-gray-800',
+                                'class' => 'text-[13px] font-semibold text-gray-800 leading-5',
                             ]),
 
-                        Stack::make([
-                            Tables\Columns\TextColumn::make('directory')
-                                ->label('Folder')
-                                ->default('/')
-                                ->badge()
-                                ->color(fn (MediaFile $record): string => static::folderColor($record->directory))
-                                ->extraAttributes([
-                                    'class' => 'text-[11px]',
-                                ]),
-                            Tables\Columns\TextColumn::make('size')
-                                ->label('Ukuran')
-                                ->formatStateUsing(fn (?int $state) => $state ? static::humanBytes($state) : '-')
-                                ->extraAttributes([
-                                    'class' => 'text-[11px] text-gray-500',
-                                ]),
-                        ])->space(1),
+                        \Filament\Tables\Columns\Layout\Grid::make(2)
+                            ->schema([
+                                Tables\Columns\TextColumn::make('directory')
+                                    ->label('Folder')
+                                    ->default('/')
+                                    ->badge()
+                                    ->color(fn (MediaFile $record): string => static::folderColor($record->directory))
+                                    ->extraAttributes([
+                                        'class' => 'min-w-0 [&>div]:truncate',
+                                    ]),
+                                Tables\Columns\TextColumn::make('size')
+                                    ->label('Ukuran')
+                                    ->formatStateUsing(fn (?int $state) => $state ? static::humanBytes($state) : '-')
+                                    ->extraAttributes([
+                                        'class' => 'text-[11px] text-gray-500 text-right',
+                                    ]),
+                            ]),
 
                         Tables\Columns\TextColumn::make('last_modified_at')
                             ->label('Diubah')
@@ -147,8 +147,10 @@ class MediaFileResource extends BaseResource
                     ])->space(2),
                 ])
                     ->extraAttributes([
-                        'class' => 'rounded-xl overflow-hidden !p-0 ring-1 ring-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200',
-                    ]),
+                        'class' => 'rounded-xl overflow-hidden ring-1 ring-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200',
+                    ])
+                    ->extraHeaderAttributes(['class' => 'p-0'])
+                    ->extraFooterAttributes(['class' => 'p-3']),
             ])
             ->actions([
                 Tables\Actions\Action::make('open')
