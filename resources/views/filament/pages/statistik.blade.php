@@ -1,195 +1,157 @@
 <x-filament-panels::page>
-    {{-- ================= HEADER + FILTER ================= --}}
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div class="h-1.5 bg-gradient-to-r from-um-blue via-blue-400 to-um-gold"></div>
-        <div class="p-6">
-            <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
-                <div class="flex items-center gap-3">
-                    <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-um-blue">
-                        <i class="fa-solid fa-chart-line text-lg"></i>
-                    </div>
-                    <div>
-                        <h2 class="text-base font-bold text-slate-800">{{ $datasetOptions[$dataset] ?? 'Statistik' }}</h2>
-                        <div class="mt-0.5 flex items-center gap-2">
-                            <span class="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-semibold text-slate-600">
-                                <i class="fa-regular fa-calendar"></i>
-                                {{ \Carbon\Carbon::parse($from)->translatedFormat('d M Y') }} — {{ \Carbon\Carbon::parse($to)->translatedFormat('d M Y') }}
-                            </span>
-                            @if($mode)
-                                <span class="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-700">
-                                    {{ $modeOptions[$mode] ?? $mode }}
-                                </span>
-                            @endif
-                        </div>
-                    </div>
-                </div>
+    {{-- ================= FILTER ================= --}}
+    <x-filament::section icon="heroicon-o-adjustments-horizontal">
+        <x-slot name="heading">
+            Filter
+        </x-slot>
 
-                <div class="flex items-center gap-2">
-                    <x-filament::button wire:click="applyFilters" color="primary" icon="heroicon-o-funnel"
-                                        wire:loading.attr="disabled" wire:target="applyFilters">
-                        <span wire:loading.remove wire:target="applyFilters">Terapkan</span>
-                        <span wire:loading wire:target="applyFilters">Memuat...</span>
-                    </x-filament::button>
-                    <x-filament::button wire:click="export" color="success" icon="heroicon-o-arrow-down-tray" outlined>
-                        Export
-                    </x-filament::button>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div>
-                    <label class="mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-slate-400">Jenis Data</label>
-                    <select wire:model="dataset"
-                            class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm font-medium text-slate-700 outline-none transition focus:border-um-blue focus:bg-white focus:ring-2 focus:ring-um-blue/20">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div>
+                <x-filament::input.wrapper>
+                    <x-filament::input.select wire:model="dataset">
                         @foreach($datasetOptions as $value => $label)
                             <option value="{{ $value }}" @selected($value === $dataset)>{{ $label }}</option>
                         @endforeach
-                    </select>
-                </div>
-                <div>
-                    <label class="mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-slate-400">Mode (EPT)</label>
-                    <select wire:model="mode"
-                            class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm font-medium text-slate-700 outline-none transition focus:border-um-blue focus:bg-white focus:ring-2 focus:ring-um-blue/20">
+                    </x-filament::input.select>
+                </x-filament::input.wrapper>
+            </div>
+            <div>
+                <x-filament::input.wrapper>
+                    <x-filament::input.select wire:model="mode">
                         @foreach($modeOptions as $value => $label)
                             <option value="{{ $value }}" @selected($value === $mode)>{{ $label }}</option>
                         @endforeach
-                    </select>
-                </div>
-                <div>
-                    <label class="mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-slate-400">Dari</label>
-                    <input type="date" wire:model="from"
-                           class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm font-medium text-slate-700 outline-none transition focus:border-um-blue focus:bg-white focus:ring-2 focus:ring-um-blue/20">
-                </div>
-                <div>
-                    <label class="mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-slate-400">Sampai</label>
-                    <input type="date" wire:model="to"
-                           class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm font-medium text-slate-700 outline-none transition focus:border-um-blue focus:bg-white focus:ring-2 focus:ring-um-blue/20">
-                </div>
+                    </x-filament::input.select>
+                </x-filament::input.wrapper>
+            </div>
+            <div>
+                <x-filament::input.wrapper>
+                    <x-filament::input type="date" wire:model="from" />
+                </x-filament::input.wrapper>
+            </div>
+            <div>
+                <x-filament::input.wrapper>
+                    <x-filament::input type="date" wire:model="to" />
+                </x-filament::input.wrapper>
             </div>
         </div>
-    </div>
+
+        <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-2 text-sm text-gray-500">
+                <x-filament::icon icon="heroicon-o-calendar" class="h-4 w-4" />
+                <span>{{ \Carbon\Carbon::parse($from)->translatedFormat('d M Y') }} — {{ \Carbon\Carbon::parse($to)->translatedFormat('d M Y') }}</span>
+                @if($mode)
+                    <x-filament::badge color="success">{{ $modeOptions[$mode] ?? $mode }}</x-filament::badge>
+                @endif
+            </div>
+            <div class="flex items-center gap-2">
+                <x-filament::button wire:click="applyFilters" icon="heroicon-o-funnel"
+                                    wire:loading.attr="disabled" wire:target="applyFilters">
+                    <span wire:loading.remove wire:target="applyFilters">Terapkan Filter</span>
+                    <span wire:loading wire:target="applyFilters">Memuat...</span>
+                </x-filament::button>
+                <x-filament::button wire:click="export" color="success" icon="heroicon-o-arrow-down-tray" outlined>
+                    Export Excel
+                </x-filament::button>
+            </div>
+        </div>
+    </x-filament::section>
 
     {{-- ================= KARTU STATISTIK ================= --}}
-    <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        @php
-            $maxIdx = $monthCounts ? array_search(max($monthCounts), $monthCounts) : null;
-            $avg = count($monthCounts) > 0 ? array_sum($monthCounts) / count($monthCounts) : 0;
-        @endphp
+    @php
+        $maxIdx = $monthCounts ? array_search(max($monthCounts), $monthCounts) : null;
+        $avg = count($monthCounts) > 0 ? array_sum($monthCounts) / count($monthCounts) : 0;
+    @endphp
 
-        <div class="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <div class="absolute inset-x-0 top-0 h-0.5 bg-um-blue"></div>
+    <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        <x-filament::section compact>
             <div class="flex items-center justify-between">
-                <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">Total</p>
-                <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-um-blue">
-                    <i class="fa-solid fa-users"></i>
-                </div>
+                <span class="text-sm font-semibold text-gray-500">Total</span>
+                <x-filament::icon icon="heroicon-o-users" class="h-5 w-5 text-primary-600" />
             </div>
-            <p class="mt-3 text-3xl font-black tabular-nums text-slate-900">{{ number_format($grandTotal) }}</p>
-            <p class="mt-1 text-xs text-slate-400">pendaftar pada rentang terpilih</p>
-        </div>
+            <p class="mt-2 text-3xl font-bold tabular-nums text-gray-900">{{ number_format($grandTotal) }}</p>
+            <p class="mt-1 text-xs text-gray-400">pendaftar terpilih</p>
+        </x-filament::section>
 
-        <div class="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <div class="absolute inset-x-0 top-0 h-0.5 bg-emerald-500"></div>
+        <x-filament::section compact>
             <div class="flex items-center justify-between">
-                <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">Rata-rata</p>
-                <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
-                    <i class="fa-solid fa-chart-simple"></i>
-                </div>
+                <span class="text-sm font-semibold text-gray-500">Rata-rata</span>
+                <x-filament::icon icon="heroicon-o-chart-bar" class="h-5 w-5 text-success-600" />
             </div>
-            <p class="mt-3 text-3xl font-black tabular-nums text-slate-900">{{ number_format($avg, 1) }}</p>
-            <p class="mt-1 text-xs text-slate-400">per {{ $chartMode === 'daily' ? 'hari' : 'bulan' }}</p>
-        </div>
+            <p class="mt-2 text-3xl font-bold tabular-nums text-gray-900">{{ number_format($avg, 1) }}</p>
+            <p class="mt-1 text-xs text-gray-400">per {{ $chartMode === 'daily' ? 'hari' : 'bulan' }}</p>
+        </x-filament::section>
 
-        <div class="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <div class="absolute inset-x-0 top-0 h-0.5 bg-amber-400"></div>
+        <x-filament::section compact>
             <div class="flex items-center justify-between">
-                <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">Puncak</p>
-                <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
-                    <i class="fa-solid fa-arrow-trend-up"></i>
-                </div>
+                <span class="text-sm font-semibold text-gray-500">Puncak</span>
+                <x-filament::icon icon="heroicon-o-arrow-trending-up" class="h-5 w-5 text-warning-600" />
             </div>
-            <p class="mt-3 truncate text-xl font-black text-slate-900">
-                {{ $maxIdx !== null ? ($monthLabels[$maxIdx] ?? '-') : '—' }}
-            </p>
-            <p class="mt-1 text-xs text-slate-400">
-                {{ $maxIdx !== null ? number_format($monthCounts[$maxIdx]) . ' pendaftar' : 'belum ada data' }}
-            </p>
-        </div>
+            <p class="mt-2 truncate text-xl font-bold text-gray-900">{{ $maxIdx !== null ? ($monthLabels[$maxIdx] ?? '—') : '—' }}</p>
+            <p class="mt-1 text-xs text-gray-400">{{ $maxIdx !== null ? number_format($monthCounts[$maxIdx]) . ' pendaftar' : 'belum ada data' }}</p>
+        </x-filament::section>
 
-        <div class="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <div class="absolute inset-x-0 top-0 h-0.5 bg-rose-400"></div>
+        <x-filament::section compact>
             <div class="flex items-center justify-between">
-                <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">Prodi</p>
-                <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-rose-50 text-rose-600">
-                    <i class="fa-solid fa-building-columns"></i>
-                </div>
+                <span class="text-sm font-semibold text-gray-500">Prodi</span>
+                <x-filament::icon icon="heroicon-o-academic-cap" class="h-5 w-5 text-danger-600" />
             </div>
-            <p class="mt-3 text-3xl font-black tabular-nums text-slate-900">{{ count($prodiRows) }}</p>
-            <p class="mt-1 text-xs text-slate-400">program studi terdaftar</p>
-        </div>
+            <p class="mt-2 text-3xl font-bold tabular-nums text-gray-900">{{ count($prodiRows) }}</p>
+            <p class="mt-1 text-xs text-gray-400">program studi</p>
+        </x-filament::section>
     </div>
 
     {{-- ================= GRAFIK + TOP 10 ================= --}}
-    <div class="mt-6 grid grid-cols-1 lg:grid-cols-5 gap-6">
-        {{-- Chart --}}
-        <div class="lg:col-span-3 rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-            <div class="flex items-center justify-between border-b border-slate-100 px-6 py-4">
-                <div class="flex items-center gap-2.5">
-                    <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-um-blue">
-                        <i class="fa-solid fa-chart-area text-sm"></i>
-                    </div>
-                    <h3 class="text-sm font-bold text-slate-800">
-                        {{ $chartMode === 'daily' ? 'Perkembangan per Hari' : 'Perkembangan per Bulan' }}
-                    </h3>
+    <div class="mt-6 grid grid-cols-1 xl:grid-cols-5 gap-6">
+        <div class="xl:col-span-3">
+            <x-filament::section icon="heroicon-o-chart-line">
+                <x-slot name="heading">
+                    {{ $chartMode === 'daily' ? 'Perkembangan per Hari' : 'Perkembangan per Bulan' }}
+                </x-slot>
+                <x-slot name="headerEnd">
+                    <x-filament::badge color="gray">
+                        {{ count($monthLabels) }} {{ $chartMode === 'daily' ? 'hari' : 'bulan' }}
+                    </x-filament::badge>
+                </x-slot>
+
+                <div wire:key="monthly-chart">
+                    <canvas id="statistik-monthly"
+                            height="110"
+                            data-labels='@json($monthLabels)'
+                            data-counts='@json($monthCounts)'></canvas>
                 </div>
-                <span class="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-500">
-                    {{ count($monthLabels) }} {{ $chartMode === 'daily' ? 'hari' : 'bulan' }}
-                </span>
-            </div>
-            <div class="p-6" wire:key="monthly-chart">
-                <canvas id="statistik-monthly"
-                        height="110"
-                        data-labels='@json($monthLabels)'
-                        data-counts='@json($monthCounts)'></canvas>
-            </div>
+            </x-filament::section>
         </div>
 
-        {{-- Top 10 --}}
-        <div class="lg:col-span-2 rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-            <div class="flex items-center justify-between border-b border-slate-100 px-6 py-4">
-                <div class="flex items-center gap-2.5">
-                    <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
-                        <i class="fa-solid fa-trophy text-sm"></i>
-                    </div>
-                    <h3 class="text-sm font-bold text-slate-800">Top 10 Prodi</h3>
-                </div>
-            </div>
-            <div class="p-5">
+        <div class="xl:col-span-2">
+            <x-filament::section icon="heroicon-o-trophy">
+                <x-slot name="heading">
+                    Top 10 Prodi
+                </x-slot>
+
                 @if(count($prodiRows) > 0)
-                <div class="space-y-4">
+                <div class="space-y-3">
                     @foreach(array_slice($prodiRows, 0, 10) as $i => $row)
                         @php
                             $rank = $i + 1;
                             $maxTotal = max(array_column(array_slice($prodiRows, 0, 10), 'total')) ?: 1;
                             $barWidth = max(6, min(100, round(($row['total'] / $maxTotal) * 100)));
                             $rankStyle = match ($rank) {
-                                1 => 'bg-gradient-to-br from-amber-300 to-amber-500 text-white shadow-sm',
-                                2 => 'bg-gradient-to-br from-slate-300 to-slate-400 text-white shadow-sm',
-                                3 => 'bg-gradient-to-br from-orange-300 to-orange-400 text-white shadow-sm',
-                                default => 'bg-slate-100 text-slate-500',
+                                1 => 'bg-amber-400 text-white',
+                                2 => 'bg-slate-400 text-white',
+                                3 => 'bg-orange-400 text-white',
+                                default => 'bg-gray-100 text-gray-500',
                             };
                         @endphp
                         <div class="flex items-center gap-3">
-                            <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-xs font-black {{ $rankStyle }}">
-                                {{ $rank }}
-                            </span>
+                            <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold {{ $rankStyle }}">{{ $rank }}</span>
                             <div class="min-w-0 flex-1">
                                 <div class="mb-1 flex items-baseline justify-between gap-2">
-                                    <p class="truncate text-[13px] font-semibold text-slate-700" title="{{ $row['prodi'] }}">{{ $row['prodi'] }}</p>
-                                    <span class="shrink-0 text-xs font-black tabular-nums text-um-blue">{{ number_format($row['total']) }}</span>
+                                    <p class="truncate text-[13px] font-medium text-gray-700" title="{{ $row['prodi'] }}">{{ $row['prodi'] }}</p>
+                                    <span class="shrink-0 text-xs font-bold tabular-nums text-primary-600">{{ number_format($row['total']) }}</span>
                                 </div>
-                                <div class="h-1 w-full overflow-hidden rounded-full bg-slate-100">
-                                    <div class="h-full rounded-full bg-gradient-to-r from-um-blue to-blue-400" style="width: {{ $barWidth }}%"></div>
+                                <div class="h-1 w-full overflow-hidden rounded-full bg-gray-100">
+                                    <div class="h-full rounded-full bg-primary-500" style="width: {{ $barWidth }}%"></div>
                                 </div>
                             </div>
                         </div>
@@ -197,64 +159,61 @@
                 </div>
                 @else
                 <div class="py-10 text-center">
-                    <i class="fa-regular fa-folder-open text-3xl text-slate-300"></i>
-                    <p class="mt-3 text-sm text-slate-400">Tidak ada data pada rentang ini.</p>
+                    <x-filament::icon icon="heroicon-o-folder-open" class="mx-auto h-8 w-8 text-gray-300" />
+                    <p class="mt-3 text-sm text-gray-400">Tidak ada data pada rentang ini.</p>
                 </div>
                 @endif
-            </div>
+            </x-filament::section>
         </div>
     </div>
 
     {{-- ================= TABEL RINCIAN ================= --}}
-    <div class="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <div class="flex items-center justify-between border-b border-slate-100 px-6 py-4">
-            <div class="flex items-center gap-2.5">
-                <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-rose-50 text-rose-600">
-                    <i class="fa-solid fa-table-list text-sm"></i>
-                </div>
-                <h3 class="text-sm font-bold text-slate-800">Rincian per Prodi</h3>
-            </div>
-            <span class="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-500">
-                {{ count($prodiRows) }} prodi
-            </span>
-        </div>
+    <div class="mt-6">
+        <x-filament::section icon="heroicon-o-table-cells">
+            <x-slot name="heading">
+                Rincian per Prodi
+            </x-slot>
+            <x-slot name="headerEnd">
+                <x-filament::badge color="gray">{{ count($prodiRows) }} prodi</x-filament::badge>
+            </x-slot>
 
-        @if(count($prodiRows) > 0)
-        <div class="max-h-[480px] overflow-auto" wire:key="prodi-table">
-            <table class="w-full text-sm">
-                <thead class="sticky top-0 z-10 bg-slate-50">
-                    <tr class="text-left text-[11px] font-bold uppercase tracking-wide text-slate-400">
-                        <th class="px-6 py-3 w-12">#</th>
-                        <th class="px-3 py-3">Program Studi</th>
-                        <th class="px-3 py-3 text-right">Jumlah</th>
-                        <th class="px-6 py-3 text-right w-56">Kontribusi</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100">
-                    @foreach($prodiRows as $i => $row)
-                    <tr class="transition hover:bg-blue-50/40 {{ $i % 2 === 1 ? 'bg-slate-50/50' : '' }}">
-                        <td class="px-6 py-3 text-xs font-semibold text-slate-400">{{ $i + 1 }}</td>
-                        <td class="px-3 py-3 font-medium text-slate-800">{{ $row['prodi'] }}</td>
-                        <td class="px-3 py-3 text-right font-bold tabular-nums text-slate-800">{{ number_format($row['total']) }}</td>
-                        <td class="px-6 py-3">
-                            <div class="flex items-center justify-end gap-3">
-                                <div class="h-1.5 w-28 overflow-hidden rounded-full bg-slate-100">
-                                    <div class="h-full rounded-full bg-gradient-to-r from-um-blue to-blue-400" style="width: {{ min(100, $row['persen']) }}%"></div>
+            @if(count($prodiRows) > 0)
+            <div class="-mx-4 overflow-auto" wire:key="prodi-table">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-gray-200 text-left text-xs font-semibold uppercase tracking-wide text-gray-400">
+                            <th class="px-4 py-3 w-10">#</th>
+                            <th class="px-4 py-3">Program Studi</th>
+                            <th class="px-4 py-3 text-right">Jumlah</th>
+                            <th class="px-4 py-3 text-right w-56">Kontribusi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        @foreach($prodiRows as $i => $row)
+                        <tr class="transition hover:bg-gray-50">
+                            <td class="px-4 py-3 text-xs font-semibold text-gray-400">{{ $i + 1 }}</td>
+                            <td class="px-4 py-3 font-medium text-gray-800">{{ $row['prodi'] }}</td>
+                            <td class="px-4 py-3 text-right font-bold tabular-nums text-gray-800">{{ number_format($row['total']) }}</td>
+                            <td class="px-4 py-3">
+                                <div class="flex items-center justify-end gap-3">
+                                    <div class="h-1.5 w-28 overflow-hidden rounded-full bg-gray-100">
+                                        <div class="h-full rounded-full bg-primary-500" style="width: {{ min(100, $row['persen']) }}%"></div>
+                                    </div>
+                                    <span class="w-12 text-right text-xs font-semibold tabular-nums text-gray-500">{{ $row['persen'] }}%</span>
                                 </div>
-                                <span class="w-12 text-right text-xs font-semibold tabular-nums text-slate-500">{{ $row['persen'] }}%</span>
-                            </div>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-        @else
-        <div class="py-12 text-center">
-            <i class="fa-regular fa-folder-open text-3xl text-slate-300"></i>
-            <p class="mt-3 text-sm text-slate-400">Tidak ada data pada rentang ini.</p>
-        </div>
-        @endif
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            @else
+            <div class="py-12 text-center">
+                <x-filament::icon icon="heroicon-o-folder-open" class="mx-auto h-8 w-8 text-gray-300" />
+                <p class="mt-3 text-sm text-gray-400">Tidak ada data pada rentang ini.</p>
+            </div>
+            @endif
+        </x-filament::section>
     </div>
 
     @push('scripts')
@@ -283,8 +242,8 @@
             if (monthLabels.length > 0) {
                 const ctx = monthlyEl.getContext('2d');
                 const gradient = ctx.createLinearGradient(0, 0, 0, 220);
-                gradient.addColorStop(0, 'rgba(30, 64, 175, 0.25)');
-                gradient.addColorStop(1, 'rgba(30, 64, 175, 0.02)');
+                gradient.addColorStop(0, 'rgba(14, 165, 233, 0.25)');
+                gradient.addColorStop(1, 'rgba(14, 165, 233, 0.02)');
 
                 statistikChart = new Chart(monthlyEl, {
                     type: 'line',
@@ -294,10 +253,10 @@
                             label: 'Jumlah',
                             data: monthCounts,
                             backgroundColor: gradient,
-                            borderColor: '#1e40af',
+                            borderColor: '#0ea5e9',
                             borderWidth: 2,
                             pointBackgroundColor: '#fff',
-                            pointBorderColor: '#1e40af',
+                            pointBorderColor: '#0ea5e9',
                             pointBorderWidth: 2,
                             pointRadius: 4,
                             pointHoverRadius: 6,
