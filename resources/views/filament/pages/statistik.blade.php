@@ -104,7 +104,7 @@
     {{-- ================= GRAFIK + TOP 10 ================= --}}
     <div class="mt-6 grid grid-cols-1 xl:grid-cols-5 gap-6">
         <div class="xl:col-span-3">
-            <x-filament::section icon="heroicon-o-chart-line">
+            <x-filament::section icon="heroicon-o-presentation-chart-line">
                 <x-slot name="heading">
                     {{ $chartMode === 'daily' ? 'Perkembangan per Hari' : 'Perkembangan per Bulan' }}
                 </x-slot>
