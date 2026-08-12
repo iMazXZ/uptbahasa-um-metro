@@ -22,6 +22,15 @@ class SuratRekomendasiDataset implements StatistikDataset
             ->pluck('total', 'periode');
     }
 
+    public function perHari(?string $from, ?string $to, ?string $mode = null): Collection
+    {
+        return $this->baseQuery($from, $to, $mode)
+            ->selectRaw('DATE_FORMAT(ept_submissions.created_at, "%Y-%m-%d") as periode, COUNT(*) as total')
+            ->groupBy('periode')
+            ->orderBy('periode')
+            ->pluck('total', 'periode');
+    }
+
     public function perProdi(?string $from, ?string $to, ?string $mode = null): Collection
     {
         $rows = $this->baseQuery($from, $to)

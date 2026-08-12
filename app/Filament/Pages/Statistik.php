@@ -36,28 +36,26 @@ class Statistik extends Page
     public array $monthCounts = [];
     public array $prodiRows = [];
     public int $grandTotal = 0;
+    public string $chartMode = 'monthly'; // 'monthly' | 'daily'
 
-    public function datasetOptions(): array
+    public array $datasetOptions = [];
+    public array $modeOptions = [];
+
+    public function mount(): void
     {
-        return [
+        $this->datasetOptions = [
             'ept' => EptRegistrasiDataset::label(),
             'surat' => SuratRekomendasiDataset::label(),
             'penerjemahan' => PenerjemahanDataset::label(),
             'users' => UserDataset::label(),
         ];
-    }
 
-    public function modeOptions(): array
-    {
-        return [
+        $this->modeOptions = [
             '' => 'Semua Mode',
             EptRegistration::MODE_ONLINE => 'EPT Online',
             EptRegistration::MODE_OFFLINE => 'EPT Offline',
         ];
-    }
 
-    public function mount(): void
-    {
         $this->from = now()->subYear()->startOfMonth()->format('Y-m-d');
         $this->to = now()->format('Y-m-d');
 
@@ -89,15 +87,33 @@ class Statistik extends Page
             return;
         }
 
-        $perBulan = $dataset->perBulan($from, $to, $mode);
         $perProdi = $dataset->perProdi($from, $to, $mode);
 
-        $this->monthLabels = $perBulan->keys()
-            ->map(fn (string $periode) => Carbon::createFromFormat('Y-m', $periode)->translatedFormat('M Y'))
-            ->values()
-            ->all();
+        // Auto-switch: rentang <= 31 hari tampil per hari, lebih dari itu per bulan
+        $rangeDays = null;
+        if ($from && $to) {
+            $rangeDays = Carbon::parse($from)->diffInDays(Carbon::parse($to)) + 1;
+        }
 
-        $this->monthCounts = $perBulan->values()->map(fn ($v) => (int) $v)->all();
+        if ($rangeDays !== null && $rangeDays <= 31) {
+            $this->chartMode = 'daily';
+            $perGrafik = $dataset->perHari($from, $to, $mode);
+
+            $this->monthLabels = $perGrafik->keys()
+                ->map(fn (string $periode) => Carbon::createFromFormat('Y-m-d', $periode)->translatedFormat('d M Y'))
+                ->values()
+                ->all();
+        } else {
+            $this->chartMode = 'monthly';
+            $perGrafik = $dataset->perBulan($from, $to, $mode);
+
+            $this->monthLabels = $perGrafik->keys()
+                ->map(fn (string $periode) => Carbon::createFromFormat('Y-m', $periode)->translatedFormat('M Y'))
+                ->values()
+                ->all();
+        }
+
+        $this->monthCounts = $perGrafik->values()->map(fn ($v) => (int) $v)->all();
         $this->prodiRows = $perProdi->values()->all();
         $this->grandTotal = (int) $perProdi->sum('total');
     }

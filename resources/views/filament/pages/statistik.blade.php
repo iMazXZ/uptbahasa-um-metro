@@ -6,8 +6,8 @@
                 <label class="block text-xs font-semibold text-slate-600 mb-2">Jenis Data</label>
                 <select wire:model.live="dataset"
                         class="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-700 focus:border-um-blue focus:ring-2 focus:ring-um-blue/20 outline-none">
-                    @foreach($this->datasetOptions() as $value => $label)
-                        <option value="{{ $value }}">{{ $label }}</option>
+                    @foreach($datasetOptions as $value => $label)
+                        <option value="{{ $value }}" @selected($value === $dataset)>{{ $label }}</option>
                     @endforeach
                 </select>
             </div>
@@ -16,8 +16,8 @@
                 <label class="block text-xs font-semibold text-slate-600 mb-2">Mode (EPT)</label>
                 <select wire:model.live="mode"
                         class="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-700 focus:border-um-blue focus:ring-2 focus:ring-um-blue/20 outline-none">
-                    @foreach($this->modeOptions() as $value => $label)
-                        <option value="{{ $value }}">{{ $label }}</option>
+                    @foreach($modeOptions as $value => $label)
+                        <option value="{{ $value }}" @selected($value === $mode)>{{ $label }}</option>
                     @endforeach
                 </select>
             </div>
@@ -79,8 +79,12 @@
     <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 mt-6">
         <div class="lg:col-span-3 bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
             <div class="flex items-center justify-between mb-5">
-                <h3 class="font-bold text-slate-800">Perkembangan per Bulan</h3>
-                <span class="text-xs text-slate-500">{{ count($monthLabels) }} bulan</span>
+                <h3 class="font-bold text-slate-800">
+                    {{ $chartMode === 'daily' ? 'Perkembangan per Hari' : 'Perkembangan per Bulan' }}
+                </h3>
+                <span class="text-xs text-slate-500">
+                    {{ $chartMode === 'daily' ? count($monthLabels) . ' hari' : count($monthLabels) . ' bulan' }}
+                </span>
             </div>
             <div wire:key="monthly-chart">
                 <canvas id="statistik-monthly"
