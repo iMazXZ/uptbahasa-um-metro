@@ -128,15 +128,16 @@ class MediaFileResource extends BaseResource
                                     ->badge()
                                     ->color(fn (MediaFile $record): string => static::folderColor($record->directory))
                                     ->extraAttributes([
-                                        'class' => 'min-w-0 [&>div]:truncate',
+                                        'class' => 'min-w-0 [&>div]:truncate [&>div]:max-w-full',
                                     ]),
                                 Tables\Columns\TextColumn::make('size')
                                     ->label('Ukuran')
                                     ->formatStateUsing(fn (?int $state) => $state ? static::humanBytes($state) : '-')
                                     ->extraAttributes([
-                                        'class' => 'text-[11px] text-gray-500 text-right',
+                                        'class' => 'text-[11px] text-gray-500 text-right whitespace-nowrap',
                                     ]),
-                            ]),
+                            ])
+                            ->extraAttributes(['class' => 'flex items-center justify-between gap-2']),
 
                         Tables\Columns\TextColumn::make('last_modified_at')
                             ->label('Diubah')
@@ -157,8 +158,7 @@ class MediaFileResource extends BaseResource
                     ->url(fn (MediaFile $record) => Storage::disk($record->disk)->url($record->path))
                     ->openUrlInNewTab()
                     ->tooltip('Buka di tab baru')
-                    ->button()
-                    ->size('sm'),
+                    ->iconButton(),
                 Tables\Actions\Action::make('rename')
                     ->label('Ganti Nama')
                     ->icon('heroicon-m-pencil-square')
@@ -200,8 +200,7 @@ class MediaFileResource extends BaseResource
                         $record->save();
                     })
                     ->tooltip('Ganti nama file')
-                    ->button()
-                    ->size('sm'),
+                    ->iconButton(),
                 Tables\Actions\Action::make('delete_file')
                     ->label('Hapus')
                     ->color('danger')
@@ -216,8 +215,7 @@ class MediaFileResource extends BaseResource
                         $record->delete();
                     })
                     ->tooltip('Hapus file')
-                    ->button()
-                    ->size('sm'),
+                    ->iconButton(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkAction::make('delete_selected')
