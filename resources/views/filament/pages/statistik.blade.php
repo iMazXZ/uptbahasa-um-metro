@@ -142,14 +142,15 @@
                             $maxTotal = max(array_column(array_slice($prodiRows, 0, 10), 'total')) ?: 1;
                             $barWidth = max(6, min(100, round(($row['total'] / $maxTotal) * 100)));
                             $rankStyle = match ($rank) {
-                                1 => 'bg-amber-500 text-white ring-2 ring-amber-200',
-                                2 => 'bg-slate-500 text-white ring-2 ring-slate-200',
-                                3 => 'bg-orange-500 text-white ring-2 ring-orange-200',
-                                default => 'bg-gray-200 text-gray-600',
+                                1 => 'background-color: #f59e0b; color: #ffffff;',
+                                2 => 'background-color: #64748b; color: #ffffff;',
+                                3 => 'background-color: #f97316; color: #ffffff;',
+                                default => 'background-color: #e2e8f0; color: #475569;',
                             };
                         @endphp
                         <div class="flex items-center gap-3">
-                            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-black {{ $rankStyle }}">{{ $rank }}</span>
+                            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold"
+                                  style="{{ $rankStyle }}">{{ $rank }}</span>
                             <div class="min-w-0 flex-1">
                                 <div class="mb-1 flex items-baseline justify-between gap-2">
                                     <p class="truncate text-[13px] font-medium text-gray-700" title="{{ $row['prodi'] }}">{{ $row['prodi'] }}</p>
