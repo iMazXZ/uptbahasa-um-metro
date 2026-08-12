@@ -50,7 +50,7 @@ class MediaFileResource extends BaseResource
                         ->mapWithKeys(fn ($row) => [$row->directory => "{$row->directory} ({$row->total})"])
                         ->toArray())
                     ->query(function ($query, $state) {
-                        $dirs = array_filter((array) $state);
+                        $dirs = array_filter((array) ($state['value'] ?? $state));
                         if (empty($dirs)) {
                             return $query;
                         }
@@ -68,20 +68,22 @@ class MediaFileResource extends BaseResource
                         'svg' => 'svg',
                     ])
                     ->query(function ($query, $state) {
-                        $exts = array_filter((array) $state);
+                        $exts = array_filter((array) ($state['value'] ?? $state));
                         if (empty($exts)) {
+
                             return $query;
                         }
 
                         return $query->where(function ($q) use ($exts) {
                             foreach ($exts as $ext) {
+                                $ext = (string) $ext;
                                 if ($ext === 'jpg') {
                                     $q->orWhere(function ($qq) {
                                         $qq->where('filename', 'like', '%.jpg')
                                            ->orWhere('filename', 'like', '%.jpeg');
                                     });
                                 } else {
-                                    $q->orWhere('filename', 'like', "%.$ext");
+                                    $q->orWhere('filename', 'like', "%.{$ext}");
                                 }
                             }
                         });
