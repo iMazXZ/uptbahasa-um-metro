@@ -1,12 +1,16 @@
 <x-filament-panels::page>
     {{-- ================= FILTER ================= --}}
-    <x-filament::section icon="heroicon-o-adjustments-horizontal">
+    <x-filament::section icon="heroicon-o-adjustments-horizontal" compact>
         <x-slot name="heading">
             Filter
         </x-slot>
+        <x-slot name="description">
+            Pilih data, rentang tanggal, dan mode untuk menampilkan statistik.
+        </x-slot>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-6 gap-x-4 gap-y-4">
+            <div class="xl:col-span-2">
+                <label class="mb-1.5 block text-xs font-medium text-gray-500">Jenis Data</label>
                 <x-filament::input.wrapper>
                     <x-filament::input.select wire:model="dataset">
                         @foreach($datasetOptions as $value => $label)
@@ -16,6 +20,7 @@
                 </x-filament::input.wrapper>
             </div>
             <div>
+                <label class="mb-1.5 block text-xs font-medium text-gray-500">Mode</label>
                 <x-filament::input.wrapper>
                     <x-filament::input.select wire:model="mode">
                         @foreach($modeOptions as $value => $label)
@@ -25,35 +30,35 @@
                 </x-filament::input.wrapper>
             </div>
             <div>
+                <label class="mb-1.5 block text-xs font-medium text-gray-500">Dari</label>
                 <x-filament::input.wrapper>
                     <x-filament::input type="date" wire:model="from" />
                 </x-filament::input.wrapper>
             </div>
             <div>
+                <label class="mb-1.5 block text-xs font-medium text-gray-500">Sampai</label>
                 <x-filament::input.wrapper>
                     <x-filament::input type="date" wire:model="to" />
                 </x-filament::input.wrapper>
             </div>
-        </div>
-
-        <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
-            <div class="flex items-center gap-2 text-sm text-gray-500">
-                <x-filament::icon icon="heroicon-o-calendar" class="h-4 w-4" />
-                <span>{{ \Carbon\Carbon::parse($from)->translatedFormat('d M Y') }} — {{ \Carbon\Carbon::parse($to)->translatedFormat('d M Y') }}</span>
-                @if($mode)
-                    <x-filament::badge color="success">{{ $modeOptions[$mode] ?? $mode }}</x-filament::badge>
-                @endif
-            </div>
-            <div class="flex items-center gap-2">
-                <x-filament::button wire:click="applyFilters" icon="heroicon-o-funnel"
-                                    wire:loading.attr="disabled" wire:target="applyFilters">
-                    <span wire:loading.remove wire:target="applyFilters">Terapkan Filter</span>
+            <div class="flex items-end gap-2">
+                <x-filament::button wire:click="applyFilters" icon="heroicon-o-funnel" size="sm"
+                                    wire:loading.attr="disabled" wire:target="applyFilters" class="w-full">
+                    <span wire:loading.remove wire:target="applyFilters">Terapkan</span>
                     <span wire:loading wire:target="applyFilters">Memuat...</span>
                 </x-filament::button>
-                <x-filament::button wire:click="export" color="success" icon="heroicon-o-arrow-down-tray" outlined>
-                    Export Excel
+                <x-filament::button wire:click="export" color="success" icon="heroicon-o-arrow-down-tray" outlined size="sm" class="w-full">
+                    Export
                 </x-filament::button>
             </div>
+        </div>
+
+        <div class="mt-4 flex items-center gap-2 text-sm text-gray-500">
+            <x-filament::icon icon="heroicon-o-calendar" class="h-4 w-4" />
+            <span>{{ \Carbon\Carbon::parse($from)->translatedFormat('d M Y') }} — {{ \Carbon\Carbon::parse($to)->translatedFormat('d M Y') }}</span>
+            @if($mode)
+                <x-filament::badge color="success" size="sm">{{ $modeOptions[$mode] ?? $mode }}</x-filament::badge>
+            @endif
         </div>
     </x-filament::section>
 
