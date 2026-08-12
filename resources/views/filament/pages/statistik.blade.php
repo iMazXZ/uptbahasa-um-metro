@@ -75,19 +75,22 @@
         </div>
     </div>
 
-    {{-- GRAFIK --}}
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-        <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+    {{-- GRAFIK + TOP 10 --}}
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 mt-6">
+        <div class="lg:col-span-3 bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
             <div class="flex items-center justify-between mb-5">
                 <h3 class="font-bold text-slate-800">Perkembangan per Bulan</h3>
                 <span class="text-xs text-slate-500">{{ count($monthLabels) }} bulan</span>
             </div>
             <div wire:key="monthly-chart">
-                <canvas id="statistik-monthly" height="120"></canvas>
+                <canvas id="statistik-monthly"
+                        height="90"
+                        data-labels='@json($monthLabels)'
+                        data-counts='@json($monthCounts)'></canvas>
             </div>
         </div>
 
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+        <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
             <h3 class="font-bold text-slate-800 mb-5">Top 10 Prodi</h3>
             <div class="space-y-3">
                 @foreach(array_slice($prodiRows, 0, 10) as $i => $row)
@@ -176,16 +179,21 @@
     <script>
         function initStatistikCharts() {
             const monthlyEl = document.getElementById('statistik-monthly');
-            if (!window.Chart) return;
+            if (!monthlyEl || !window.Chart) return;
 
             window.statistikCharts = window.statistikCharts || {};
 
-            const monthLabels = @json($monthLabels);
-            const monthCounts = @json($monthCounts);
+            // Data dibaca dari atribut canvas — selalu segar setelah Livewire re-render
+            let monthLabels = [];
+            let monthCounts = [];
+            try {
+                monthLabels = JSON.parse(monthlyEl.dataset.labels || '[]');
+                monthCounts = JSON.parse(monthlyEl.dataset.counts || '[]');
+            } catch (e) { /* abaikan */ }
 
             if (window.statistikCharts.monthly) { window.statistikCharts.monthly.destroy(); window.statistikCharts.monthly = null; }
 
-            if (monthlyEl && monthLabels.length > 0) {
+            if (monthLabels.length > 0) {
                 window.statistikCharts.monthly = new Chart(monthlyEl, {
                     type: 'line',
                     data: {
