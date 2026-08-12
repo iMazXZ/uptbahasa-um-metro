@@ -148,9 +148,7 @@ class MediaFileResource extends BaseResource
                 ])
                     ->extraAttributes([
                         'class' => 'rounded-xl overflow-hidden ring-1 ring-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200',
-                    ])
-                    ->extraHeaderAttributes(['class' => 'p-0'])
-                    ->extraFooterAttributes(['class' => 'p-3']),
+                    ]),
             ])
             ->actions([
                 Tables\Actions\Action::make('open')
