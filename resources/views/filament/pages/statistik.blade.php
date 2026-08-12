@@ -230,8 +230,21 @@
         document.addEventListener('DOMContentLoaded', () => initStatistikCharts(true));
         document.addEventListener('livewire:init', () => {
             Livewire.hook('commit', ({ succeed }) => {
-                succeed(() => initStatistikCharts());
+                succeed(() => {
+                    // Tunggu DOM baru terpasang sebelum membaca atribut canvas
+                    setTimeout(() => initStatistikCharts(true), 80);
+                });
             });
+        });
+        // Fallback: jika canvas diganti oleh Livewire, pastikan chart tetap dibuat
+        const observer = new MutationObserver(() => {
+            if (document.getElementById('statistik-monthly')) {
+                initStatistikCharts(true);
+            }
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.querySelector('[wire\\:key="monthly-chart"]') || document.body;
+            observer.observe(container, { childList: true, subtree: true });
         });
     </script>
     @endpush
