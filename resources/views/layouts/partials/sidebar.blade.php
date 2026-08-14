@@ -180,19 +180,23 @@
         @endif
         @endif
 
-        {{-- Section: Admin (Conditional) --}}
+        {{-- Section: Admin / Tutor (Conditional) --}}
         @if ($u && $u->hasAnyRole(['Admin', 'Staf Administrasi', 'Kepala Lembaga', 'Penerjemah', 'tutor']))
+            @php
+                $isTutorOnly = $u->hasRole('tutor')
+                    && ! $u->hasAnyRole(['Admin', 'Staf Administrasi', 'Kepala Lembaga']);
+            @endphp
             <div>
                 <div class="px-3 mb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400 transition-opacity duration-200"
                      :class="!sidebarOpen && 'lg:hidden'">
-                    Administrator
+                    {{ $isTutorOnly ? 'Tutor' : 'Administrator' }}
                 </div>
                 <div class="space-y-1">
                     <a href="{{ route('filament.admin.pages.2') }}"
                        class="group flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200
                               text-slate-600 hover:bg-slate-100 hover:text-slate-900">
                         <i class="fa-solid fa-screwdriver-wrench w-5 text-center transition-transform group-hover:scale-110 text-slate-400 group-hover:text-slate-600"></i>
-                        <span :class="!sidebarOpen && 'lg:hidden'" class="whitespace-nowrap">Panel Admin</span>
+                        <span :class="!sidebarOpen && 'lg:hidden'" class="whitespace-nowrap">{{ $isTutorOnly ? 'Panel Tutor' : 'Panel Admin' }}</span>
                     </a>
                 </div>
             </div>
