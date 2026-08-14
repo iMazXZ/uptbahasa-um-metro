@@ -49,7 +49,11 @@
     {{-- Menu Navigation --}}
     <nav class="h-[calc(100vh-4rem-4rem)] overflow-y-auto px-3 py-4 space-y-6 custom-scrollbar">
 
-        {{-- Section: Utama --}}
+        {{-- Section: Utama (pendaftar & multi-role, bukan pengawas murni) --}}
+        @php
+            $isProctorOnly = $u && $u->hasRole('Pengawas EPT') && ! $u->hasAnyRole(['pendaftar', 'tutor', 'Admin', 'Staf Administrasi', 'Kepala Lembaga', 'Penerjemah']);
+        @endphp
+        @unless($isProctorOnly)
         <div class="space-y-1">
             {{-- Dashboard --}}
             <a href="{{ route('dashboard') }}"
@@ -74,8 +78,30 @@
                 @endif
             </a>
         </div>
+        @endunless
 
-        {{-- Section: Layanan --}}
+        {{-- Section: Pengawas EPT (kondisional) --}}
+        @if($u && $u->hasRole('Pengawas EPT'))
+        <div>
+            <div class="px-3 mb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400 transition-opacity duration-200"
+                 :class="!sidebarOpen && 'lg:hidden'">
+                Pengawas
+            </div>
+            <div class="space-y-1">
+                {{-- Dashboard Pengawas --}}
+                <a href="{{ route('dashboard.pengawas-ept') }}"
+                   class="group flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200
+                          {{ request()->routeIs('dashboard.pengawas-ept') ? 'bg-blue-50 text-um-blue shadow-sm ring-1 ring-blue-100' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}">
+                    <i class="fa-solid fa-user-shield w-5 text-center transition-transform group-hover:scale-110
+                              {{ request()->routeIs('dashboard.pengawas-ept') ? 'text-um-blue' : 'text-slate-400 group-hover:text-slate-600' }}"></i>
+                    <span :class="!sidebarOpen && 'lg:hidden'" class="whitespace-nowrap">Dashboard Pengawas</span>
+                </a>
+            </div>
+        </div>
+        @endif
+
+        {{-- Section: Layanan (pendaftar & multi-role, bukan pengawas murni) --}}
+        @unless($isProctorOnly)
         <div>
             <div class="px-3 mb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400 transition-opacity duration-200"
                  :class="!sidebarOpen && 'lg:hidden'">
@@ -112,6 +138,7 @@
                 @endif
             </div>
         </div>
+        @endunless
 
         {{-- Section: Basic Listening (hanya untuk tahun 2025+, bukan S2, dan sudah isi biodata) --}}
         @php

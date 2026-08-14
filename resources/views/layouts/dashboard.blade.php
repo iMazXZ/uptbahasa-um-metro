@@ -159,12 +159,8 @@
      @resize.window="isMobile = window.innerWidth < 1024; if(!isMobile) sidebarOpen = (localStorage.getItem('sidebarCollapsed') !== '1')"
      class="min-h-screen flex overflow-hidden bg-slate-50">
 
-    {{-- SIDEBAR (berdasarkan role) --}}
-    @if(auth()->user()?->hasRole('Pengawas EPT'))
-        @include('layouts.partials.sidebar-pengawas')
-    @else
-        @include('layouts.partials.sidebar')
-    @endif
+    {{-- SIDEBAR --}}
+    @include('layouts.partials.sidebar')
 
     {{-- Edge swipe area (mobile) --}}
     <div
