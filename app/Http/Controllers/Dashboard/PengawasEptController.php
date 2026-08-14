@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
-use App\Models\EptGroup;
 use App\Models\EptOnlineAttempt;
 use App\Models\EptRegistration;
 use App\Models\User;

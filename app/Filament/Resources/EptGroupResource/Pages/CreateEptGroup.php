@@ -12,8 +12,6 @@ class CreateEptGroup extends CreateRecord
 
     protected function afterCreate(): void
     {
-        $this->record->proctors()->sync($this->data['proctors'] ?? []);
-
         app(EptSchedulePostSyncService::class)->sync($this->record, auth()->id());
     }
 }

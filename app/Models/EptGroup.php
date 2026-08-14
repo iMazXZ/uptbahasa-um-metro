@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -62,12 +61,6 @@ class EptGroup extends Model
             ->orWhere('grup_2_id', $this->id)
             ->orWhere('grup_3_id', $this->id)
             ->orWhere('grup_4_id', $this->id);
-    }
-
-    public function proctors(): BelongsToMany
-    {
-        return $this->belongsToMany(User::class, 'ept_group_proctors', 'ept_group_id', 'user_id')
-            ->withTimestamps();
     }
 
     public function scheduleNotifications(): HasMany

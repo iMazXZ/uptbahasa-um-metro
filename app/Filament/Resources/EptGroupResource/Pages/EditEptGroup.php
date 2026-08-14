@@ -13,8 +13,6 @@ class EditEptGroup extends EditRecord
 
     protected function afterSave(): void
     {
-        $this->record->proctors()->sync($this->data['proctors'] ?? []);
-
         app(EptSchedulePostSyncService::class)->sync($this->record, auth()->id());
     }
 
