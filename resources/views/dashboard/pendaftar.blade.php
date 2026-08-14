@@ -14,13 +14,14 @@
         : 'https://ui-avatars.com/api/?name='.urlencode($user->name).'&background=EBF4FF&color=1E40AF&bold=true';
 
     // Logic Biodata
-    $hasBasicInfo = $user->prody_id && $user->srn && $user->year;
+    $isGeneralProdi = $user->prody && in_array(strtolower(trim($user->prody->name)), ['umum', 'program studi umum'], true);
+    $hasBasicInfo = $user->prody_id && ($isGeneralProdi || ($user->srn && $user->year));
     $yearInt      = (int) $user->year;
     $isS2         = $user->prody && str_starts_with($user->prody->name ?? '', 'S2');
     $isPBI        = $user->prody && $user->prody->name === 'Pendidikan Bahasa Inggris';
     $prodiIslam   = ['Komunikasi dan Penyiaran Islam', 'Pendidikan Agama Islam', 'Pendidikan Islam Anak Usia Dini'];
     $isProdiIslam = $user->prody && in_array($user->prody->name, $prodiIslam);
-    $needsNilai   = $yearInt && $yearInt <= 2024 && !$isS2;
+    $needsNilai   = $yearInt && $yearInt <= 2024 && !$isS2 && !$isGeneralProdi;
 
     $biodataLengkap = \App\Models\SiteSetting::isEptBiodataComplete($user);
 

@@ -218,18 +218,25 @@ class SiteSetting extends Model
 
     public static function isEptBiodataComplete(User $user): bool
     {
-        $hasBasicInfo = $user->prody_id && $user->srn && $user->year;
+        $prodyName = $user->prody?->name ?? '';
+        $isGeneral = in_array(
+            strtolower(trim((string) $prodyName)),
+            ['umum', 'program studi umum'],
+            true,
+        );
+
+        // Prodi Umum tidak wajib NPM & tahun angkatan
+        $hasBasicInfo = $user->prody_id && ($isGeneral || ($user->srn && $user->year));
         if (! $hasBasicInfo) {
             return false;
         }
 
         $yearInt = (int) $user->year;
-        $prodyName = $user->prody?->name ?? '';
         $isS2 = $prodyName !== '' && str_starts_with($prodyName, 'S2');
         $isPBI = $prodyName === 'Pendidikan Bahasa Inggris';
         $prodiIslam = ['Komunikasi dan Penyiaran Islam', 'Pendidikan Agama Islam', 'Pendidikan Islam Anak Usia Dini'];
         $isProdiIslam = $prodyName !== '' && in_array($prodyName, $prodiIslam, true);
-        $needsNilai = $yearInt && $yearInt <= 2024 && ! $isS2;
+        $needsNilai = $yearInt && $yearInt <= 2024 && ! $isS2 && ! $isGeneral;
 
         if (! $needsNilai) {
             return true;
