@@ -43,6 +43,25 @@ class BasicListeningProfileController extends Controller
     }
 
     /**
+     * Check if the selected prodi is "Umum" (bukan mahasiswa UM Metro).
+     */
+    private function isProdiUmum($request): bool
+    {
+        $prodyId = $request->input('prody_id');
+        if (!$prodyId) return false;
+
+        $prody = \App\Models\Prody::find($prodyId);
+
+        if (! $prody) {
+            return false;
+        }
+
+        $normalized = \Illuminate\Support\Str::of($prody->name)->lower()->squish()->value();
+
+        return in_array($normalized, ['umum', 'program studi umum'], true);
+    }
+
+    /**
      * Check if the selected prodi is one of 3 Islamic study programs and year <= 2024
      */
     private function isProdiIslam($request): bool
@@ -70,6 +89,10 @@ class BasicListeningProfileController extends Controller
     private function minimumSrnDigitsRule(): callable
     {
         return function (string $attribute, mixed $value, \Closure $fail): void {
+            if ($value === null || trim((string) $value) === '') {
+                return; // Skip jika kosong (opsional untuk prodi Umum)
+            }
+
             $digits = preg_replace('/\D+/', '', (string) $value);
 
             if (mb_strlen((string) $digits) < 8) {
@@ -294,14 +317,16 @@ class BasicListeningProfileController extends Controller
             // ===== Field biodata inti =====
             'prody_id' => ['required', Rule::exists('prodies', 'id')],
             'srn'      => [
-                'required',
+                'nullable',
+                Rule::requiredIf(! $this->isProdiUmum($request)),
                 'string',
                 'max:50',
                 $this->minimumSrnDigitsRule(),
                 Rule::unique('users', 'srn')->ignore($user->id),
             ],
             'year'     => [
-                'required',
+                'nullable',
+                Rule::requiredIf(! $this->isProdiUmum($request)),
                 'integer',
                 'min:2015',
                 'max:' . (int) now()->year + 1, // biar sama2 aman

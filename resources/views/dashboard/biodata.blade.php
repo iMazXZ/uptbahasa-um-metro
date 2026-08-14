@@ -52,9 +52,13 @@
         legacyScoreMessage: @js($initialLegacyScore !== '' ? '' : 'Nilai Basic Listening belum tersedia di arsip. Jika Anda sudah mengikuti dan lulus kelas, silakan konfirmasi ke kantor UPT Bahasa.'),
         isS2: {{ str_starts_with($initialProdyName ?? '', 'S2') ? 'true' : 'false' }},
         prodiName: @js($initialProdyName),
+        isGeneralProdi: @js(in_array(strtolower(trim((string) $initialProdyName)), ['umum', 'program studi umum'], true)),
         changePasswordOpen: {{ $shouldOpenPasswordModal ? 'true' : 'false' }},
         lookupUrl: @js(route('dashboard.biodata.manual-basic-listening-score'))
     }"
+    @biodata-prodi-changed.window="
+        isGeneralProdi = ['umum', 'program studi umum'].includes(String($event.detail?.prodiName || '').toLowerCase());
+    "
     class="max-w-7xl mx-auto"
 >
     {{-- TOP BANNER: WhatsApp OTP Verification (hanya muncul jika ada pending OTP) --}}
@@ -592,7 +596,11 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             {{-- NPM --}}
                             <div>
-                                <label class="block text-xs font-semibold text-slate-700 mb-1.5 ml-1">NPM / NIM <span class="text-rose-500">*</span></label>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1.5 ml-1">
+                                    NPM / NIM
+                                    <span class="text-rose-500" x-show="!isGeneralProdi">*</span>
+                                    <span class="text-slate-400 text-[11px] font-normal" x-show="isGeneralProdi" x-cloak>(opsional)</span>
+                                </label>
                                 <input type="text" id="biodata-srn" name="srn" x-ref="srnInput" value="{{ $initialSrnString }}" x-model="srn"
                                        class="block w-full py-3 px-4 rounded-xl border-2 border-slate-200 bg-white shadow-sm focus:border-um-blue focus:ring-um-blue text-base transition-all duration-200 placeholder:text-slate-400"
                                        placeholder="Masukkan NPM / NIM">
@@ -606,7 +614,11 @@
                             {{-- Angkatan --}}
                             <div>
                                 <label class="mb-1.5 ml-1 flex items-center justify-between gap-2 text-xs font-semibold text-slate-700">
-                                    <span>Tahun Angkatan <span class="text-rose-500">*</span></span>
+                                    <span>
+                                        Tahun Angkatan
+                                        <span class="text-rose-500" x-show="!isGeneralProdi">*</span>
+                                        <span class="text-slate-400 text-[11px] font-normal" x-show="isGeneralProdi" x-cloak>(opsional)</span>
+                                    </span>
                                     <span class="text-[11px] font-medium text-slate-400">Auto dari NPM, bisa diubah</span>
                                 </label>
                                 <select id="biodata-year" name="year" x-ref="yearSelect" x-model="year"
