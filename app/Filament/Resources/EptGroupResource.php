@@ -52,6 +52,17 @@ class EptGroupResource extends BaseResource
                     ->label('Lokasi')
                     ->default('Ruang Stanford')
                     ->required(),
+                Forms\Components\Select::make('proctors')
+                    ->label('Pengawas EPT')
+                    ->multiple()
+                    ->searchable()
+                    ->preload()
+                    ->options(fn () => \App\Models\User::query()
+                        ->whereHas('roles', fn ($q) => $q->where('name', 'Pengawas EPT'))
+                        ->orderBy('name')
+                        ->pluck('name', 'id')
+                        ->toArray())
+                    ->helperText('Pilih pengawas yang bertanggung jawab untuk grup ini.'),
             ]);
     }
 

@@ -16,6 +16,7 @@ class EptOnlineAttempt extends Model
     public const STATUS_SUBMITTED = 'submitted';
     public const STATUS_EXPIRED = 'expired';
     public const STATUS_CANCELLED = 'cancelled';
+    public const STATUS_DISQUALIFIED = 'disqualified';
 
     protected $fillable = [
         'public_id',
@@ -30,6 +31,10 @@ class EptOnlineAttempt extends Model
         'current_section_started_at',
         'submitted_at',
         'expires_at',
+        'paused_at',
+        'resumed_at',
+        'pause_reason',
+        'pause_controlled_by',
         'ip_address',
         'user_agent',
         'integrity_flags',
@@ -41,6 +46,8 @@ class EptOnlineAttempt extends Model
         'current_section_started_at' => 'datetime',
         'submitted_at' => 'datetime',
         'expires_at' => 'datetime',
+        'paused_at' => 'datetime',
+        'resumed_at' => 'datetime',
         'integrity_flags' => 'array',
         'meta' => 'array',
     ];
@@ -97,6 +104,12 @@ class EptOnlineAttempt extends Model
             self::STATUS_SUBMITTED => 'Submitted',
             self::STATUS_EXPIRED => 'Expired',
             self::STATUS_CANCELLED => 'Cancelled',
+            self::STATUS_DISQUALIFIED => 'Disqualified',
         ];
+    }
+
+    public function isPaused(): bool
+    {
+        return $this->paused_at !== null && $this->resumed_at === null;
     }
 }

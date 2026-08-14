@@ -38,6 +38,8 @@ class EptRegistration extends Model
         'approved_at',
         'rejected_at',
         'rejection_reason',
+        'proctor_verified_at',
+        'proctor_verified_by',
         'grup_1_id',
         'grup_2_id',
         'grup_3_id',
@@ -48,6 +50,7 @@ class EptRegistration extends Model
         'test_quota' => 'integer',
         'approved_at' => 'datetime',
         'rejected_at' => 'datetime',
+        'proctor_verified_at' => 'datetime',
     ];
 
     protected static function booted(): void
