@@ -9,6 +9,11 @@ class EditEptOnlineAccessToken extends EditRecord
 {
     protected static string $resource = EptOnlineAccessTokenResource::class;
 
+    protected function afterSave(): void
+    {
+        $this->record->proctors()->sync($this->data['proctors'] ?? []);
+    }
+
     protected function mutateFormDataBeforeSave(array $data): array
     {
         $plain = trim((string) ($data['plain_token'] ?? ''));

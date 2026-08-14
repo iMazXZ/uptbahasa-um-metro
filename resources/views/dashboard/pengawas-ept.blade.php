@@ -6,7 +6,7 @@
 
 @section('content')
 @php
-    $hasGroups = $groups->isNotEmpty();
+    $hasTokens = ($tokens ?? collect())->isNotEmpty();
 @endphp
 
 <div class="space-y-6">
@@ -39,37 +39,43 @@
         </div>
     </div>
 
-    @if(!$hasGroups)
+    @if(!$hasTokens)
         <div class="rounded-2xl border border-slate-200 bg-white p-10 text-center">
             <div class="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mx-auto">
                 <i class="fa-solid fa-clipboard-list text-2xl text-slate-400"></i>
             </div>
             <h3 class="mt-4 font-bold text-slate-800">Belum Ada Tugas</h3>
-            <p class="text-sm text-slate-500 mt-1">Anda belum ditugaskan ke grup EPT mana pun. Silakan hubungi admin.</p>
+            <p class="text-sm text-slate-500 mt-1">Anda belum ditugaskan ke sesi tes EPT Online mana pun. Silakan hubungi admin.</p>
         </div>
     @endif
 
-    @foreach($groups as $group)
+    @foreach($tokens as $token)
         @php
-            $registrations = $group->registrations ?? collect();
+            $registrations = $token->registrations ?? collect();
 
             $waitingVerify = $registrations->filter(fn ($r) => blank($r->proctor_verified_at))->count();
             $verified = $registrations->filter(fn ($r) => filled($r->proctor_verified_at));
+            $tokenCode = $token->token_hint ?? '-';
         @endphp
 
         <div class="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-            {{-- Header grup --}}
+            {{-- Header token --}}
             <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/60 flex flex-wrap items-center justify-between gap-3">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-xl bg-um-blue/10 text-um-blue flex items-center justify-center">
-                        <i class="fa-solid fa-layer-group"></i>
+                        <i class="fa-solid fa-laptop-file"></i>
                     </div>
                     <div>
-                        <h3 class="font-bold text-slate-800">{{ $group->name }}</h3>
+                        <h3 class="font-bold text-slate-800">
+                            {{ $token->form?->code ?? 'Paket Tes' }} - {{ $token->form?->title ?? 'Tanpa judul' }}
+                        </h3>
                         <p class="text-xs text-slate-500">
-                            {{ $registrations->count() }} peserta online
-                            @if($group->jadwal)
-                                · Jadwal: {{ $group->jadwal->translatedFormat('d M Y H:i') }}
+                            Token: <span class="font-mono font-semibold">{{ $tokenCode }}</span>
+                            @if($token->group)
+                                · Grup: {{ $token->group->name }}
+                            @endif
+                            @if($token->starts_at)
+                                · {{ $token->starts_at->translatedFormat('d M Y H:i') }}
                             @endif
                         </p>
                     </div>

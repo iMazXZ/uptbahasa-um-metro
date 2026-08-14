@@ -46,6 +46,18 @@ class EptOnlineAccessTokenResource extends BaseResource
                     Forms\Components\TextInput::make('ept_registration_id')
                         ->label('ID Registrasi EPT (opsional)')
                         ->numeric(),
+                    Forms\Components\Select::make('proctors')
+                        ->label('Pengawas EPT')
+                        ->multiple()
+                        ->searchable()
+                        ->preload()
+                        ->options(fn () => \App\Models\User::query()
+                            ->whereHas('roles', fn ($q) => $q->where('name', 'Pengawas EPT'))
+                            ->orderBy('name')
+                            ->pluck('name', 'id')
+                            ->toArray())
+                        ->helperText('Pengawas yang bertanggung jawab pada sesi tes ini.')
+                        ->columnSpanFull(),
                 ])
                 ->columns(2),
             Forms\Components\Section::make('Konfigurasi Token')

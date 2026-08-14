@@ -16,25 +16,42 @@ class PengawasEptController extends Controller
     {
         $user = $request->user();
 
-        // Grup yang di-assign ke pengawas ini
-        $groups = EptGroup::query()
+        // Token tes online yang di-assign ke pengawas ini
+        $tokens = \App\Models\EptOnlineAccessToken::query()
+            ->with(['form', 'group', 'registration.user.prody'])
             ->whereHas('proctors', fn ($q) => $q->whereKey($user->id))
             ->orderByDesc('id')
             ->get()
-            ->map(function (EptGroup $group) {
-                $group->registrations = $group->allRegistrations()
-                    ->with(['user.prody'])
-                    ->orderByDesc('id')
-                    ->get()
-                    ->filter(fn ($r) => $r->mode === EptRegistration::MODE_ONLINE)
-                    ->values();
+            ->map(function (\App\Models\EptOnlineAccessToken $token) {
+                // Peserta dari registrasi yang terhubung ke token ini
+                $registration = $token->registration;
 
-                return $group;
+                // Kalau token terkait grup, ambil semua peserta online di grup itu
+                $registrations = collect();
+                if ($token->ept_group_id) {
+                    $registrations = $token->group
+                        ? $token->group->allRegistrations()
+                            ->with(['user.prody'])
+                            ->orderByDesc('id')
+                            ->get()
+                            ->filter(fn ($r) => $r->mode === EptRegistration::MODE_ONLINE)
+                            ->values()
+                        : collect();
+                } elseif ($registration) {
+                    $registration->loadMissing('user.prody');
+                    $registrations = collect([$registration])
+                        ->filter(fn ($r) => $r->mode === EptRegistration::MODE_ONLINE)
+                        ->values();
+                }
+
+                $token->registrations = $registrations;
+
+                return $token;
             });
 
         return view('dashboard.pengawas-ept', [
             'user' => $user,
-            'groups' => $groups,
+            'tokens' => $tokens,
         ]);
     }
 
@@ -164,26 +181,23 @@ class PengawasEptController extends Controller
     {
         $groupIds = $this->registrationGroupIds($registration);
 
-        $isAssigned = EptGroup::query()
-            ->whereIn('id', $groupIds)
+        // Pengawas dianggap berwenang jika di-assign ke token yang terkait
+        // grup ini, atau ke token yang menunjuk registrasi ini.
+        $isAssigned = \App\Models\EptOnlineAccessToken::query()
+            ->where(function ($q) use ($groupIds, $registration) {
+                $q->whereIn('ept_group_id', $groupIds)
+                  ->orWhere('ept_registration_id', $registration->id);
+            })
             ->whereHas('proctors', fn ($q) => $q->whereKey($proctor->id))
             ->exists();
 
-        abort_unless($isAssigned, 403, 'Anda tidak ditugaskan untuk grup peserta ini.');
+        abort_unless($isAssigned, 403, 'Anda tidak ditugaskan untuk peserta ini.');
     }
 
     protected function authorizeAttemptProctor(User $proctor, EptOnlineAttempt $attempt): void
     {
-        $groupIds = [];
-        if ($attempt->ept_group_id) {
-            $groupIds[] = $attempt->ept_group_id;
-        }
-        if ($attempt->ept_registration_id) {
-            $groupIds = array_merge($groupIds, $this->registrationGroupIds($attempt->registration));
-        }
-
-        $isAssigned = EptGroup::query()
-            ->whereIn('id', array_unique($groupIds))
+        $isAssigned = \App\Models\EptOnlineAccessToken::query()
+            ->whereKey($attempt->access_token_id)
             ->whereHas('proctors', fn ($q) => $q->whereKey($proctor->id))
             ->exists();
 

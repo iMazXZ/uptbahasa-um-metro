@@ -9,6 +9,11 @@ class CreateEptOnlineAccessToken extends CreateRecord
 {
     protected static string $resource = EptOnlineAccessTokenResource::class;
 
+    protected function afterCreate(): void
+    {
+        $this->record->proctors()->sync($this->data['proctors'] ?? []);
+    }
+
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $plain = trim((string) ($data['plain_token'] ?? ''));

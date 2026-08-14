@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class EptOnlineAccessToken extends Model
@@ -59,6 +60,12 @@ class EptOnlineAccessToken extends Model
     public function attempts(): HasMany
     {
         return $this->hasMany(EptOnlineAttempt::class, 'access_token_id');
+    }
+
+    public function proctors(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'ept_token_proctors', 'ept_online_access_token_id', 'user_id')
+            ->withTimestamps();
     }
 
     public function withinWindow(): bool
