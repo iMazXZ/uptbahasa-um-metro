@@ -114,6 +114,15 @@
                         <h3 class="text-base font-bold text-slate-900 mb-1">Pilih Mode Pelaksanaan EPT</h3>
                         <p class="text-sm text-slate-500 mb-5">Tentukan bagaimana Anda akan mengikuti tes EPT.</p>
 
+                        @if(!\App\Models\SiteSetting::isEptOnlineEnabled())
+                            <div class="mb-5 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4">
+                                <i class="fa-solid fa-circle-info text-amber-500 mt-0.5"></i>
+                                <p class="text-sm text-amber-800 leading-relaxed">
+                                    Pendaftaran <strong>EPT Online</strong> sedang ditutup. Saat ini hanya tersedia pendaftaran <strong>EPT Offline</strong> (luring di kampus).
+                                </p>
+                            </div>
+                        @endif
+
                         <div class="grid grid-cols-1 {{ \App\Models\SiteSetting::isEptOnlineEnabled() ? 'sm:grid-cols-2' : '' }} gap-4">
                             <div @click="mode = 'offline'; step = 2"
                                  :class="mode === 'offline' ? 'border-um-blue bg-blue-50 ring-2 ring-um-blue/20' : 'border-slate-200 hover:border-slate-300'"
