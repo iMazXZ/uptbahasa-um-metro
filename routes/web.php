@@ -55,6 +55,27 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [RoleDashboardRedirectController::class, 'index'])
         ->name('dashboard');
 
+    // Dashboard Pengawas EPT
+    Route::get('/dashboard/pengawas-ept', [\App\Http\Controllers\Dashboard\PengawasEptController::class, 'index'])
+        ->middleware('role:Pengawas EPT')
+        ->name('dashboard.pengawas-ept');
+
+    Route::post('/dashboard/pengawas-ept/verify/{registration}', [\App\Http\Controllers\Dashboard\PengawasEptController::class, 'verifyRegistration'])
+        ->name('dashboard.pengawas-ept.verify');
+
+    Route::post('/dashboard/pengawas-ept/attempt/{attempt}/pause', [\App\Http\Controllers\Dashboard\PengawasEptController::class, 'pauseAttempt'])
+        ->name('dashboard.pengawas-ept.attempt.pause');
+
+    Route::post('/dashboard/pengawas-ept/attempt/{attempt}/resume', [\App\Http\Controllers\Dashboard\PengawasEptController::class, 'resumeAttempt'])
+        ->name('dashboard.pengawas-ept.attempt.resume');
+
+    Route::post('/dashboard/pengawas-ept/attempt/{attempt}/disqualify', [\App\Http\Controllers\Dashboard\PengawasEptController::class, 'disqualifyAttempt'])
+        ->name('dashboard.pengawas-ept.attempt.disqualify');
+
+    Route::get('/dashboard/pengawas-ept/identity/{registration}/{type}', [\App\Http\Controllers\Dashboard\PengawasEptController::class, 'identityPhoto'])
+        ->whereIn('type', ['ktp', 'selfie'])
+        ->name('dashboard.pengawas-ept.identity');
+
     // Dashboard Pendaftar
     Route::get('/dashboard/pendaftar', [PendaftarDashboardController::class, 'index'])
         ->middleware('role:pendaftar')

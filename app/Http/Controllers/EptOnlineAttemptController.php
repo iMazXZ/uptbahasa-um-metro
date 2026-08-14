@@ -25,6 +25,20 @@ class EptOnlineAttemptController extends Controller
         app(EptOnlineAttemptFinalizer::class)->catchUpExpiredAttempt($attempt);
         $attempt->refresh();
 
+        // Pengawas: pause / disqualify → tampilkan halaman blokir
+        if ($attempt->status === EptOnlineAttempt::STATUS_DISQUALIFIED) {
+            return redirect()->route('ept-online.index')
+                ->withErrors(['code' => 'Tes Anda telah didiskualifikasi oleh pengawas. Silakan hubungi pengawas.']);
+        }
+
+        if ($attempt->isPaused()) {
+            return view('ept-online.blocked', [
+                'attempt' => $attempt,
+                'blockedReason' => 'paused',
+                'blockedMessage' => 'Tes Anda sedang dijeda oleh pengawas. Mohon tunggu arahan pengawas untuk melanjutkan.',
+            ]);
+        }
+
         if ($attempt->status === EptOnlineAttempt::STATUS_SUBMITTED || $attempt->submitted_at) {
             return redirect()->route('ept-online.attempt.finished', $this->attemptRouteParams($attempt));
         }
@@ -213,6 +227,11 @@ class EptOnlineAttemptController extends Controller
 
         $isAjax = $request->wantsJson() || $request->ajax();
 
+        // Pengawas: pause / disqualify
+        if ($blocked = $this->proctorBlockResponse($attempt, $request, $isAjax)) {
+            return $blocked;
+        }
+
         if ($attempt->status === EptOnlineAttempt::STATUS_SUBMITTED || $attempt->submitted_at) {
             return $this->redirectResponse(
                 route('ept-online.attempt.finished', $this->attemptRouteParams($attempt)),
@@ -384,6 +403,13 @@ class EptOnlineAttemptController extends Controller
     {
         $this->authorizeAttempt($attempt, $request);
 
+        $isAjax = $request->wantsJson() || $request->ajax();
+
+        // Pengawas: pause / disqualify
+        if ($blocked = $this->proctorBlockResponse($attempt, $request, $isAjax)) {
+            return $blocked;
+        }
+
         if ($attempt->status === EptOnlineAttempt::STATUS_SUBMITTED || $attempt->submitted_at) {
             return redirect()->route('ept-online.attempt.finished', $this->attemptRouteParams($attempt));
         }
@@ -396,6 +422,26 @@ class EptOnlineAttemptController extends Controller
     public function ping(EptOnlineAttempt $attempt, Request $request): JsonResponse
     {
         $this->authorizeAttempt($attempt, $request);
+
+        // Pengawas: pause / disqualify → balas status khusus agar halaman dikunci
+        if ($attempt->status === EptOnlineAttempt::STATUS_DISQUALIFIED) {
+            return response()->json([
+                'blocked' => true,
+                'blocked_reason' => 'disqualified',
+                'message' => 'Tes Anda telah didiskualifikasi oleh pengawas.',
+                'redirect' => route('ept-online.index'),
+            ], 423);
+        }
+
+        if ($attempt->isPaused()) {
+            return response()->json([
+                'blocked' => true,
+                'blocked_reason' => 'paused',
+                'message' => 'Tes Anda sedang dijeda oleh pengawas. Mohon tunggu arahan pengawas.',
+                'redirect' => route('ept-online.index'),
+            ], 423);
+        }
+
         app(EptOnlineAttemptFinalizer::class)->catchUpExpiredAttempt($attempt);
         $attempt->refresh();
 
@@ -443,6 +489,24 @@ class EptOnlineAttemptController extends Controller
     public function integrity(EptOnlineAttempt $attempt, Request $request): JsonResponse
     {
         $this->authorizeAttempt($attempt, $request);
+
+        if ($attempt->status === EptOnlineAttempt::STATUS_DISQUALIFIED) {
+            return response()->json([
+                'ok' => true,
+                'blocked' => true,
+                'blocked_reason' => 'disqualified',
+                'redirect' => route('ept-online.index'),
+            ], 423);
+        }
+
+        if ($attempt->isPaused()) {
+            return response()->json([
+                'ok' => true,
+                'blocked' => true,
+                'blocked_reason' => 'paused',
+                'redirect' => route('ept-online.index'),
+            ], 423);
+        }
 
         if ($attempt->status === EptOnlineAttempt::STATUS_SUBMITTED || $attempt->submitted_at) {
             return response()->json([
@@ -512,6 +576,39 @@ class EptOnlineAttemptController extends Controller
     private function authorizeAttempt(EptOnlineAttempt $attempt, Request $request): void
     {
         abort_unless($request->user() && (int) $attempt->user_id === (int) $request->user()->id, 403);
+    }
+
+    /**
+     * Cek apakah attempt sedang di-pause / didiskualifikasi oleh pengawas.
+     * Mengembalikan respons yang tepat untuk request JSON maupun redirect.
+     */
+    private function proctorBlockResponse(EptOnlineAttempt $attempt, Request $request, bool $isAjax)
+    {
+        if ($attempt->status === EptOnlineAttempt::STATUS_DISQUALIFIED) {
+            return $this->redirectResponse(
+                route('ept-online.index'),
+                $isAjax,
+                423,
+                'Tes Anda telah didiskualifikasi oleh pengawas.',
+            );
+        }
+
+        if ($attempt->isPaused()) {
+            return $this->redirectResponse(
+                route('ept-online.index'),
+                $isAjax,
+                423,
+                'Tes Anda sedang dijeda oleh pengawas. Mohon tunggu arahan pengawas.',
+            );
+        }
+
+        return null;
+    }
+
+    private function attemptIsBlockedByProctor(EptOnlineAttempt $attempt): bool
+    {
+        return $attempt->status === EptOnlineAttempt::STATUS_DISQUALIFIED
+            || $attempt->isPaused();
     }
 
     private function shouldShowListeningIntro(EptOnlineAttempt $attempt, EptOnlineSection $section): bool

@@ -968,6 +968,10 @@
             })
             .then(response => response.json())
             .then(payload => {
+                if (payload.blocked) {
+                    showProctorBlocked(payload.blocked_reason, payload.message);
+                    return;
+                }
                 if (payload.redirect) {
                     allowExamUnload();
                     window.location.href = payload.redirect;
@@ -975,6 +979,52 @@
             })
             .catch(() => {});
         }, 20000);
+    }
+
+    // Layar terkunci oleh pengawas (pause / disqualify)
+    function showProctorBlocked(reason, message) {
+        if (window.__proctorBlockedShown) return;
+        window.__proctorBlockedShown = true;
+
+        if (window.attemptTimerInterval) clearInterval(window.attemptTimerInterval);
+
+        const overlay = document.createElement('div');
+        overlay.id = 'proctor-blocked-overlay';
+        overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(15,23,42,0.95);display:flex;align-items:center;justify-content:center;flex-direction:column;color:#fff;text-align:center;padding:24px;';
+
+        const icon = reason === 'disqualified'
+            ? '<i class="fa-solid fa-ban" style="font-size:48px;color:#f87171;margin-bottom:16px;"></i>'
+            : '<i class="fa-solid fa-pause" style="font-size:48px;color:#fbbf24;margin-bottom:16px;"></i>';
+
+        const title = reason === 'disqualified' ? 'Tes Didiskualifikasi' : 'Tes Dijeda oleh Pengawas';
+
+        overlay.innerHTML = icon
+            + '<h2 style="font-size:20px;font-weight:800;margin-bottom:8px;">' + title + '</h2>'
+            + '<p style="font-size:14px;color:#cbd5e1;max-width:420px;">' + (message || 'Mohon hubungi pengawas EPT Anda.') + '</p>'
+            + '<p style="font-size:12px;color:#64748b;margin-top:16px;">Halaman ini akan diperbarui otomatis saat pengawas melanjutkan tes.</p>';
+
+        document.body.appendChild(overlay);
+        document.body.style.overflow = 'hidden';
+
+        // Poll sampai pengawas lanjutkan (blocked hilang)
+        const pollBlocked = () => {
+            window.fetch(pingUrl, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': @json(csrf_token()),
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            })
+            .then(response => response.json())
+            .then(payload => {
+                if (!payload.blocked && window.__proctorBlockedShown) {
+                    window.location.reload();
+                }
+            })
+            .catch(() => {});
+        };
+        window.setInterval(pollBlocked, 10000);
     }
 
     if (listeningAudio) {

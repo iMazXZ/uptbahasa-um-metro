@@ -79,6 +79,43 @@ class EptOnlineController extends Controller
             ]);
         }
 
+        // Guard pengawas: peserta EPT Online harus diverifikasi identitas oleh pengawas dulu
+        $registration = $token->registration;
+        if ($registration && $registration->mode === \App\Models\EptRegistration::MODE_ONLINE) {
+            if (blank($registration->proctor_verified_at)) {
+                throw ValidationException::withMessages([
+                    'code' => 'Identitas Anda belum diverifikasi oleh pengawas. Silakan hubungi pengawas EPT Anda.',
+                ]);
+            }
+
+            // Cek apakah ada attempt yang sedang di-pause atau didiskualifikasi
+            $existing = EptOnlineAttempt::query()
+                ->where('user_id', $user->id)
+                ->where('status', \App\Models\EptOnlineAttempt::STATUS_IN_PROGRESS)
+                ->whereNotNull('paused_at')
+                ->whereNull('resumed_at')
+                ->latest('id')
+                ->first();
+
+            if ($existing) {
+                throw ValidationException::withMessages([
+                    'code' => 'Tes Anda sedang dijeda oleh pengawas. Mohon tunggu arahan pengawas.',
+                ]);
+            }
+
+            $disqualified = EptOnlineAttempt::query()
+                ->where('user_id', $user->id)
+                ->where('status', \App\Models\EptOnlineAttempt::STATUS_DISQUALIFIED)
+                ->latest('id')
+                ->first();
+
+            if ($disqualified) {
+                throw ValidationException::withMessages([
+                    'code' => 'Tes Anda telah didiskualifikasi oleh pengawas. Silakan hubungi pengawas.',
+                ]);
+            }
+        }
+
         $attempt = DB::transaction(function () use ($token, $user, $request) {
             /** @var EptOnlineAccessToken $lockedToken */
             $lockedToken = EptOnlineAccessToken::query()
