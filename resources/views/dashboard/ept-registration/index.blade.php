@@ -54,7 +54,7 @@
                         <p class="text-sm text-red-600 mt-2">Silakan unggah ulang bukti pembayaran yang valid.</p>
                         @if($canCreateRegistration)
                             <button type="button"
-                                    onclick="document.getElementById('ept-registration-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' })"
+                                    onclick="window.dispatchEvent(new CustomEvent('ept-start-registration'))"
                                     class="mt-4 inline-flex items-center gap-2 rounded-xl bg-um-blue px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-um-dark-blue transition">
                                 <i class="fa-solid fa-plus"></i> Daftar Lagi
                             </button>
@@ -80,7 +80,7 @@
                         </p>
                         @if($canCreateRegistration)
                             <button type="button"
-                                    onclick="document.getElementById('ept-registration-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' })"
+                                    onclick="window.dispatchEvent(new CustomEvent('ept-start-registration'))"
                                     class="mt-4 inline-flex items-center gap-2 rounded-xl bg-um-blue px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-um-dark-blue transition">
                                 <i class="fa-solid fa-plus"></i> Daftar Lagi
                             </button>
@@ -93,7 +93,10 @@
         @endif
 
         @if($canCreateRegistration)
-            <div class="bg-white rounded-xl border border-slate-200 shadow-sm" x-data="{ step: 1, accepted: false, mode: '' }">
+            <div id="ept-registration-card" class="bg-white rounded-xl border border-slate-200 shadow-sm"
+                 x-data="{ step: 1, accepted: false, mode: '' }"
+                 x-init="$watch('step', () => {})"
+                 @ept-start-registration.window="step = 1; accepted = false; mode = ''; $nextTick(() => { document.getElementById('ept-registration-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); })">
                 <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
                     <div class="flex items-center justify-between gap-4 flex-wrap">
                         <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
