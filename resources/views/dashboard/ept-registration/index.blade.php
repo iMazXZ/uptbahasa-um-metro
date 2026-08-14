@@ -114,7 +114,7 @@
                         <h3 class="text-base font-bold text-slate-900 mb-1">Pilih Mode Pelaksanaan EPT</h3>
                         <p class="text-sm text-slate-500 mb-5">Tentukan bagaimana Anda akan mengikuti tes EPT.</p>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 {{ \App\Models\SiteSetting::isEptOnlineEnabled() ? 'sm:grid-cols-2' : '' }} gap-4">
                             <div @click="mode = 'offline'; step = 2"
                                  :class="mode === 'offline' ? 'border-um-blue bg-blue-50 ring-2 ring-um-blue/20' : 'border-slate-200 hover:border-slate-300'"
                                  class="cursor-pointer rounded-2xl border-2 bg-white p-6 transition-all">
@@ -128,6 +128,7 @@
                                 <p class="mt-1 text-xs text-slate-500 leading-relaxed">Tes dilaksanakan secara luring di lokasi kampus sesuai jadwal dan grup yang ditentukan.</p>
                             </div>
 
+                            @if(\App\Models\SiteSetting::isEptOnlineEnabled())
                             <div @click="mode = 'online'; step = 2"
                                  :class="mode === 'online' ? 'border-um-blue bg-blue-50 ring-2 ring-um-blue/20' : 'border-slate-200 hover:border-slate-300'"
                                  class="cursor-pointer rounded-2xl border-2 bg-white p-6 transition-all">
@@ -140,6 +141,7 @@
                                 <h4 class="mt-4 font-bold text-slate-900">EPT Online</h4>
                                 <p class="mt-1 text-xs text-slate-500 leading-relaxed">Tes dilaksanakan secara daring melalui sistem EPT Online dengan akses kode dari admin.</p>
                             </div>
+                            @endif
                         </div>
                     </div>
 

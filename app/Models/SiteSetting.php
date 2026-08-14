@@ -40,10 +40,6 @@ class SiteSetting extends Model
     {
         $setting = static::where('key', $key)->first();
 
-        if (!$setting) {
-            return false;
-        }
-
         if (is_array($value)) {
             $value = json_encode($value);
         }
@@ -53,7 +49,16 @@ class SiteSetting extends Model
             $value = $value ? '1' : '0';
         }
 
-        $setting->update(['value' => (string) $value]);
+        if ($setting) {
+            $setting->update(['value' => (string) $value]);
+        } else {
+            static::create([
+                'key' => $key,
+                'value' => (string) $value,
+                'type' => 'string',
+                'group' => 'general',
+            ]);
+        }
 
         // Clear cache
         Cache::forget("site_setting_{$key}");
@@ -157,6 +162,11 @@ class SiteSetting extends Model
     public static function isEptRegistrationOpen(): bool
     {
         return (bool) static::get('ept_registration_open', true);
+    }
+
+    public static function isEptOnlineEnabled(): bool
+    {
+        return (bool) static::get('ept_online_enabled', true);
     }
 
     public static function getEptAllowedProdyIds(): array
