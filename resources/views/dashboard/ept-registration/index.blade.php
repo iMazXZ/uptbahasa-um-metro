@@ -71,12 +71,12 @@
                         <i class="fa-solid fa-circle-check text-2xl"></i>
                     </div>
                     <div>
-                        <h3 class="text-lg font-bold text-emerald-800">Pendaftaran Terakhir Selesai</h3>
+                        <h3 class="text-lg font-bold text-emerald-800">Anda Bisa Mendaftar Lagi</h3>
                         <p class="text-sm text-emerald-700 mt-1">
-                            Pendaftaran terakhir Anda sudah selesai dijalankan pada siklus sebelumnya.
+                            Pendaftaran EPT terakhir Anda sudah selesai, sehingga Anda dapat mengajukan pendaftaran baru.
                         </p>
                         <p class="text-sm text-emerald-600 mt-2">
-                            Diajukan pada {{ $registration->created_at->translatedFormat('d F Y, H:i') }}
+                            Pendaftaran sebelumnya: {{ $registration->created_at->translatedFormat('d F Y') }}
                         </p>
                         @if($canCreateRegistration)
                             <button type="button"
