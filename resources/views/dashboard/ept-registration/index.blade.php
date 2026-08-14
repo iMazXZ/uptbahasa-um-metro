@@ -52,6 +52,13 @@
                             <strong>Alasan:</strong> {{ $registration->rejection_reason ?? 'Tidak ada keterangan.' }}
                         </p>
                         <p class="text-sm text-red-600 mt-2">Silakan unggah ulang bukti pembayaran yang valid.</p>
+                        @if($canCreateRegistration)
+                            <button type="button"
+                                    onclick="document.getElementById('ept-registration-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' })"
+                                    class="mt-4 inline-flex items-center gap-2 rounded-xl bg-um-blue px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-um-dark-blue transition">
+                                <i class="fa-solid fa-plus"></i> Daftar Lagi
+                            </button>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -71,6 +78,13 @@
                         <p class="text-sm text-emerald-600 mt-2">
                             Diajukan pada {{ $registration->created_at->translatedFormat('d F Y, H:i') }}
                         </p>
+                        @if($canCreateRegistration)
+                            <button type="button"
+                                    onclick="document.getElementById('ept-registration-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' })"
+                                    class="mt-4 inline-flex items-center gap-2 rounded-xl bg-um-blue px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-um-dark-blue transition">
+                                <i class="fa-solid fa-plus"></i> Daftar Lagi
+                            </button>
+                        @endif
                     </div>
                 </div>
             </div>
