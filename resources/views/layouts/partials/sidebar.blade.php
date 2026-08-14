@@ -49,11 +49,8 @@
     {{-- Menu Navigation --}}
     <nav class="h-[calc(100vh-4rem-4rem)] overflow-y-auto px-3 py-4 space-y-6 custom-scrollbar">
 
-        {{-- Section: Utama (pendaftar & multi-role, bukan pengawas murni) --}}
-        @php
-            $isProctorOnly = $u && $u->hasRole('Pengawas EPT') && ! $u->hasAnyRole(['pendaftar', 'tutor', 'Admin', 'Staf Administrasi', 'Kepala Lembaga', 'Penerjemah']);
-        @endphp
-        @unless($isProctorOnly)
+        {{-- Section: Utama (hanya role pendaftar) --}}
+        @if($u && $u->hasRole('pendaftar'))
         <div class="space-y-1">
             {{-- Dashboard --}}
             <a href="{{ route('dashboard') }}"
@@ -78,7 +75,7 @@
                 @endif
             </a>
         </div>
-        @endunless
+        @endif
 
         {{-- Section: Pengawas EPT (kondisional) --}}
         @if($u && $u->hasRole('Pengawas EPT'))
@@ -100,8 +97,8 @@
         </div>
         @endif
 
-        {{-- Section: Layanan (pendaftar & multi-role, bukan pengawas murni) --}}
-        @unless($isProctorOnly)
+        {{-- Section: Layanan (hanya role pendaftar) --}}
+        @if($u && $u->hasRole('pendaftar'))
         <div>
             <div class="px-3 mb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400 transition-opacity duration-200"
                  :class="!sidebarOpen && 'lg:hidden'">
@@ -138,9 +135,10 @@
                 @endif
             </div>
         </div>
-        @endunless
+        @endif
 
-        {{-- Section: Basic Listening (hanya untuk tahun 2025+, bukan S2, dan sudah isi biodata) --}}
+        {{-- Section: Basic Listening (hanya role pendaftar + kondisi) --}}
+        @if($u && $u->hasRole('pendaftar'))
         @php
             $showBasicListeningMenu = $hasBasicInfo && ((int)($u->year ?? 0) >= 2025) && !$isS2;
         @endphp
@@ -180,9 +178,10 @@
             </div>
         </div>
         @endif
+        @endif
 
         {{-- Section: Admin (Conditional) --}}
-        @if ($u && $u->hasAnyRole(['Admin', 'Staf Administrasi', 'Kepala Lembaga', 'Penerjemah']))
+        @if ($u && $u->hasAnyRole(['Admin', 'Staf Administrasi', 'Kepala Lembaga', 'Penerjemah', 'tutor']))
             <div>
                 <div class="px-3 mb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400 transition-opacity duration-200"
                      :class="!sidebarOpen && 'lg:hidden'">
@@ -199,7 +198,8 @@
             </div>
         @endif
 
-        {{-- Section: EPT Online --}}
+        {{-- Section: EPT Online (hanya pendaftar) --}}
+        @if($u && $u->hasRole('pendaftar'))
         <div class="pt-2">
             <a href="{{ route('ept-online.index') }}"
                title="EPT Online (Beta) — start or continue the online test session"
@@ -213,6 +213,7 @@
                 </span>
             </a>
         </div>
+        @endif
     </nav>
 
     {{-- Footer User Profile --}}
