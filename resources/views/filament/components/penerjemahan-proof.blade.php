@@ -2,7 +2,7 @@
     {{-- Detail Pemohon --}}
     <div class="rounded-xl bg-slate-50 border border-slate-200 p-4">
         <p class="text-xs font-bold uppercase tracking-wide text-slate-400 mb-3">Detail Pemohon</p>
-        <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 text-sm">
+        <dl class="grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
             <div>
                 <dt class="text-xs text-slate-400">Nama</dt>
                 <dd class="mt-0.5 font-semibold text-slate-800">{{ $record->users?->name ?? '-' }}</dd>
