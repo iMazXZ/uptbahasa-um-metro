@@ -129,6 +129,11 @@ class User extends Authenticatable implements HasAvatar, FilamentUser
         return $this->hasMany(\App\Models\EptOnlineAttempt::class, 'user_id');
     }
 
+    public function eptRegistrations(): HasMany
+    {
+        return $this->hasMany(\App\Models\EptRegistration::class, 'user_id');
+    }
+
     /**
      * Relasi ke pengajuan penerjemahan milik user.
      */

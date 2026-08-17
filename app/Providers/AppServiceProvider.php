@@ -56,6 +56,7 @@ class AppServiceProvider extends ServiceProvider
 
         FilamentAsset::register([
             Css::make('custom-stylesheet', __DIR__ . '/../../resources/css/custom.css'),
+            Css::make('fontawesome', asset('vendor/fontawesome/all.min.css')),
         ]);
 
         // === Registrasi eksplisit policy (opsional jika auto-discovery sudah aktif) ===

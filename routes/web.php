@@ -109,10 +109,6 @@ Route::middleware('auth')->group(function () {
     Route::put('/dashboard/penerjemah/update/{penerjemahan}', [\App\Http\Controllers\PenerjemahDashboardController::class, 'update'])
         ->middleware('role:Penerjemah')
         ->name('dashboard.penerjemah.update');
-
-    Route::post('/dashboard/penerjemah/selesai/{penerjemahan}', [\App\Http\Controllers\PenerjemahDashboardController::class, 'selesai'])
-        ->middleware('role:Penerjemah')
-        ->name('dashboard.penerjemah.selesai');
 });
 
 /*
@@ -685,4 +681,18 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
 
     Route::post('/ept-registration-export-bukti/crop-save', [\App\Http\Controllers\Admin\EptRegistrationExportBuktiController::class, 'cropSave'])
         ->name('admin.ept-registration-export-bukti.crop-save');
+});
+
+// Aksi penerjemahan (dipakai modal Kelola)
+Route::middleware(['auth'])->prefix('admin')->group(function () {
+    Route::post('/penerjemahan/{penerjemahan}/approve', [\App\Http\Controllers\Admin\PenerjemahanActionController::class, 'approve'])
+        ->name('admin.penerjemahan.approve');
+    Route::post('/penerjemahan/{penerjemahan}/reject-payment', [\App\Http\Controllers\Admin\PenerjemahanActionController::class, 'rejectPayment'])
+        ->name('admin.penerjemahan.reject-payment');
+    Route::post('/penerjemahan/{penerjemahan}/reject-document', [\App\Http\Controllers\Admin\PenerjemahanActionController::class, 'rejectDocument'])
+        ->name('admin.penerjemahan.reject-document');
+    Route::post('/penerjemahan/{penerjemahan}/assign-translator', [\App\Http\Controllers\Admin\PenerjemahanActionController::class, 'assignTranslator'])
+        ->name('admin.penerjemahan.assign-translator');
+    Route::post('/penerjemahan/{penerjemahan}/set-selesai', [\App\Http\Controllers\Admin\PenerjemahanActionController::class, 'setSelesai'])
+        ->name('admin.penerjemahan.set-selesai');
 });

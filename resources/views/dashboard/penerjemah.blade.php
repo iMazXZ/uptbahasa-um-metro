@@ -66,121 +66,95 @@
 
     {{-- TUGAS TERKINI --}}
     <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between">
-            <div>
-                <h2 class="text-xl font-bold text-slate-900">Tugas Terkini</h2>
-                <p class="text-base text-slate-500">5 tugas terbaru Anda</p>
+        <div class="px-6 py-5 border-b border-slate-100">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900">Tugas Terkini</h2>
+                    <p class="text-base text-slate-500">Tugas, draft, dan yang sudah selesai</p>
+                </div>
+                <a href="{{ route('dashboard.penerjemah.tugas') }}"
+                   class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-200 text-slate-700 font-bold text-base hover:bg-slate-300 transition-colors">
+                    <i class="fa-solid fa-list"></i>
+                    Lihat Semua
+                </a>
             </div>
-            <a href="{{ route('dashboard.penerjemah.tugas') }}" 
-               class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-200 text-slate-700 font-bold text-base hover:bg-slate-300 transition-colors">
-                <i class="fa-solid fa-list"></i>
-                Lihat Semua
-            </a>
+
+            {{-- Tab buttons --}}
+            <div class="flex gap-2 mt-4">
+                <button type="button" data-tab="tugas" class="tab-btn active inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold bg-indigo-600 text-white">
+                    <i class="fa-solid fa-briefcase"></i> Tugas
+                </button>
+                <button type="button" data-tab="draft" class="tab-btn inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors">
+                    <i class="fa-solid fa-floppy-disk"></i> Draft
+                </button>
+                <button type="button" data-tab="selesai" class="tab-btn inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors">
+                    <i class="fa-solid fa-check-circle"></i> Selesai
+                </button>
+            </div>
         </div>
 
-        @if($tugasTerkini->isEmpty())
-            <div class="p-12 text-center">
-                <div class="w-20 h-20 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4">
-                    <i class="fa-solid fa-inbox text-3xl text-slate-400"></i>
-                </div>
-                <p class="text-xl font-medium text-slate-600">Belum ada tugas penerjemahan</p>
-                <p class="text-base text-slate-500 mt-2">Tugas akan muncul ketika admin menugaskan Anda</p>
-            </div>
-        @else
-            <div class="divide-y divide-slate-100">
-                @foreach($tugasTerkini as $item)
-                    @php
-                        $statusColor = match($item->status) {
-                            'Disetujui' => 'bg-amber-100 text-amber-700 border-amber-200',
-                            'Diproses' => 'bg-blue-100 text-blue-700 border-blue-200',
-                            'Selesai' => 'bg-emerald-100 text-emerald-700 border-emerald-200',
-                            default => 'bg-slate-100 text-slate-700 border-slate-200'
-                        };
-                        $isUrgent = in_array($item->status, ['Disetujui', 'Diproses']);
-                        $hasDraft = !empty($item->translated_text);
-                        
-                        // Hitung deadline hanya jika belum ada draft
-                        $deadlineText = null;
-                        $deadlineClass = null;
-                        if ($isUrgent && !$hasDraft && $item->updated_at) {
-                            $deadline = $item->updated_at->addDays(3);
-                            $now = now();
-                            $diffHours = (int) $now->diffInHours($deadline, false);
-                            $diffDays = (int) floor($diffHours / 24);
-                            
-                            if ($diffHours < 0) {
-                                $telatHours = abs($diffHours);
-                                $telatDays = (int) ceil($telatHours / 24);
-                                if ($telatDays == 1) {
-                                    $deadlineText = 'Terlambat 1 hari, mohon diselesaikan 🙏';
-                                } else {
-                                    $deadlineText = 'Terlambat ' . $telatDays . ' hari, mohon diselesaikan 🙏';
-                                }
-                                $deadlineClass = 'bg-rose-100 text-rose-700 border-rose-200';
-                            } elseif ($diffHours <= 24) {
-                                $deadlineText = 'Sisa waktu ' . $diffHours . ' jam';
-                                $deadlineClass = 'bg-orange-100 text-orange-700 border-orange-200';
-                            } elseif ($diffDays == 1) {
-                                $deadlineText = 'Sisa waktu 1 hari';
-                                $deadlineClass = 'bg-amber-100 text-amber-700 border-amber-200';
-                            } else {
-                                $deadlineText = 'Sisa waktu ' . $diffDays . ' hari';
-                                $deadlineClass = 'bg-sky-100 text-sky-700 border-sky-200';
-                            }
-                        }
-                    @endphp
-                    <div class="p-6 hover:bg-slate-50 transition-colors {{ $isUrgent && !$hasDraft ? 'bg-amber-50/30' : '' }}">
-                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                            <div class="flex-1 min-w-0">
-                                <div class="flex flex-wrap items-center gap-2 mb-2">
-                                    @if($hasDraft && $item->status !== 'Selesai')
-                                        {{-- Sudah ada draft, menunggu verifikasi --}}
-                                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-lg text-sm font-bold border bg-purple-100 text-purple-700 border-purple-200">
-                                            <i class="fa-solid fa-hourglass-half"></i>
-                                            Menunggu Verifikasi
-                                        </span>
-                                    @else
-                                        <span class="inline-flex items-center px-3 py-1 rounded-lg text-sm font-bold border {{ $statusColor }}">
-                                            {{ $item->status }}
-                                        </span>
-                                        @if($deadlineText)
-                                            <span class="inline-flex items-center gap-1 px-3 py-1 rounded-lg text-sm font-medium border {{ $deadlineClass }}">
-                                                <i class="fa-solid fa-clock"></i>
-                                                {{ $deadlineText }}
-                                            </span>
-                                        @endif
-                                    @endif
-                                </div>
-                                <p class="text-lg font-semibold text-slate-800 truncate">
-                                    {{ $item->users->name ?? 'Pemohon' }}
-                                </p>
-                                <p class="text-base text-slate-500 mt-1">
-                                    <i class="fa-solid fa-file-alt text-slate-400 mr-2"></i>
-                                    {{ $item->source_word_count ?? 0 }} kata
-                                </p>
-                            </div>
-                            
-                            @if($isUrgent && !$hasDraft)
-                                {{-- Belum ada draft - tombol Kerjakan --}}
-                                <a href="{{ route('dashboard.penerjemah.edit', $item) }}" 
-                                   class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 text-white font-bold text-base hover:bg-indigo-700 transition-colors shadow-lg shrink-0">
-                                    <i class="fa-solid fa-pen"></i>
-                                    Kerjakan
-                                </a>
-                            @else
-                                {{-- Sudah ada draft atau selesai - tombol Lihat --}}
-                                <a href="{{ route('dashboard.penerjemah.edit', $item) }}" 
-                                   class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-slate-200 text-slate-700 font-medium text-base hover:bg-slate-300 transition-colors shrink-0">
-                                    <i class="fa-solid fa-eye"></i>
-                                    Lihat
-                                </a>
-                            @endif
-                        </div>
+        {{-- Tab: Tugas (belum dikerjakan) --}}
+        <div id="tab-tugas" class="tab-panel">
+            @forelse($tugas as $item)
+                @include('dashboard.partials.tugas-item', ['item' => $item])
+            @empty
+                <div class="p-12 text-center">
+                    <div class="w-20 h-20 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4">
+                        <i class="fa-solid fa-briefcase text-3xl text-slate-400"></i>
                     </div>
-                @endforeach
-            </div>
-        @endif
+                    <p class="text-xl font-medium text-slate-600">Tidak ada tugas yang perlu dikerjakan</p>
+                    <p class="text-base text-slate-500 mt-2">Semua tugas sudah memiliki draft atau selesai</p>
+                </div>
+            @endforelse
+        </div>
+
+        {{-- Tab: Draft --}}
+        <div id="tab-draft" class="tab-panel" style="display:none;">
+            @forelse($draft as $item)
+                @include('dashboard.partials.tugas-item', ['item' => $item])
+            @empty
+                <div class="p-12 text-center">
+                    <div class="w-20 h-20 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4">
+                        <i class="fa-solid fa-floppy-disk text-3xl text-slate-400"></i>
+                    </div>
+                    <p class="text-xl font-medium text-slate-600">Belum ada draft</p>
+                    <p class="text-base text-slate-500 mt-2">Draft muncul setelah Anda menyimpan hasil terjemahan</p>
+                </div>
+            @endforelse
+        </div>
+
+        {{-- Tab: Selesai --}}
+        <div id="tab-selesai" class="tab-panel" style="display:none;">
+            @forelse($selesaiList as $item)
+                @include('dashboard.partials.tugas-item', ['item' => $item])
+            @empty
+                <div class="p-12 text-center">
+                    <div class="w-20 h-20 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4">
+                        <i class="fa-solid fa-check-circle text-3xl text-slate-400"></i>
+                    </div>
+                    <p class="text-xl font-medium text-slate-600">Belum ada tugas selesai</p>
+                </div>
+            @endforelse
+        </div>
     </div>
+
+    <script>
+        document.querySelectorAll('.tab-btn').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                document.querySelectorAll('.tab-btn').forEach(function (b) {
+                    b.classList.remove('bg-indigo-600', 'text-white');
+                    b.classList.add('bg-slate-100', 'text-slate-600');
+                });
+                this.classList.remove('bg-slate-100', 'text-slate-600');
+                this.classList.add('bg-indigo-600', 'text-white');
+
+                document.querySelectorAll('.tab-panel').forEach(function (p) {
+                    p.style.display = 'none';
+                });
+                document.getElementById('tab-' + this.dataset.tab).style.display = 'block';
+            });
+        });
+    </script>
 
     {{-- BANTUAN --}}
     <div class="bg-blue-50 rounded-2xl border border-blue-200 p-6">

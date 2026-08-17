@@ -82,6 +82,41 @@
         @csrf
         @method('PUT')
 
+        @php
+            $sudahDikirim = filled($tugas->submitted_for_review_at);
+            $adaDraft = filled($tugas->translated_text);
+        @endphp
+
+        @if($tugas->status !== 'Selesai')
+            @if($sudahDikirim)
+                <div class="flex items-start gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 p-5 mb-6">
+                    <div class="w-11 h-11 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-paper-plane text-emerald-600 text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-emerald-800">Sudah Dikirim untuk Diverifikasi</h3>
+                        <p class="text-base text-emerald-700 mt-1">
+                            Terjemahan Anda sudah dikirim ke admin dan sedang menunggu verifikasi.
+                            Jika Anda mengubah isi terjemahan lalu menyimpan draft, status ini akan menjadi draft kembali.
+                        </p>
+                    </div>
+                </div>
+            @elseif($adaDraft)
+                <div class="flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-5 mb-6">
+                    <div class="w-11 h-11 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-floppy-disk text-amber-600 text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-amber-800">Draft Tersimpan — Belum Dikirim</h3>
+                        <p class="text-base text-amber-700 mt-1">
+                            Anda masih menyimpan draft dan belum mengirim ke admin.
+                            Klik tombol <strong>Kirim untuk Diverifikasi</strong> jika sudah selesai.
+                        </p>
+                    </div>
+                </div>
+            @endif
+        @endif
+
         <div class="bg-white rounded-2xl border border-indigo-200 shadow-sm overflow-hidden">
             <div class="px-6 py-4 border-b border-indigo-100 bg-indigo-50">
                 <h2 class="text-xl font-bold text-indigo-900">
@@ -164,6 +199,16 @@
                         <i class="fa-solid fa-floppy-disk text-xl"></i>
                         Simpan Draft
                     </button>
+                    {{-- Tombol Kirim untuk Diverifikasi --}}
+                    <button type="submit" name="submit" value="1"
+                            class="flex-1 inline-flex items-center justify-center gap-3 px-6 py-4 rounded-xl bg-emerald-600 text-white font-bold text-lg hover:bg-emerald-700 transition-colors shadow-lg">
+                        <i class="fa-solid fa-paper-plane text-xl"></i>
+                        @if($sudahDikirim)
+                            Kirim Ulang untuk Diverifikasi
+                        @else
+                            Selesai &amp; Kirim untuk Diverifikasi
+                        @endif
+                    </button>
                 </div>
             @endif
         </div>
@@ -177,10 +222,19 @@
                     <i class="fa-solid fa-circle-info text-xl text-blue-600"></i>
                 </div>
                 <div>
-                    <h3 class="text-lg font-bold text-blue-900">Draft Tersimpan</h3>
-                    <p class="text-base text-blue-700 mt-1">
-                        Terjemahan Anda akan diperiksa oleh admin. Setelah admin memverifikasi, status akan berubah menjadi "Selesai" dan pemohon akan menerima notifikasi.
-                    </p>
+                    @if($sudahDikirim)
+                        <h3 class="text-lg font-bold text-blue-900">Sudah Dikirim untuk Diverifikasi</h3>
+                        <p class="text-base text-blue-700 mt-1">
+                            Terjemahan Anda sudah dikirim ke admin dan sedang menunggu verifikasi.
+                            Status akan berubah menjadi "Selesai" setelah admin memverifikasi dan pemohon akan menerima notifikasi.
+                        </p>
+                    @else
+                        <h3 class="text-lg font-bold text-blue-900">Draft Tersimpan</h3>
+                        <p class="text-base text-blue-700 mt-1">
+                            Terjemahan Anda masih berupa draft dan <strong>belum dikirim</strong> ke admin.
+                            Klik tombol <strong>Kirim untuk Diverifikasi</strong> jika sudah selesai.
+                        </p>
+                    @endif
                 </div>
             </div>
         </div>

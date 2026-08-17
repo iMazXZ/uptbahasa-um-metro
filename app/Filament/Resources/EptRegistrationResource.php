@@ -314,6 +314,9 @@ class EptRegistrationResource extends BaseResource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query
+                ->select('ept_registrations.*')
+                ->addSelect(\Illuminate\Support\Facades\DB::raw('(SELECT COUNT(*) FROM ept_registrations AS er WHERE er.user_id = ept_registrations.user_id) AS registration_count')))
             ->columns([
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Nama')
@@ -321,6 +324,22 @@ class EptRegistrationResource extends BaseResource
                     ->sortable()
                     ->copyable()
                     ->copyMessage('Nama disalin')
+                    ->html()
+                    ->tooltip(function (EptRegistration $record) {
+                        $count = (int) ($record->registration_count ?? 1);
+                        return $count > 1
+                            ? "Sudah mendaftar {$count} kali. Cek kemungkinan bukti pembayaran digunakan ulang."
+                            : null;
+                    })
+                    ->formatStateUsing(function (EptRegistration $record) {
+                        $name = e($record->user?->name ?? '-');
+                        $count = (int) ($record->registration_count ?? 1);
+                        if ($count > 1) {
+                            $badge = '<span style="display:inline-block;margin-left:5px;padding:0 5px;border-radius:9999px;background:#fee2e2;color:#b91c1c;border:1px solid #fecaca;font-size:10px;font-weight:600;line-height:1.5;vertical-align:middle;white-space:nowrap;">Cek</span>';
+                            return $name . $badge;
+                        }
+                        return $name;
+                    })
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('user.srn')
                     ->label('NPM')
@@ -551,9 +570,28 @@ class EptRegistrationResource extends BaseResource
                         ->label('Setujui')
                         ->icon('heroicon-o-check-circle')
                         ->color('success')
+                        ->modalWidth('3xl')
                         ->visible(fn ($record) => $record->status === 'pending')
                         ->form(function (EptRegistration $record): array {
-                            return static::groupAssignmentForm($record);
+                            $fields = static::groupAssignmentForm($record);
+
+                            $userCount = \App\Models\EptRegistration::where('user_id', $record->user_id)->count();
+
+                            if ($userCount > 1) {
+                                $fields[] = Forms\Components\Section::make('Perhatian - Pendaftar Pernah Mendaftar')
+                                    ->description("Pendaftar ini sudah terdaftar {$userCount} kali. Periksa ulang bukti pembayaran dan data SITAMA dengan teliti sebelum menyetujui.")
+                                    ->icon('heroicon-o-exclamation-triangle')
+                                    ->iconColor('danger')
+                                    ->schema([
+                                        Forms\Components\Checkbox::make('confirm_check')
+                                            ->label('Saya sudah memeriksa ulang bukti pembayaran dan SITAMA pendaftar.')
+                                            ->helperText('Wajib dicentang sebelum menyetujui pendaftar yang pernah mendaftar.')
+                                            ->required()
+                                            ->dehydrated(false),
+                                    ]);
+                            }
+
+                            return $fields;
                         })
                         ->action(function ($record, array $data) {
                             $testQuota = EptRegistration::normalizeTestQuota(
@@ -759,59 +797,70 @@ class EptRegistrationResource extends BaseResource
         $isGeneral = $record->isGeneralParticipant();
 
         return [
-            Forms\Components\Placeholder::make('participant_rule')
-                ->label('Skema Tes')
-                ->content($isGeneral
+            Forms\Components\Section::make('Penjadwalan Peserta')
+                ->description($isGeneral
                     ? 'Peserta Umum hanya dijadwalkan ke 1 grup tes.'
-                    : 'Peserta dapat dijadwalkan ke 3 grup tes, atau 4 grup jika tagihan/pembayaran 200.'),
-            Forms\Components\Radio::make('test_quota')
-                ->label('Kuota Tes')
-                ->options(EptRegistration::testQuotaOptionsForStudentStatus($record->student_status))
-                ->default($record->requiredGroupCount())
-                ->inline()
-                ->live()
-                ->required()
-                ->helperText($isGeneral
-                    ? 'Peserta Umum tetap 1 kali tes.'
-                    : 'Biarkan 3 untuk pembayaran normal. Pilih 4 hanya jika tagihan/pembayaran 200.'),
-            Forms\Components\Select::make('grup_1_id')
-                ->label($isGeneral ? 'Grup Tes' : 'Grup Tes 1')
-                ->options($groupOptions)
-                ->default($contextRecord?->grup_1_id)
-                ->disableOptionWhen(fn ($value): bool => isset($disabledGroupOptions[(int) $value]))
-                ->searchable()
-                ->preload()
-                ->required(),
-            Forms\Components\Select::make('grup_2_id')
-                ->label('Grup Tes 2')
-                ->options($groupOptions)
-                ->default($contextRecord?->grup_2_id)
-                ->disableOptionWhen(fn ($value): bool => isset($disabledGroupOptions[(int) $value]))
-                ->searchable()
-                ->preload()
-                ->visible(fn (Get $get): bool => static::selectedTestQuota($get, $record) >= 2)
-                ->dehydrated(fn (Get $get): bool => static::selectedTestQuota($get, $record) >= 2)
-                ->required(fn (Get $get): bool => static::selectedTestQuota($get, $record) >= 2),
-            Forms\Components\Select::make('grup_3_id')
-                ->label('Grup Tes 3')
-                ->options($groupOptions)
-                ->default($contextRecord?->grup_3_id)
-                ->disableOptionWhen(fn ($value): bool => isset($disabledGroupOptions[(int) $value]))
-                ->searchable()
-                ->preload()
-                ->visible(fn (Get $get): bool => static::selectedTestQuota($get, $record) >= 3)
-                ->dehydrated(fn (Get $get): bool => static::selectedTestQuota($get, $record) >= 3)
-                ->required(fn (Get $get): bool => static::selectedTestQuota($get, $record) >= 3),
-            Forms\Components\Select::make('grup_4_id')
-                ->label('Grup Tes 4')
-                ->options($groupOptions)
-                ->default($contextRecord?->grup_4_id)
-                ->disableOptionWhen(fn ($value): bool => isset($disabledGroupOptions[(int) $value]))
-                ->searchable()
-                ->preload()
-                ->visible(fn (Get $get): bool => static::selectedTestQuota($get, $record) >= 4)
-                ->dehydrated(fn (Get $get): bool => static::selectedTestQuota($get, $record) >= 4)
-                ->required(fn (Get $get): bool => static::selectedTestQuota($get, $record) >= 4),
+                    : 'Peserta dijadwalkan ke 3 grup tes, atau 4 jika tagihan/pembayaran 200.')
+                ->icon('heroicon-o-calendar')
+                ->schema([
+                    Forms\Components\Radio::make('test_quota')
+                        ->label('Kuota Tes')
+                        ->options(EptRegistration::testQuotaOptionsForStudentStatus($record->student_status))
+                        ->default($record->requiredGroupCount())
+                        ->inline()
+                        ->live()
+                        ->required()
+                        ->helperText($isGeneral
+                            ? 'Peserta Umum tetap 1 kali tes.'
+                            : 'Biarkan 3 untuk pembayaran normal. Pilih 4 hanya jika tagihan/pembayaran 200.')
+                        ->columnSpanFull(),
+
+                    Forms\Components\Grid::make(2)
+                        ->schema([
+                            Forms\Components\Select::make('grup_1_id')
+                                ->label($isGeneral ? 'Grup Tes' : 'Grup Tes 1')
+                                ->placeholder('Pilih grup tes')
+                                ->options($groupOptions)
+                                ->default($contextRecord?->grup_1_id)
+                                ->disableOptionWhen(fn ($value): bool => isset($disabledGroupOptions[(int) $value]))
+                                ->searchable()
+                                ->preload()
+                                ->required(),
+                            Forms\Components\Select::make('grup_2_id')
+                                ->label('Grup Tes 2')
+                                ->placeholder('Pilih grup tes')
+                                ->options($groupOptions)
+                                ->default($contextRecord?->grup_2_id)
+                                ->disableOptionWhen(fn ($value): bool => isset($disabledGroupOptions[(int) $value]))
+                                ->searchable()
+                                ->preload()
+                                ->visible(fn (Get $get): bool => static::selectedTestQuota($get, $record) >= 2)
+                                ->dehydrated(fn (Get $get): bool => static::selectedTestQuota($get, $record) >= 2)
+                                ->required(fn (Get $get): bool => static::selectedTestQuota($get, $record) >= 2),
+                            Forms\Components\Select::make('grup_3_id')
+                                ->label('Grup Tes 3')
+                                ->placeholder('Pilih grup tes')
+                                ->options($groupOptions)
+                                ->default($contextRecord?->grup_3_id)
+                                ->disableOptionWhen(fn ($value): bool => isset($disabledGroupOptions[(int) $value]))
+                                ->searchable()
+                                ->preload()
+                                ->visible(fn (Get $get): bool => static::selectedTestQuota($get, $record) >= 3)
+                                ->dehydrated(fn (Get $get): bool => static::selectedTestQuota($get, $record) >= 3)
+                                ->required(fn (Get $get): bool => static::selectedTestQuota($get, $record) >= 3),
+                            Forms\Components\Select::make('grup_4_id')
+                                ->label('Grup Tes 4')
+                                ->placeholder('Pilih grup tes')
+                                ->options($groupOptions)
+                                ->default($contextRecord?->grup_4_id)
+                                ->disableOptionWhen(fn ($value): bool => isset($disabledGroupOptions[(int) $value]))
+                                ->searchable()
+                                ->preload()
+                                ->visible(fn (Get $get): bool => static::selectedTestQuota($get, $record) >= 4)
+                                ->dehydrated(fn (Get $get): bool => static::selectedTestQuota($get, $record) >= 4)
+                                ->required(fn (Get $get): bool => static::selectedTestQuota($get, $record) >= 4),
+                        ]),
+                ]),
         ];
     }
 

@@ -110,11 +110,17 @@
                             <div class="flex-1 min-w-0">
                                 <div class="flex flex-wrap items-center gap-2 mb-2">
                                     @if($hasDraft && $item->status !== 'Selesai')
-                                        {{-- Sudah ada draft, menunggu verifikasi --}}
-                                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-lg text-sm font-bold border bg-purple-100 text-purple-700 border-purple-200">
-                                            <i class="fa-solid fa-hourglass-half"></i>
-                                            Menunggu Verifikasi
-                                        </span>
+                                        @if(filled($item->submitted_for_review_at))
+                                            <span class="inline-flex items-center gap-1 px-3 py-1 rounded-lg text-sm font-bold border bg-purple-100 text-purple-700 border-purple-200">
+                                                <i class="fa-solid fa-paper-plane"></i>
+                                                Menunggu Verifikasi
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center gap-1 px-3 py-1 rounded-lg text-sm font-bold border bg-amber-100 text-amber-700 border-amber-200">
+                                                <i class="fa-solid fa-floppy-disk"></i>
+                                                Draft (Belum Dikirim)
+                                            </span>
+                                        @endif
                                     @else
                                         <span class="inline-flex items-center px-3 py-1 rounded-lg text-sm font-bold border {{ $statusColor }}">
                                             {{ $item->status }}
