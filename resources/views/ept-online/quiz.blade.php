@@ -978,7 +978,7 @@
                 }
             })
             .catch(() => {});
-        }, 20000);
+        }, 5000);
     }
 
     // Layar terkunci oleh pengawas (pause / disqualify)
