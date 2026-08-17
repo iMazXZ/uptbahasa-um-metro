@@ -988,6 +988,26 @@
 
         if (window.attemptTimerInterval) clearInterval(window.attemptTimerInterval);
 
+        // Kirim posisi audio terakhir sebelum tes dijeda/dihentikan
+        try {
+            const audio = document.getElementById('listeningAudio');
+            if (audio && reason === 'paused') {
+                window.fetch(pingUrl, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': @json(csrf_token()),
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        audio_position: Number.isFinite(audio.currentTime) ? audio.currentTime.toFixed(3) : '0',
+                        audio_playing: !audio.paused && !audio.ended ? true : false,
+                    }),
+                }).catch(() => {});
+            }
+        } catch (_) { /* abaikan jika audio tidak ada */ }
+
         const overlay = document.createElement('div');
         overlay.id = 'proctor-blocked-overlay';
         overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(15,23,42,0.95);display:flex;align-items:center;justify-content:center;flex-direction:column;color:#fff;text-align:center;padding:24px;';

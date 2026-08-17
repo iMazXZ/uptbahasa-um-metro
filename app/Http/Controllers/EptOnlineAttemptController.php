@@ -423,6 +423,16 @@ class EptOnlineAttemptController extends Controller
     {
         $this->authorizeAttempt($attempt, $request);
 
+        // Simpan posisi audio dulu (sebelum cek blocked) — supaya posisi presisi saat pause
+        if ($attempt->current_section_type === EptOnlineSection::TYPE_LISTENING) {
+            $audioPosition = $this->normalizeAudioPosition($request->input('audio_position'));
+            $audioPlaying = $request->boolean('audio_playing');
+
+            if ($audioPosition !== null || $request->has('audio_playing')) {
+                $this->storeSectionAudioState($attempt, EptOnlineSection::TYPE_LISTENING, $audioPosition, $audioPlaying);
+            }
+        }
+
         // Pengawas: pause / disqualify → balas status khusus agar halaman dikunci
         if ($attempt->status === EptOnlineAttempt::STATUS_DISQUALIFIED) {
             return response()->json([
