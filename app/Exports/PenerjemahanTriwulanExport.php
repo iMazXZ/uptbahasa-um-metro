@@ -49,7 +49,7 @@ class PenerjemahanTriwulanExport implements
             [$this->titleLine],
             ['DAFTAR PENERJEMAHAN'],
             [$this->periodLabel],
-            ['No', 'Nama', 'NPM', 'Keterangan'],
+            ['No', 'Nama', 'NPM', 'Penerjemah', 'Tanggal Pengajuan', 'Tanggal Selesai', 'Keterangan'],
         ];
     }
 
@@ -61,6 +61,9 @@ class PenerjemahanTriwulanExport implements
             ++$this->rowIndex,
             $user?->name ?? '—',
             $user?->srn ?? '—',
+            $row->translator?->name ?? '—',
+            optional($row->submission_date)->format('d/m/Y') ?: '—',
+            optional($row->completion_date)->format('d/m/Y') ?: '—',
             $this->keterangan,
         ];
     }
@@ -71,17 +74,20 @@ class PenerjemahanTriwulanExport implements
             'A' => 6,
             'B' => 32,
             'C' => 16,
-            'D' => 18,
+            'D' => 24,
+            'E' => 18,
+            'F' => 18,
+            'G' => 18,
         ];
     }
 
     public function styles(Worksheet $sheet)
     {
-        $sheet->getStyle('A1:D4')->getFont()->setBold(true);
-        $sheet->getStyle('A1:D4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-        $sheet->getStyle('A1:D4')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
-        $sheet->getStyle('A5:D5')->getFont()->setBold(true);
-        $sheet->getStyle('A1:D5')->getAlignment()->setWrapText(true);
+        $sheet->getStyle('A1:G4')->getFont()->setBold(true);
+        $sheet->getStyle('A1:G4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A1:G4')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+        $sheet->getStyle('A5:G5')->getFont()->setBold(true);
+        $sheet->getStyle('A1:G5')->getAlignment()->setWrapText(true);
         $sheet->getStyle('A:C')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
     }
 
@@ -93,12 +99,12 @@ class PenerjemahanTriwulanExport implements
 
                 // Merge header rows
                 foreach (range(1, 4) as $row) {
-                    $sheet->mergeCells("A{$row}:D{$row}");
+                    $sheet->mergeCells("A{$row}:G{$row}");
                 }
 
                 $lastRow = 5 + $this->rows->count();
                 if ($lastRow >= 5) {
-                    $sheet->getStyle("A5:D{$lastRow}")->applyFromArray([
+                    $sheet->getStyle("A5:G{$lastRow}")->applyFromArray([
                         'borders' => [
                             'allBorders' => ['borderStyle' => Border::BORDER_THIN],
                         ],

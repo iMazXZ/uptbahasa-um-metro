@@ -8,6 +8,7 @@ use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Notifications\Notification;
@@ -402,12 +403,71 @@ class PenerjemahanResource extends BaseResource
                     ->color('success')
                     ->visible(fn () => auth()->user()?->hasAnyRole(['Admin', 'Staf Administrasi', 'Kepala Lembaga']))
                     ->form([
+                        Forms\Components\Select::make('penerjemah_ids')
+                            ->label('Penerjemah')
+                            ->options(fn () => User::whereHas('roles', fn ($q) => $q->where('name', 'Penerjemah'))->orderBy('name')->pluck('name', 'id'))
+                            ->multiple()
+                            ->searchable()
+                            ->preload()
+                            ->helperText('Kosongkan jika ingin semua penerjemah.'),
+
+                        Forms\Components\Select::make('periode')
+                            ->label('Periode')
+                            ->placeholder('Pilih manual')
+                            ->options([
+                                'bulan_ini'   => 'Bulan ini',
+                                'bulan_lalu'  => 'Bulan lalu',
+                                'triwulan_1'  => 'Triwulan 1 (Jan - Mar)',
+                                'triwulan_2'  => 'Triwulan 2 (Apr - Jun)',
+                                'triwulan_3'  => 'Triwulan 3 (Jul - Sep)',
+                                'triwulan_4'  => 'Triwulan 4 (Okt - Des)',
+                                'tahun_ini'   => 'Tahun ini',
+                            ])
+                            ->live()
+                            ->afterStateUpdated(function ($state, Set $set) {
+                                $now = now();
+                                match ($state) {
+                                    'bulan_ini' => [
+                                        $set('start_date', $now->startOfMonth()->toDateString()),
+                                        $set('end_date', $now->endOfMonth()->toDateString()),
+                                    ],
+                                    'bulan_lalu' => [
+                                        $set('start_date', $now->subMonthNoOverflow()->startOfMonth()->toDateString()),
+                                        $set('end_date', $now->subMonthNoOverflow()->endOfMonth()->toDateString()),
+                                    ],
+                                    'triwulan_1' => [
+                                        $set('start_date', $now->startOfYear()->toDateString()),
+                                        $set('end_date', $now->startOfYear()->addMonths(2)->endOfMonth()->toDateString()),
+                                    ],
+                                    'triwulan_2' => [
+                                        $set('start_date', $now->startOfYear()->addMonths(3)->startOfMonth()->toDateString()),
+                                        $set('end_date', $now->startOfYear()->addMonths(5)->endOfMonth()->toDateString()),
+                                    ],
+                                    'triwulan_3' => [
+                                        $set('start_date', $now->startOfYear()->addMonths(6)->startOfMonth()->toDateString()),
+                                        $set('end_date', $now->startOfYear()->addMonths(8)->endOfMonth()->toDateString()),
+                                    ],
+                                    'triwulan_4' => [
+                                        $set('start_date', $now->startOfYear()->addMonths(9)->startOfMonth()->toDateString()),
+                                        $set('end_date', $now->startOfYear()->addMonths(11)->endOfMonth()->toDateString()),
+                                    ],
+                                    'tahun_ini' => [
+                                        $set('start_date', $now->startOfYear()->toDateString()),
+                                        $set('end_date', $now->endOfYear()->toDateString()),
+                                    ],
+                                    default => null,
+                                };
+                            }),
+
                         Forms\Components\DatePicker::make('start_date')
                             ->label('Dari tanggal')
-                            ->required(),
+                            ->required()
+                            ->live(),
                         Forms\Components\DatePicker::make('end_date')
                             ->label('Sampai tanggal')
-                            ->required(),
+                            ->required()
+                            ->live(),
+
                         Forms\Components\TextInput::make('period_label')
                             ->label('Label Triwulan')
                             ->placeholder('TRIWULAN 1 GANJIL 2025-2026')
@@ -434,8 +494,17 @@ class PenerjemahanResource extends BaseResource
                         $period  = $data['period_label'] ?: self::formatPeriodLabel($start, $end);
                         $ket     = $data['keterangan'] ?: 'Abstrak';
 
-                        $rows = Penerjemahan::query()
-                            ->with('users')
+                        $query = Penerjemahan::query()->with('users');
+
+                        // Filter penerjemah (jika dipilih)
+                        if (filled($data['penerjemah_ids'] ?? null)) {
+                            $query->whereIn('translator_id', (array) $data['penerjemah_ids']);
+                        }
+
+                        // Exclude yang ditolak
+                        $query->whereNotLike('status', '%Ditolak%');
+
+                        $rows = $query
                             ->whereBetween('submission_date', [$start, $end])
                             ->orderBy('submission_date')
                             ->get()
