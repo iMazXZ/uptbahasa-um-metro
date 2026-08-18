@@ -9,6 +9,8 @@ use Illuminate\Support\Carbon;
 
 class BlSummaryWidget extends Widget
 {
+    protected static bool $isLazy = true;
+    protected ?string $placeholderHeight = '10rem';
     use HasWidgetShield;
 
     protected static string $view = 'filament.widgets.bl-summary-widget';

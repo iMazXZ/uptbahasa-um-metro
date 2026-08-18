@@ -7,6 +7,8 @@ use Filament\Widgets\ChartWidget;
 
 class EptRegistrationMonthlyChart extends ChartWidget
 {
+    protected static bool $isLazy = true;
+    protected ?string $placeholderHeight = '22rem';
     protected static ?string $heading = 'Pendaftaran EPT';
 
     protected static ?int $sort = 3;

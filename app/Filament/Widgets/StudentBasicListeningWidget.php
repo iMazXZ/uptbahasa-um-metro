@@ -13,6 +13,8 @@ use App\Models\BasicListeningSurveyResponse;
 
 class StudentBasicListeningWidget extends Widget
 {
+    protected static bool $isLazy = true;
+    protected ?string $placeholderHeight = '10rem';
     protected static string $view = 'filament.widgets.student-basic-listening-widget';
     protected int|string|array $columnSpan = 'full';
 

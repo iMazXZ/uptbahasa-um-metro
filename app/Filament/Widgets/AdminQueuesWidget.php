@@ -9,6 +9,8 @@ use Filament\Widgets\Widget;
 
 class AdminQueuesWidget extends Widget
 {
+    protected static bool $isLazy = true;
+    protected ?string $placeholderHeight = '12rem';
     use HasWidgetShield;
 
     protected static string $view = 'filament.widgets.admin-queues-widget';
