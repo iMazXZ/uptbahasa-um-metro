@@ -310,6 +310,15 @@ class SiteSetting extends Model
             return true;
         }
 
+        // Nilai manual (Nilai Manual / remedial) berlaku untuk semua angkatan
+        if (LegacyBasicListeningScores::findByIdentity(
+            srn: $user->srn,
+            name: $user->name,
+            year: (int) ($user->year ?? 0),
+        ) !== null) {
+            return true;
+        }
+
         $yearInt = (int) ($user->year ?? 0);
         if ($yearInt <= 2024) {
             if (! LegacyBasicListeningScores::requiresLegacyScoreForUser($user)) {
