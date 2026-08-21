@@ -310,12 +310,14 @@ class SiteSetting extends Model
             return true;
         }
 
-        // Nilai manual (Nilai Manual / remedial) berlaku untuk semua angkatan
+        // Nilai manual (Nilai Manual / remedial / kolom nilaibasiclistening) berlaku untuk semua angkatan
         if (LegacyBasicListeningScores::findByIdentity(
             srn: $user->srn,
             name: $user->name,
             year: (int) ($user->year ?? 0),
-        ) !== null) {
+        ) !== null
+            || is_numeric($user->nilaibasiclistening)
+        ) {
             return true;
         }
 

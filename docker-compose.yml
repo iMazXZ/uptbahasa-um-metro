@@ -52,6 +52,20 @@ services:
     depends_on:
       - app
 
+  phpmyadmin:
+    image: phpmyadmin:latest
+    restart: unless-stopped
+    ports:
+      - '${PMA_PORT:-8081}:80'
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      UPLOAD_LIMIT: 64M
+    networks:
+      - lembagabahasa
+    depends_on:
+      - mysql
+
 networks:
   lembagabahasa:
     driver: bridge

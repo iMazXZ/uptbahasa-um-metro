@@ -24,20 +24,8 @@ class SubmitEptScoreController extends Controller
         $isS2         = $user->prody && str_starts_with($user->prody->name ?? '', 'S2');
         $biodataComplete = SiteSetting::isEptBiodataComplete($user);
 
-        // ==== Cek keikutsertaan Basic Listening (angkatan ≥ 2025) ====
-        $completedBL = true;
-
-        // S2 tidak perlu Basic Listening
-        if (!$isS2 && $year >= 2025) {
-            $grade = BasicListeningGrade::query()
-                ->where('user_id', $user->id)
-                ->where('user_year', $user->year)
-                ->first();
-
-            $completedBL = $grade !== null
-                && is_numeric($grade->attendance)
-                && is_numeric($grade->final_test);
-        }
+        // ==== Cek keikutsertaan Basic Listening ====
+        $completedBL = SiteSetting::hasCompletedBasicListening($user);
 
         // ==== Status pengajuan ====
         $hasSubmissions = EptSubmission::where('user_id', $user->id)
