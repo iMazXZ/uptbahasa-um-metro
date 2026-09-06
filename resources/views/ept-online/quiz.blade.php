@@ -978,7 +978,7 @@
                 }
             })
             .catch(() => {});
-        }, 5000);
+        }, 20000);
     }
 
     // Layar terkunci oleh pengawas (pause / disqualify)
@@ -1393,7 +1393,7 @@
         return true;
     };
 
-    const fetchAttemptPage = async (url, pushState = true) => {
+    const fetchAttemptPage = async (url, pushState = true, isRetry = false) => {
         setAttemptNavigationLocked(true);
         beforeAttemptTransition();
         const targetUrl = withAttemptStateUrl(url);
@@ -1408,6 +1408,11 @@
             });
 
             if (!response.ok) {
+                if (!isRetry) {
+                    await new Promise((resolve) => setTimeout(resolve, 1500));
+                    return await fetchAttemptPage(url, pushState, true);
+                }
+
                 allowExamUnload();
                 window.location.href = targetUrl;
                 return;
@@ -1417,6 +1422,11 @@
             const doc = new DOMParser().parseFromString(html, 'text/html');
 
             if (!replaceAttemptFragments(doc)) {
+                if (!isRetry) {
+                    await new Promise((resolve) => setTimeout(resolve, 1500));
+                    return await fetchAttemptPage(url, pushState, true);
+                }
+
                 allowExamUnload();
                 window.location.href = targetUrl;
                 return;
@@ -1429,6 +1439,11 @@
             document.title = doc.title || document.title;
             window.scrollTo({ top: 0, behavior: 'auto' });
         } catch (_) {
+            if (!isRetry) {
+                await new Promise((resolve) => setTimeout(resolve, 1500));
+                return await fetchAttemptPage(url, pushState, true);
+            }
+
             allowExamUnload();
             window.location.href = targetUrl;
         } finally {

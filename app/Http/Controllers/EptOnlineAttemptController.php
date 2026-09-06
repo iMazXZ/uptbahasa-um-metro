@@ -170,13 +170,14 @@ class EptOnlineAttemptController extends Controller
             'Content-Type' => $audioFile['mime_type'],
             'Content-Disposition' => 'inline; filename="' . basename($audioFile['absolute_path']) . '"',
             'Accept-Ranges' => 'bytes',
-            'Pragma' => 'no-cache',
-            'Expires' => '0',
             'X-Robots-Tag' => 'noindex, nofollow, noarchive',
         ]);
 
         $response->setPrivate();
-        $response->headers->set('Cache-Control', 'private, no-store, no-cache, must-revalidate, max-age=0');
+        $response->headers->set('Cache-Control', 'private, max-age=14400, must-revalidate');
+        $response->setAutoEtag(true);
+        $response->setAutoLastModified(true);
+        $response->isNotModified($request);
 
         return $response;
     }
@@ -1080,7 +1081,11 @@ class EptOnlineAttemptController extends Controller
             return null;
         }
 
-        $expiresAt = now()->addMinutes(max(15, ((int) $section->duration_minutes) + 30));
+        // Gunakan waktu kedaluwarsa attempt yang stabil agar signed URL tidak berubah tiap menit/request,
+        // sehingga browser dapat memanfaatkan client-side caching secara optimal.
+        $expiresAt = $attempt->expires_at
+            ? $attempt->expires_at->copy()->addMinutes(30)
+            : ($attempt->created_at ? $attempt->created_at->copy()->addHours(6) : now()->addHours(3));
 
         return app(UrlGenerator::class)->temporarySignedRoute(
             'ept-online.attempt.audio',
